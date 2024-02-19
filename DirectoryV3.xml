@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+ <trees>
+     <tree path="/client.go" title="连接MongoDB"/>
+     <tree path="/database.go" title="数据库操作"/>
+     <tree path="/collection.go" title="集合"/>
+     <tree path="/query.go" title="查询"/>
+     <tree path="/interface.go" title="定义接口"/>
+     <tree path="/errors.go" title="错误"/>
+     <tree path="/cursor.go" title="结果集"/>
+ </trees>
