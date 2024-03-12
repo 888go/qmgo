@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -27,7 +27,7 @@ type Cursor struct {
 }
 
 // Next 获取此游标的下一个文档。如果未发生错误且游标未被耗尽，则返回true。
-func (c *Cursor) Next(result interface{}) bool {
+func (c *Cursor) X下一个(result interface{}) bool {
 	if c.err != nil {
 		return false
 	}
@@ -44,7 +44,7 @@ func (c *Cursor) Next(result interface{}) bool {
 
 // All 方法遍历游标并对每个文档进行解码，将结果存入 results 参数。results 参数必须是指向切片的指针。
 // 推荐在结构体 Query 或 Aggregate 中使用 All() 方法。
-func (c *Cursor) All(results interface{}) error {
+func (c *Cursor) X取全部(results interface{}) error {
 	if c.err != nil {
 		return c.err
 	}
@@ -63,7 +63,7 @@ func (c *Cursor) All(results interface{}) error {
 
 // Close 关闭此游标。在调用 Close 后，不得再调用 Next 和 TryNext。
 // 当游标对象不再使用时，应主动关闭它。
-func (c *Cursor) Close() error {
+func (c *Cursor) X关闭() error {
 	if c.err != nil {
 		return c.err
 	}
@@ -71,7 +71,7 @@ func (c *Cursor) Close() error {
 }
 
 // Err 返回Cursor的最后一个错误，如果没有发生错误，则返回nil
-func (c *Cursor) Err() error {
+func (c *Cursor) X取错误() error {
 	if c.err != nil {
 		return c.err
 	}

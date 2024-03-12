@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -44,15 +44,15 @@ func TestDatabase(t *testing.T) {
 		MinPoolSize:      &minPoolSize,
 	}
 
-	c, err := NewClient(context.Background(), &cfg)
+	c, err := X创建客户端(context.Background(), &cfg)
 	ast.NoError(err)
-	cli := c.Database(cfg.Database)
+	cli := c.X设置数据库(cfg.Database)
 	ast.Nil(err)
-	ast.Equal(dbName, cli.GetDatabaseName())
-	coll := cli.Collection(collName)
-	ast.Equal(collName, coll.GetCollectionName())
-	cli.Collection(collName).DropCollection(context.Background())
-	cli.DropDatabase(context.Background())
+	ast.Equal(dbName, cli.X取数据库名称())
+	coll := cli.X取集合(collName)
+	ast.Equal(collName, coll.X取集合名())
+	cli.X取集合(collName).X删除集合(context.Background())
+	cli.X删除数据库(context.Background())
 
 }
 
@@ -62,7 +62,7 @@ func TestRunCommand(t *testing.T) {
 	cli := initClient("test")
 
 	opts := opts.RunCommandOptions{RunCmdOptions: options.RunCmd().SetReadPreference(readpref.Primary())}
-	res := cli.RunCommand(context.Background(), bson.D{
+	res := cli.X执行命令(context.Background(), bson.D{
 		{"ping", 1}}, opts)
 	ast.NoError(res.Err())
 }

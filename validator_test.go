@@ -1,4 +1,4 @@
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -23,8 +23,8 @@ func TestValidator(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.Close(ctx)
-	defer cli.DropCollection(ctx)
+	defer cli.X关闭(ctx)
+	defer cli.X删除集合(ctx)
 
 	user := &User{
 		FirstName: "",
@@ -32,37 +32,37 @@ func TestValidator(t *testing.T) {
 		Age:       45,
 		Email:     "1234@gmail.com",
 	}
-	_, err := cli.InsertOne(ctx, user)
+	_, err := cli.X插入(ctx, user)
 	ast.NoError(err)
 
 	user.Age = 200 // invalid age
-	_, err = cli.InsertOne(ctx, user)
+	_, err = cli.X插入(ctx, user)
 	ast.Error(err)
 
 	users := []*User{user, user, user}
-	_, err = cli.InsertMany(ctx, users)
+	_, err = cli.X插入多个(ctx, users)
 	ast.Error(err)
 
 	user.Age = 20
 	user.Email = "1234@gmail" // email标签，无效邮箱地址
-	err = cli.ReplaceOne(ctx, bson.M{"age": 45}, user)
+	err = cli.X替换一条(ctx, bson.M{"age": 45}, user)
 	ast.Error(err)
 
 	user.Email = "" // 必需的标签，空字符串无效
-	_, err = cli.Upsert(ctx, bson.M{"age": 45}, user)
+	_, err = cli.X更新或插入(ctx, bson.M{"age": 45}, user)
 	ast.Error(err)
 
 	user.Email = "1234@gmail.com"
 	user.CreateAt = time.Now().Add(1 * time.Hour) // lte标签用于时间，时间值必须小于等于当前时间
-	_, err = cli.Upsert(ctx, bson.M{"age": 45}, user)
+	_, err = cli.X更新或插入(ctx, bson.M{"age": 45}, user)
 	ast.Error(err)
 
 	user.CreateAt = time.Now()
 	user.Relations = map[string]string{"Alex": "friend", "Joe": "friend"}
-	_, err = cli.Upsert(ctx, bson.M{"age": 45}, user)
+	_, err = cli.X更新或插入(ctx, bson.M{"age": 45}, user)
 	ast.NoError(err)
 
 	user.Relations = map[string]string{"Alex": "friend", "Joe": "friend", "Bob": "sister"} // 最大标签数，映射的数量
-	_, err = cli.Upsert(ctx, bson.M{"age": 45}, user)
+	_, err = cli.X更新或插入(ctx, bson.M{"age": 45}, user)
 	ast.Error(err)
 }

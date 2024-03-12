@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 // InsertOneResult 是 InsertOne 操作返回的结果类型。
 type InsertOneResult struct {

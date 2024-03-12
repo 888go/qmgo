@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -44,16 +44,16 @@ func TestFieldInsert(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.Close(ctx)
-	defer cli.DropCollection(ctx)
+	defer cli.X关闭(ctx)
+	defer cli.X删除集合(ctx)
 
 	u := &UserField{Name: "Lucas", Age: 7}
-	_, err := cli.InsertOne(context.Background(), u)
+	_, err := cli.X插入(context.Background(), u)
 	ast.NoError(err)
 
 	uc := bson.M{"name": "Lucas"}
 	ur := &UserField{}
-	err = cli.Find(ctx, uc).One(ur)
+	err = cli.X查询(ctx, uc).X取一条(ur)
 	ast.NoError(err)
 
 	// default fields
@@ -71,18 +71,18 @@ func TestFieldInsertMany(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.Close(ctx)
-	defer cli.DropCollection(ctx)
+	defer cli.X关闭(ctx)
+	defer cli.X删除集合(ctx)
 
 	u1 := &UserField{Name: "Lucas", Age: 7}
 	u2 := &UserField{Name: "Alice", Age: 7}
 	us := []*UserField{u1, u2}
-	_, err := cli.InsertMany(ctx, us)
+	_, err := cli.X插入多个(ctx, us)
 	ast.NoError(err)
 
 	uc := bson.M{"age": 7}
 	ur := []UserField{}
-	err = cli.Find(ctx, uc).All(&ur)
+	err = cli.X查询(ctx, uc).X取全部(&ur)
 	ast.NoError(err)
 
 	// default fields
@@ -102,27 +102,27 @@ func TestFieldInsertMany(t *testing.T) {
 func TestFieldUpdate(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.Close(context.Background())
-	defer cli.DropCollection(context.Background())
-	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
+	defer cli.X关闭(context.Background())
+	defer cli.X删除集合(context.Background())
+	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
 
 	ui := &UserField{Name: "Lucas", Age: 17}
-	_, err := cli.InsertOne(context.Background(), ui)
+	_, err := cli.X插入(context.Background(), ui)
 	ast.NoError(err)
 
-	err = cli.UpdateOne(context.Background(), bson.M{"name": "Lucas"}, bson.M{"$set": bson.M{"updateTimeAt": 0, "updateAt": time.Time{}}})
+	err = cli.X更新一条(context.Background(), bson.M{"name": "Lucas"}, bson.M{"$set": bson.M{"updateTimeAt": 0, "updateAt": time.Time{}}})
 	ast.NoError(err)
 
 	findUi := UserField{}
-	err = cli.Find(context.Background(), bson.M{"name": "Lucas"}).One(&findUi)
+	err = cli.X查询(context.Background(), bson.M{"name": "Lucas"}).X取一条(&findUi)
 	ast.Equal(int64(0), findUi.UpdateTimeAt)
 	ast.Equal(time.Time{}, findUi.UpdateAt)
 
 	ast.NoError(err)
 	ui.Id = findUi.Id
-	err = cli.ReplaceOne(context.Background(), bson.M{"_id": findUi.Id}, &ui)
+	err = cli.X替换一条(context.Background(), bson.M{"_id": findUi.Id}, &ui)
 	ast.NoError(err)
-	err = cli.Find(context.Background(), bson.M{"name": "Lucas"}).One(&findUi)
+	err = cli.X查询(context.Background(), bson.M{"name": "Lucas"}).X取一条(&findUi)
 	ast.NotEqual(int64(0), findUi.UpdateTimeAt)
 	ast.NotEqual(time.Time{}, findUi.UpdateAt)
 
@@ -132,15 +132,15 @@ func TestFieldUpsert(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.Close(ctx)
-	defer cli.DropCollection(ctx)
+	defer cli.X关闭(ctx)
+	defer cli.X删除集合(ctx)
 
 	u := &UserField{Name: "Lucas", Age: 7}
 	id := primitive.NewObjectID()
 	u.Id = id
 	id_1 := primitive.NewObjectID()
 	u.MyId = id_1.String()
-	_, err := cli.InsertOne(context.Background(), u)
+	_, err := cli.X插入(context.Background(), u)
 	ast.NoError(err)
 
 	time.Sleep(2 * time.Second)
@@ -150,12 +150,12 @@ func TestFieldUpsert(t *testing.T) {
 	u.UpdateAt = tBefore3s
 	u.CreateTimeAt = tBefore3s
 	u.UpdateTimeAt = tBefore3s.Unix()
-	result, err := cli.Upsert(ctx, bson.M{"_id": id}, u)
+	result, err := cli.X更新或插入(ctx, bson.M{"_id": id}, u)
 	ast.NoError(err)
 	fmt.Println(result)
 
 	ui := UserField{}
-	err = cli.Find(ctx, bson.M{"_id": id}).One(&ui)
+	err = cli.X查询(ctx, bson.M{"_id": id}).X取一条(&ui)
 
 	ast.NoError(err)
 	ast.Equal(u.Age, ui.Age)
@@ -173,15 +173,15 @@ func TestFieldUpsertId(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.Close(ctx)
-	defer cli.DropCollection(ctx)
+	defer cli.X关闭(ctx)
+	defer cli.X删除集合(ctx)
 
 	u := &UserField{Name: "Lucas", Age: 7}
 	id := primitive.NewObjectID()
 	u.Id = id
 	id_1 := primitive.NewObjectID()
 	u.MyId = id_1.String()
-	_, err := cli.InsertOne(context.Background(), u)
+	_, err := cli.X插入(context.Background(), u)
 	ast.NoError(err)
 
 	time.Sleep(2 * time.Second)
@@ -191,11 +191,11 @@ func TestFieldUpsertId(t *testing.T) {
 	u.UpdateAt = tBefore3s
 	u.CreateTimeAt = tBefore3s
 	u.UpdateTimeAt = tBefore3s.Unix()
-	_, err = cli.UpsertId(ctx, id, u)
+	_, err = cli.X更新或插入并按ID(ctx, id, u)
 	ast.NoError(err)
 
 	ui := UserField{}
-	err = cli.Find(ctx, bson.M{"_id": id}).One(&ui)
+	err = cli.X查询(ctx, bson.M{"_id": id}).X取一条(&ui)
 
 	ast.NoError(err)
 	ast.Equal(u.Age, ui.Age)
@@ -210,19 +210,19 @@ func TestFieldUpsertId(t *testing.T) {
 func TestFieldUpdateId(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.Close(context.Background())
-	defer cli.DropCollection(context.Background())
-	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
+	defer cli.X关闭(context.Background())
+	defer cli.X删除集合(context.Background())
+	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
 
 	ui := &UserField{Name: "Lucas", Age: 17}
-	res, err := cli.InsertOne(context.Background(), ui)
+	res, err := cli.X插入(context.Background(), ui)
 	ast.NoError(err)
 
-	err = cli.UpdateId(context.Background(), res.InsertedID, bson.M{"$set": bson.M{"updateTimeAt": 0, "updateAt": time.Time{}}})
+	err = cli.X更新并按ID(context.Background(), res.InsertedID, bson.M{"$set": bson.M{"updateTimeAt": 0, "updateAt": time.Time{}}})
 	ast.NoError(err)
 
 	findUi := UserField{}
-	err = cli.Find(context.Background(), bson.M{"name": "Lucas"}).One(&findUi)
+	err = cli.X查询(context.Background(), bson.M{"name": "Lucas"}).X取一条(&findUi)
 	ast.NoError(err)
 	ast.Equal(int64(0), findUi.UpdateTimeAt)
 	ast.Equal(time.Time{}, findUi.UpdateAt)

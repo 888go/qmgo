@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -34,7 +34,7 @@ type Aggregate struct {
 }
 
 // All 遍历从聚合中获取的游标，并将每个文档解码到结果中。
-func (a *Aggregate) All(results interface{}) error {
+func (a *Aggregate) X取全部(结果指针 interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions
@@ -43,11 +43,11 @@ func (a *Aggregate) All(results interface{}) error {
 	if err != nil {
 		return err
 	}
-	return c.All(a.ctx, results)
+	return c.All(a.ctx, 结果指针)
 }
 
 // One 通过从聚合中迭代游标，并将当前文档解码到结果中。
-func (a *Aggregate) One(result interface{}) error {
+func (a *Aggregate) X取一条(结果指针 interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions
@@ -61,9 +61,9 @@ func (a *Aggregate) One(result interface{}) error {
 		cursor: c,
 		err:    err,
 	}
-	defer cr.Close()
-	if !cr.Next(result) {
-		if err := cr.Err(); err != nil {
+	defer cr.X关闭()
+	if !cr.X下一个(结果指针) {
+		if err := cr.X取错误(); err != nil {
 			return err
 		}
 		return ErrNoSuchDocuments
@@ -73,12 +73,12 @@ func (a *Aggregate) One(result interface{}) error {
 
 // Iter 返回聚合后的游标
 // 已弃用，请使用 Cursor
-func (a *Aggregate) Iter() CursorI {
-	return a.Cursor()
+func (a *Aggregate) Iter弃用() CursorI {
+	return a.X取结果集()
 }
 
 // Cursor 返回聚合后的游标
-func (a *Aggregate) Cursor() CursorI {
+func (a *Aggregate) X取结果集() CursorI {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions

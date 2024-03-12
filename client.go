@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -30,33 +30,33 @@ import (
 
 // Config 是初始 MongoDB 实例的配置
 type Config struct {
-	// URI 示例: [mongodb://][用户名:密码@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
-	// URI 参考文档: https://docs.mongodb.com/manual/reference/connection-string/
-	// 这段Go语言代码的注释是关于MongoDB数据库连接字符串（URI）的格式说明：
-	// - `mongodb://`：表示URI的协议部分，表明这是用于连接MongoDB服务器的地址。
-	// - `[user:pass@]`：可选的认证信息部分，其中`user`代表用户名，`pass`为经过编码的密码。
-	// - `host1[:port1][,host2[:port2],...]`：必填的服务器地址和端口部分，可以指定一个或多个服务器及对应端口，用逗号分隔。
-	// - `[/database]`：可选的数据库名称部分，用于指定默认连接的数据库。
-	// - `[?options]`：可选的连接参数部分，以问号开头，后面跟随一系列键值对（key=value&key=value...），用于设置额外的连接选项。
+// URI 示例: [mongodb://][用户名:密码@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
+// URI 参考文档: https://docs.mongodb.com/manual/reference/connection-string/
+// 这段Go语言代码的注释是关于MongoDB数据库连接字符串（URI）的格式说明：
+// - `mongodb://`：表示URI的协议部分，表明这是用于连接MongoDB服务器的地址。
+// - `[user:pass@]`：可选的认证信息部分，其中`user`代表用户名，`pass`为经过编码的密码。
+// - `host1[:port1][,host2[:port2],...]`：必填的服务器地址和端口部分，可以指定一个或多个服务器及对应端口，用逗号分隔。
+// - `[/database]`：可选的数据库名称部分，用于指定默认连接的数据库。
+// - `[?options]`：可选的连接参数部分，以问号开头，后面跟随一系列键值对（key=value&key=value...），用于设置额外的连接选项。
 	Uri      string `json:"uri"`
 	Database string `json:"database"`
 	Coll     string `json:"coll"`
-	// ConnectTimeoutMS 指定一个用于建立到服务器连接的超时时间。
-	//	如果设置为0，将不使用超时。
-	//	默认值是30秒。
+// ConnectTimeoutMS 指定一个用于建立到服务器连接的超时时间。
+//	如果设置为0，将不使用超时。
+//	默认值是30秒。
 	ConnectTimeoutMS *int64 `json:"connectTimeoutMS"`
-	// MaxPoolSize 指定驱动程序连接池中允许的每个服务器最大连接数。
-	// 如果该值为0，则会被设置为 math.MaxInt64，
-	// 默认值是100。
+// MaxPoolSize 指定驱动程序连接池中允许的每个服务器最大连接数。
+// 如果该值为0，则会被设置为 math.MaxInt64，
+// 默认值是100。
 	MaxPoolSize *uint64 `json:"maxPoolSize"`
-	// MinPoolSize 指定驱动程序与每个服务器连接池中允许的最小连接数。如果该值不为零，
-	// 则会后台维护每个服务器的连接池，确保其大小不低于最小值。也可以通过 "minPoolSize" URI 选项（例如 "minPoolSize=100"）进行设置。
-	// 默认值为 0。
+// MinPoolSize 指定驱动程序与每个服务器连接池中允许的最小连接数。如果该值不为零，
+// 则会后台维护每个服务器的连接池，确保其大小不低于最小值。也可以通过 "minPoolSize" URI 选项（例如 "minPoolSize=100"）进行设置。
+// 默认值为 0。
 	MinPoolSize *uint64 `json:"minPoolSize"`
-	// SocketTimeoutMS 指定了在返回网络错误之前，驱动程序将等待套接字读写操作返回的时间。如果该值为0，则表示不使用超时，套接字操作可能会无限期阻塞。默认值为300,000毫秒。
+// SocketTimeoutMS 指定了在返回网络错误之前，驱动程序将等待套接字读写操作返回的时间。如果该值为0，则表示不使用超时，套接字操作可能会无限期阻塞。默认值为300,000毫秒。
 	SocketTimeoutMS *int64 `json:"socketTimeoutMS"`
-	// ReadPreference 决定哪些服务器被认为适合读取操作。
-	// 默认设置为 PrimaryMode
+// ReadPreference 决定哪些服务器被认为适合读取操作。
+// 默认设置为 PrimaryMode
 	ReadPreference *ReadPref `json:"readPreference"`
 	// 可用于在配置 Client 时提供身份验证选项。
 	Auth *Credential `json:"auth"`
@@ -89,11 +89,11 @@ type Credential struct {
 
 // ReadPref 决定哪些服务器适合读取操作。
 type ReadPref struct {
-	// MaxStaleness 表示服务器被视为可选的最大过时时间。
-	// 该特性从版本 3.4 开始支持。
+// MaxStaleness 表示服务器被视为可选的最大过时时间。
+// 该特性从版本 3.4 开始支持。
 	MaxStalenessMS int64 `json:"maxStalenessMS"`
-	// 表示用户对读取操作的偏好。
-	// 默认为 PrimaryMode
+// 表示用户对读取操作的偏好。
+// 默认为 PrimaryMode
 	Mode readpref.Mode `json:"mode"`
 }
 
@@ -104,25 +104,19 @@ type QmgoClient struct {
 	*Client
 }
 
-// 创建
-// ctx:上下文
-// conf:配置
-// o:可选选项
-// cli:Qmgo客户端
-// err:错误
-// Open根据配置创建客户端实例
-// QmgoClient可以操作所有操作 qmgo.client 、qmgo.database 和 qmgo.collection
-func Open(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *QmgoClient, err error) {
-	client, err := NewClient(ctx, conf, o...)
-	if err != nil {
-		fmt.Println("new client fail", err)
+// Open creates client instance according to config
+// QmgoClient can operates all qmgo.client 、qmgo.database and qmgo.collection
+func X创建(上下文 context.Context, 配置 *Config, 可选选项 ...options.ClientOptions) (Qmgo客户端 *QmgoClient, 错误 error) {
+	client, 错误 := X创建客户端(上下文, 配置, 可选选项...)
+	if 错误 != nil {
+		fmt.Println("new client fail", 错误)
 		return
 	}
 
-	db := client.Database(conf.Database)
-	coll := db.Collection(conf.Coll)
+	db := client.X设置数据库(配置.Database)
+	coll := db.X取集合(配置.Coll)
 
-	cli = &QmgoClient{
+	Qmgo客户端 = &QmgoClient{
 		Client:     client,
 		Database:   db,
 		Collection: coll,
@@ -139,26 +133,20 @@ type Client struct {
 	registry *bsoncodec.Registry
 }
 
-// 创建客户端
-// ctx:上下文
-// conf:配置
-// o:可选选项
-// cli:客户端
-// err:错误
 // NewClient 创建 Qmgo MongoDB 客户端
-func NewClient(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *Client, err error) {
-	opt, err := newConnectOpts(conf, o...)
-	if err != nil {
-		return nil, err
+func X创建客户端(上下文 context.Context, 配置 *Config, 可选选项 ...options.ClientOptions) (客户端 *Client, 错误 error) {
+	opt, 错误 := newConnectOpts(配置, 可选选项...)
+	if 错误 != nil {
+		return nil, 错误
 	}
-	client, err := client(ctx, opt)
-	if err != nil {
-		fmt.Println("new client fail", err)
+	client, 错误 := client(上下文, opt)
+	if 错误 != nil {
+		fmt.Println("new client fail", 错误)
 		return
 	}
-	cli = &Client{
+	客户端 = &Client{
 		client:   client,
-		conf:     *conf,
+		conf:     *配置,
 		registry: opt.Registry,
 	}
 	return
@@ -280,20 +268,16 @@ func newReadPref(pref ReadPref) (*readpref.ReadPref, error) {
 	return readPreference, err
 }
 
-// 关闭
-// ctx:上下文
 // Close关闭与此Client关联的拓扑结构的所有套接字连接。
-func (c *Client) Close(ctx context.Context) error {
-	err := c.client.Disconnect(ctx)
+func (c *Client) X关闭(上下文 context.Context) error {
+	err := c.client.Disconnect(上下文)
 	return err
 }
 
-// 是否存活
-// timeout:超时时长
 // Ping：确认连接是否存活
-func (c *Client) Ping(timeout int64) error {
+func (c *Client) X是否存活(超时时长 int64) error {
 	var err error
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(超时时长)*time.Second)
 	defer cancel()
 
 	if err = c.client.Ping(ctx, readpref.Primary()); err != nil {
@@ -302,57 +286,52 @@ func (c *Client) Ping(timeout int64) error {
 	return nil
 }
 
-// 设置数据库
-// name:数据库名称
-// options:可选选项
 // 创建与数据库的连接
-func (c *Client) Database(name string, options ...*options.DatabaseOptions) *Database {
-	opts := make([]*officialOpts.DatabaseOptions, 0, len(options))
-	for _, o := range options {
+func (c *Client) X设置数据库(数据库名称 string, 可选选项 ...*options.DatabaseOptions) *Database {
+	opts := make([]*officialOpts.DatabaseOptions, 0, len(可选选项))
+	for _, o := range 可选选项 {
 		opts = append(opts, o.DatabaseOptions)
 	}
 	databaseOpts := officialOpts.MergeDatabaseOptions(opts...)
-	return &Database{database: c.client.Database(name, databaseOpts), registry: c.registry}
+	return &Database{database: c.client.Database(数据库名称, databaseOpts), registry: c.registry}
 }
 
-// 创建Session
-// opt:可选选项
 // Session 在客户端创建一个会话
 // 注意，在操作完成后关闭会话
-func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {
+func (c *Client) X创建Session(可选选项 ...*options.SessionOptions) (*Session, error) {
 	sessionOpts := officialOpts.Session()
-	if len(opt) > 0 && opt[0].SessionOptions != nil {
-		sessionOpts = opt[0].SessionOptions
+	if len(可选选项) > 0 && 可选选项[0].SessionOptions != nil {
+		sessionOpts = 可选选项[0].SessionOptions
 	}
 	s, err := c.client.StartSession(sessionOpts)
 	return &Session{session: s}, err
 }
 
-// 事务
-// ctx:上下文
-// callback:回调函数
-// opts:可选选项
-// DoTransaction在一个函数中完成整个事务的前提条件:- mongoDB服务器版本>= v4.0 - mongoDB服务器拓扑不是Single同时，请注意以下几点
-// 确保回调中的所有操作都使用sessCtx作为上下文参数
-// 如果回调中的操作耗时超过(include equal) 120秒，则操作不会生效;
-// 如果回调操作返回qmgo。ErrTransactionRetry，整个事务将重试，因此该事务必须是幂等的
-// 回调中的If操作返回qmgo。ErrTransactionNotSupported,
-// 如果ctx参数已经附加了一个Session，它将被这个Session取代
-func (c *Client) DoTransaction(ctx context.Context, callback func(sessCtx context.Context) (interface{}, error), opts ...*options.TransactionOptions) (interface{}, error) {
+// DoTransaction do whole transaction in one function
+// precondition：
+// - version of mongoDB server >= v4.0
+// - Topology of mongoDB server is not Single
+// At the same time, please pay attention to the following
+// - make sure all operations in callback use the sessCtx as context parameter
+// - if operations in callback takes more than(include equal) 120s, the operations will not take effect,
+// - if operation in callback return qmgo.ErrTransactionRetry,
+//   the whole transaction will retry, so this transaction must be idempotent
+// - if operations in callback return qmgo.ErrTransactionNotSupported,
+// - If the ctx parameter already has a Session attached to it, it will be replaced by this session.
+func (c *Client) X事务(上下文 context.Context, 回调函数 func(sessCtx context.Context) (interface{}, error), 可选选项 ...*options.TransactionOptions) (interface{}, error) {
 	if !c.transactionAllowed() {
 		return nil, ErrTransactionNotSupported
 	}
-	s, err := c.Session()
+	s, err := c.X创建Session()
 	if err != nil {
 		return nil, err
 	}
-	defer s.EndSession(ctx)
-	return s.StartTransaction(ctx, callback, opts...)
+	defer s.EndSession(上下文)
+	return s.StartTransaction(上下文, 回调函数, 可选选项...)
 }
 
-// 取版本号
 // ServerVersion 获取MongoDB服务器的版本，如4.4.0
-func (c *Client) ServerVersion() string {
+func (c *Client) X取版本号() string {
 	var buildInfo bson.Raw
 	err := c.client.Database("admin").RunCommand(
 		context.Background(),
@@ -372,7 +351,7 @@ func (c *Client) ServerVersion() string {
 
 // transactionAllowed 检查交易是否被允许
 func (c *Client) transactionAllowed() bool {
-	vr, err := CompareVersions("4.0", c.ServerVersion())
+	vr, err := X比较版本号("4.0", c.X取版本号())
 	if err != nil {
 		return false
 	}
@@ -380,12 +359,12 @@ func (c *Client) transactionAllowed() bool {
 		fmt.Println("transaction is not supported because mongo server version is below 4.0")
 		return false
 	}
-	// TODO 未知为何需要在topology()函数中执行`cli, err := Open(ctx, &c.conf)`来获取topo，
-	// 在查明原因之前，我们仅在单元测试（UT）中使用此函数
-	//topo, err := c.topology()
-	//如果topo是description.Single类型 {
-	//	 fmt.Println("由于Mongo服务器拓扑为单节点，因此不支持事务")
-	//	 返回false
-	//}
+// TODO 未知为何需要在topology()函数中执行`cli, err := Open(ctx, &c.conf)`来获取topo，
+// 在查明原因之前，我们仅在单元测试（UT）中使用此函数
+//topo, err := c.topology()
+//如果topo是description.Single类型 {
+//	 fmt.Println("由于Mongo服务器拓扑为单节点，因此不支持事务")
+//	 返回false
+//}
 	return true
 }

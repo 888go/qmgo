@@ -1,4 +1,4 @@
-package qmgo
+package mgo类
 
 import (
 	"context"
@@ -14,8 +14,8 @@ import (
 func TestBulk(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.Close(context.Background())
-	defer cli.DropCollection(context.Background())
+	defer cli.X关闭(context.Background())
+	defer cli.X删除集合(context.Background())
 
 	id := primitive.NewObjectID()
 	lucas := UserInfo{Id: primitive.NewObjectID(), Name: "Lucas", Age: 12}
@@ -25,13 +25,13 @@ func TestBulk(t *testing.T) {
 	ethanId := primitive.NewObjectID()
 	ethan := UserInfo{Id: ethanId, Name: "Ethan", Age: 8}
 
-	result, err := cli.Bulk().
-		InsertOne(lucas).InsertOne(alias).InsertOne(jess).
-		UpdateOne(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 23}}).UpdateId(id, bson.M{operator.Set: bson.M{"age": 23}}).
-		UpdateAll(bson.M{"age": 23}, bson.M{operator.Set: bson.M{"age": 18}}).
-		Upsert(bson.M{"age": 17}, joe).UpsertId(ethanId, ethan).
-		Remove(bson.M{"name": "Joe"}).RemoveId(ethanId).RemoveAll(bson.M{"age": 18}).
-		Run(context.Background())
+	result, err := cli.X创建批量执行().
+		X插入(lucas).X插入(alias).X插入(jess).
+		X更新一条(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 23}}).X更新并按ID(id, bson.M{operator.Set: bson.M{"age": 23}}).
+		X更新(bson.M{"age": 23}, bson.M{operator.Set: bson.M{"age": 18}}).
+		X更新或插入(bson.M{"age": 17}, joe).X更新或插入并按ID(ethanId, ethan).
+		X删除一条(bson.M{"name": "Joe"}).X删除并按ID(ethanId).X删除(bson.M{"age": 18}).
+		X执行(context.Background())
 	ast.NoError(err)
 	ast.Equal(int64(3), result.InsertedCount)
 	ast.Equal(int64(4), result.ModifiedCount)
@@ -45,13 +45,13 @@ func TestBulk(t *testing.T) {
 func TestBulkUpsertOne(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.Close(context.Background())
-	defer cli.DropCollection(context.Background())
+	defer cli.X关闭(context.Background())
+	defer cli.X删除集合(context.Background())
 
-	result, err := cli.Bulk().
-		UpsertOne(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 20}, operator.SetOnInsert: bson.M{"weight": 40}}).
-		UpsertOne(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 30}, operator.SetOnInsert: bson.M{"weight": 40}}).
-		Run(context.Background())
+	result, err := cli.X创建批量执行().
+		X更新或插入一条(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 20}, operator.SetOnInsert: bson.M{"weight": 40}}).
+		X更新或插入一条(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 30}, operator.SetOnInsert: bson.M{"weight": 40}}).
+		X执行(context.Background())
 
 	ast.NoError(err)
 	ast.Equal(int64(0), result.InsertedCount)

@@ -7,4 +7,8 @@
      <tree path="/interface.go" title="定义接口"/>
      <tree path="/errors.go" title="错误"/>
      <tree path="/cursor.go" title="结果集"/>
+     <tree path="/field" title="字段"/>
+     <tree path="/hook" title="钩子"/>
+     <tree path="/validator" title="效验"/>
+     <tree path="/aggregate.go" title="聚合方法"/>
  </trees>

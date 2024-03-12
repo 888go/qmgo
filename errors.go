@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"errors"
@@ -47,14 +47,14 @@ var (
 
 // IsErrNoDocuments 检查 err 是否表示没有文档，包括mongo-go-driver库的错误和qmgo自定义错误
 // 已弃用，直接调用 if err == ErrNoSuchDocuments 或 if err == mongo.ErrNoDocuments 即可
-func IsErrNoDocuments(err error) bool {
-	if err == ErrNoSuchDocuments {
+func X是否为无文档错误(错误 error) bool {
+	if 错误 == ErrNoSuchDocuments {
 		return true
 	}
 	return false
 }
 
 // IsDup check if err is mongo E11000 (duplicate err)。
-func IsDup(err error) bool {
-	return err != nil && strings.Contains(err.Error(), "E11000")
+func X是否为重复键错误(错误 error) bool {
+	return 错误 != nil && strings.Contains(错误.Error(), "E11000")
 }
