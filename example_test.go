@@ -109,7 +109,7 @@ func TestQmgo(t *testing.T) {
 	matchStage := bson.D{{operator.Match, []bson.E{{"weight", bson.D{{operator.Gt, 30}}}}}}
 	groupStage := bson.D{{operator.Group, bson.D{{"_id", "$name"}, {"total", bson.D{{operator.Sum, "$age"}}}}}}
 	var showsWithInfo []bson.M
-	err = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).All(&showsWithInfo)
+	err = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).X取全部(&showsWithInfo)
 	ast.Equal(3, len(showsWithInfo))
 	for _, v := range showsWithInfo {
 		if "a1" == v["_id"] {

@@ -53,7 +53,7 @@ func TestAggregate(t *testing.T) {
 		AggregateOptions: options.Aggregate().SetAllowDiskUse(true),
 	}
 	// aggregate ALL()
-	err := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt).All(&showsWithInfo)
+	err := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt).X取全部(&showsWithInfo)
 	ast.NoError(err)
 	ast.Equal(2, len(showsWithInfo))
 	for _, v := range showsWithInfo {
@@ -70,7 +70,7 @@ func TestAggregate(t *testing.T) {
 	// Iter()
 	iter := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage})
 	ast.NotNil(iter)
-	err = iter.All(&showsWithInfo)
+	err = iter.X取全部(&showsWithInfo)
 	ast.NoError(err)
 	for _, v := range showsWithInfo {
 		if "Alice" == v["_id"] {
@@ -93,7 +93,7 @@ func TestAggregate(t *testing.T) {
 	ast.NotNil(iter)
 	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage})
 	ast.NotNil(iter)
-	err = iter.One(&oneInfo)
+	err = iter.X取一条(&oneInfo)
 	ast.NoError(err)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 
@@ -113,11 +113,11 @@ func TestAggregate(t *testing.T) {
 	ast.Equal(false, ct)
 
 	// err
-	ast.Error(cli.X聚合(context.Background(), 1).All(&showsWithInfo))
-	ast.Error(cli.X聚合(context.Background(), 1).One(&showsWithInfo))
+	ast.Error(cli.X聚合(context.Background(), 1).X取全部(&showsWithInfo))
+	ast.Error(cli.X聚合(context.Background(), 1).X取一条(&showsWithInfo))
 	ast.Error(cli.X聚合(context.Background(), 1).Iter弃用().X取错误())
 	matchStage = bson.D{{"$match", []bson.E{{"age", bson.D{{"$gt", 100}}}}}}
 	groupStage = bson.D{{"$group", bson.D{{"_id", "$name"}, {"total", bson.D{{"$sum", "$age"}}}}}}
-	ast.Error(cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).One(&showsWithInfo))
+	ast.Error(cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).X取一条(&showsWithInfo))
 
 }

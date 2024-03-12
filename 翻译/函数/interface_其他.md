@@ -4,6 +4,8 @@ sx= 是属性或者结构体重命名,默认会跳转到行首进行重命名.
     文档内如果有多个相同的,会一起重命名.
 bm= 包名称
 th= 替换文本
+cf= 重复命名多次,如: 一个文档内有2个"One(result interface{}) error"需要重命名.
+    但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
 [Update    interface{}]
 sx=更新替换
@@ -31,6 +33,7 @@ sx=取错误
 
 [All(results interface{}) error]
 sx=取全部
+cf=2
 
 [Collation(collation *options.Collation) QueryI]
 sx=设置排序规则
@@ -58,9 +61,11 @@ sx=设置最大返回数
 
 [One(result interface{}) error]
 sx=取一条
+cf=2
 
 [All(result interface{}) error]
 sx=取全部
+
 
 [Count() (n int64, err error)]
 sx=取数量
@@ -73,6 +78,7 @@ sx=去重
 
 [Cursor() CursorI]
 sx=取结果集
+cf=2
 
 [Apply(change Change, result interface{}) error]
 sx=执行命令

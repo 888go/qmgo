@@ -70,8 +70,8 @@ type QueryI interface {
 
 // AggregateI 定义了聚合的接口
 type AggregateI interface {
-	All(results interface{}) error
-	One(result interface{}) error
+	X取全部(results interface{}) error
+	X取一条(result interface{}) error
 	Iter弃用() CursorI // 已弃用，请改用Cursor
-	Cursor() CursorI
+	X取结果集() CursorI
 }
