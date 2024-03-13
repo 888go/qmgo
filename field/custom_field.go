@@ -29,40 +29,54 @@ type CustomFields struct {
 
 // CustomFieldsHook 定义了一个接口，其中 CustomFields 方法用于返回用户想要修改的自定义字段
 type CustomFieldsHook interface {
-	CustomFields() CustomFieldsBuilder
+	CustomFields() CustomFieldsBuilder //hs:设置更新时间字段名
 }
 
 // CustomFieldsBuilder 定义了用户用于设置自定义字段的接口
 type CustomFieldsBuilder interface {
-	SetUpdateAt(fieldName string) CustomFieldsBuilder
-	SetCreateAt(fieldName string) CustomFieldsBuilder
-	SetId(fieldName string) CustomFieldsBuilder
+	SetUpdateAt(fieldName string) CustomFieldsBuilder //hs:设置更新时间字段名
+	SetCreateAt(fieldName string) CustomFieldsBuilder //hs:设置创建时间字段名
+	SetId(fieldName string) CustomFieldsBuilder       //hs:设置ID字段名
 }
 
 // NewCustom 创建一个新的 Builder，用于设置自定义字段
+
+// ff:创建自定义自动更新
 func NewCustom() CustomFieldsBuilder {
 	return &CustomFields{}
 }
 
 // SetUpdateAt 设置自定义的 UpdateAt 字段
+
+// ff:设置更新时间字段名
+// fieldName:字段名称
 func (c *CustomFields) SetUpdateAt(fieldName string) CustomFieldsBuilder {
 	c.updateAt = fieldName
 	return c
 }
 
 // SetCreateAt 设置自定义的 CreateAt 字段
+
+// ff:设置创建时间字段名
+// fieldName:字段名称
 func (c *CustomFields) SetCreateAt(fieldName string) CustomFieldsBuilder {
 	c.createAt = fieldName
 	return c
 }
 
 // SetId 设置自定义 Id 字段
+
+// ff:设置ID字段名
+// fieldName:字段名称
 func (c *CustomFields) SetId(fieldName string) CustomFieldsBuilder {
 	c.id = fieldName
 	return c
 }
 
 // CustomCreateTime 修改自定义创建时间
+
+// ff:自定义创建时间
+// doc:待插入文档
 func (c CustomFields) CustomCreateTime(doc interface{}) {
 	if c.createAt == "" {
 		return
@@ -73,6 +87,9 @@ func (c CustomFields) CustomCreateTime(doc interface{}) {
 }
 
 // CustomUpdateTime 更改自定义更新时间
+
+// ff:自定义更新时间
+// doc:待插入文档
 func (c CustomFields) CustomUpdateTime(doc interface{}) {
 	if c.updateAt == "" {
 		return
@@ -83,6 +100,9 @@ func (c CustomFields) CustomUpdateTime(doc interface{}) {
 }
 
 // CustomUpdateTime 更改自定义更新时间
+
+// ff:自定义ID
+// doc:待插入文档
 func (c CustomFields) CustomId(doc interface{}) {
 	if c.id == "" {
 		return

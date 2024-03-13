@@ -11,4 +11,5 @@
      <tree path="/hook" title="钩子"/>
      <tree path="/validator" title="效验"/>
      <tree path="/aggregate.go" title="聚合方法"/>
- </trees>
+    <tree path="/operator" title="操作符"/>
+</trees>
