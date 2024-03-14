@@ -12,3 +12,18 @@ hs=平均值
 
 [Sum        = "$sum"]
 hs=求和
+
+[Hour           = "$hour"]
+hs=小时
+
+[Month          = "$month"]
+hs=月
+
+[Second         = "$second"]
+hs=秒
+
+[Week           = "$week"]
+hs=周
+
+[Year           = "$year"]
+hs=年

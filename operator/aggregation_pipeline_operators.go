@@ -72,17 +72,17 @@ const (
 	DayOfMonth     = "$dayOfMonth"
 	DayOfWeek      = "$dayOfWeek"
 	DayOfYear      = "$dayOfYear"
-	Hour           = "$hour"
+	Hour           = "$hour" //hs:小时
 	IsoDayOfWeek   = "$isoDayOfWeek"
-	IsoWeek        = "$isoWeek"
+	IsoWeek        = "$isoWeek" //
 	IsoWeekYear    = "$isoWeekYear"
 	Millisecond    = "$millisecond"
 	Minute         = "$minute"
-	Month          = "$month"
-	Second         = "$second"
+	Month          = "$month"  //hs:月
+	Second         = "$second" //hs:秒
 	ToDate         = "$toDate"
-	Week           = "$week"
-	Year           = "$year"
+	Week           = "$week" //hs:周
+	Year           = "$year" //hs:年
 
 	// 字面量表达式操作符
 	Literal = "$literal"
