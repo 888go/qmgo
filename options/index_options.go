@@ -13,7 +13,9 @@
 
 package options
 
-import "go.mongodb.org/mongo-driver/mongo/options"
+import (
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
 type IndexModel struct {
 	Key []string // 索引键字段；若希望降序排列，在名称前添加破折号（-）

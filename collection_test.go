@@ -16,15 +16,15 @@ package mgo类
 import (
 	"context"
 	"testing"
-
+	
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	officialOpts "go.mongodb.org/mongo-driver/mongo/options"
-
-	"github.com/qiniu/qmgo/operator"
-	"github.com/qiniu/qmgo/options"
+	
+	"github.com/888go/qmgo/operator"
+	"github.com/888go/qmgo/options"
 )
 
 func TestCollection_EnsureIndex(t *testing.T) {

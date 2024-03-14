@@ -18,8 +18,8 @@ import (
 	"errors"
 	"fmt"
 	"testing"
-
-	"github.com/qiniu/qmgo/operator"
+	
+	"github.com/888go/qmgo/operator"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )

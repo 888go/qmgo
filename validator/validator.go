@@ -4,9 +4,9 @@ import (
 	"context"
 	"reflect"
 	"time"
-
+	
 	"github.com/go-playground/validator/v10"
-	"github.com/qiniu/qmgo/operator"
+	"github.com/888go/qmgo/operator"
 )
 
 // 使用单一实例的Validate，它会缓存结构体信息

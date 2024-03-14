@@ -13,7 +13,9 @@
 
 package mgo类
 
-import "go.mongodb.org/mongo-driver/bson"
+import (
+	"go.mongodb.org/mongo-driver/bson"
+)
 
 // 对mongo驱动的bson原生类型进行别名定义
 // 这样用户就不需要直接导入go.mongodb.org/mongo-driver/mongo包，所有相关类型都在qmgo包中提供

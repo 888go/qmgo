@@ -11,27 +11,27 @@
  limitations under the License.
 */
 
-package operator
+package operator //bm:操作符
 
 // 定义查询和投影操作符
 // 参考：https://docs.mongodb.com/manual/reference/operator/query/
 // （这段代码注释表明接下来将定义在MongoDB中用于查询和投影的相关操作符，并提供了官方文档的参考链接，以便查阅更详细的使用说明。）
 const (
 	// Comparison
-	Eq  = "$eq"
-	Gt  = "$gt"
-	Gte = "$gte"
-	In  = "$in"
-	Lt  = "$lt"
-	Lte = "$lte"
-	Ne  = "$ne"
-	Nin = "$nin"
+	Eq  = "$eq"  //hs:等于
+	Gt  = "$gt"  //hs:大于
+	Gte = "$gte" //hs:大于等于
+	In  = "$in"  //hs:包含
+	Lt  = "$lt"  //hs:小于
+	Lte = "$lte" //hs:小于等于
+	Ne  = "$ne"  //hs:不等于
+	Nin = "$nin" //hs:不包含
 
 	// Logical
-	And = "$and"
-	Not = "$not"
-	Nor = "$nor"
-	Or  = "$or"
+	And = "$and" //hs:且
+	Not = "$not" //
+	Nor = "$nor" //
+	Or  = "$or"  //hs:或
 
 	// Element
 	Exists = "$exists"

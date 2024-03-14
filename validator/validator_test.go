@@ -3,7 +3,7 @@ package validator
 import (
 	"context"
 	"github.com/go-playground/validator/v10"
-	"github.com/qiniu/qmgo/operator"
+	"github.com/888go/qmgo/operator"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"testing"

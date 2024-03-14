@@ -3,9 +3,9 @@ package middleware
 import (
 	"context"
 	"fmt"
-	"github.com/qiniu/qmgo/operator"
+	"github.com/888go/qmgo/operator"
 	"testing"
-
+	
 	"github.com/stretchr/testify/require"
 )
 

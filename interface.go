@@ -13,7 +13,9 @@
 
 package mgo类
 
-import "go.mongodb.org/mongo-driver/mongo/options"
+import (
+	"go.mongodb.org/mongo-driver/mongo/options"
+)
 
 // CollectionI
 // 集合操作接口

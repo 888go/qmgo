@@ -15,8 +15,8 @@ package mgo类
 
 import (
 	"context"
-
-	opts "github.com/qiniu/qmgo/options"
+	
+	opts "github.com/888go/qmgo/options"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/mongo/driver"

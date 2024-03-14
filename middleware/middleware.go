@@ -2,10 +2,10 @@ package middleware
 
 import (
 	"context"
-	"github.com/qiniu/qmgo/field"
-	"github.com/qiniu/qmgo/hook"
-	"github.com/qiniu/qmgo/operator"
-	"github.com/qiniu/qmgo/validator"
+	"github.com/888go/qmgo/field"
+	"github.com/888go/qmgo/hook"
+	"github.com/888go/qmgo/operator"
+	"github.com/888go/qmgo/validator"
 )
 
 // callback 定义回调函数类型
