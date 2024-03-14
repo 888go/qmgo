@@ -20,11 +20,11 @@ const (
 	// Fields
 	CurrentDate = "$currentDate"
 	Inc         = "$inc"
-	Min         = "$min"
-	Max         = "$max"
+	Min         = "$min" //hs:最小值
+	Max         = "$max" //hs:最大值
 	Mul         = "$mul"
 	Rename      = "$rename"
-	Set         = "$set"
+	Set         = "$set" //hs:设置值
 	SetOnInsert = "$setOnInsert"
 	Unset       = "$unset"
 

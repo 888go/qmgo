@@ -7,32 +7,8 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
     但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
 
-[Gt  = "$gt"]
-hs=大于
+[Avg   = "$avg"]
+hs=平均值
 
-[Gte = "$gte"]
-hs=大于等于
-
-[In  = "$in"]
-hs=包含
-
-[Lt  = "$lt"]
-hs=小于
-
-[Lte = "$lte"]
-hs=小于等于
-
-[Ne  = "$ne"]
-hs=不等于
-
-[Nin = "$nin"]
-hs=不包含
-
-[And = "$and"]
-hs=且
-
-[Or  = "$or"]
-hs=或
-
-[Eq  = "$eq"]
-hs=等于
+[Sum        = "$sum"]
+hs=求和

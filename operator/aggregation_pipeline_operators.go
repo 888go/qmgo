@@ -60,7 +60,7 @@ const (
 	Accumulator = "$accumulator"
 	Function    = "$function"
 
-	// Data Size Operators
+	// 数据大小运算符
 	BinarySize = "$binarySize"
 	BsonSize   = "$bsonSize"
 
@@ -147,13 +147,13 @@ const (
 	IsNumber   = "$isNumber"
 
 	// Accumulators ($group)
-	Avg   = "$avg"
+	Avg   = "$avg" //hs:平均值
 	First = "$first"
 	Last  = "$last"
 
 	StdDevPop  = "$stdDevPop"
 	StdDevSamp = "$stdDevSamp"
-	Sum        = "$sum"
+	Sum        = "$sum" //hs:求和
 
 	// 变量表达式操作符
 	Let = "$let"

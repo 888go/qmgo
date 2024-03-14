@@ -13,4 +13,6 @@
      <tree path="/aggregate.go" title="聚合方法"/>
     <tree path="/operator" title="操作符"/>
     <tree path="/operator/query_and_projection.go" title="查询和投影操作符"/>
+    <tree path="/operator/update.go" title="更新操作符"/>
+    <tree path="/operator/query_modifiers.go" title="查询修饰符"/>
 </trees>
