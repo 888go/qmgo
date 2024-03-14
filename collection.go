@@ -61,7 +61,7 @@ func (c *Collection) X插入(上下文 context.Context, 待插入文档 interfac
 			h = 可选选项[0].InsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, operator.BeforeInsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入前, h); 错误 != nil {
 		return
 	}
 	res, 错误 := c.collection.InsertOne(上下文, 待插入文档, insertOneOpts)
@@ -71,7 +71,7 @@ func (c *Collection) X插入(上下文 context.Context, 待插入文档 interfac
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, operator.AfterInsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -91,7 +91,7 @@ func (c *Collection) X插入多个(上下文 context.Context, 待插入文档 in
 			h = 可选选项[0].InsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, operator.BeforeInsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入前, h); 错误 != nil {
 		return
 	}
 	sDocs := interfaceToSliceInterface(待插入文档)
@@ -106,7 +106,7 @@ func (c *Collection) X插入多个(上下文 context.Context, 待插入文档 in
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, operator.AfterInsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -146,7 +146,7 @@ func (c *Collection) X更新或插入(上下文 context.Context, 更新条件 in
 			h = 可选选项[0].UpsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, operator.BeforeUpsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入前, h); 错误 != nil {
 		return
 	}
 
@@ -158,7 +158,7 @@ func (c *Collection) X更新或插入(上下文 context.Context, 更新条件 in
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, operator.AfterUpsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -181,7 +181,7 @@ func (c *Collection) X更新或插入并按ID(上下文 context.Context, 更新I
 			h = 可选选项[0].UpsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, operator.BeforeUpsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入前, h); 错误 != nil {
 		return
 	}
 	res, 错误 := c.collection.ReplaceOne(上下文, bson.M{"_id": 更新ID}, 更新内容, officialOpts)
@@ -191,7 +191,7 @@ func (c *Collection) X更新或插入并按ID(上下文 context.Context, 更新I
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, operator.AfterUpsert, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -207,7 +207,7 @@ func (c *Collection) X更新一条(上下文 context.Context, 更新条件 inter
 			updateOpts = 可选选项[0].UpdateOptions
 		}
 		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, operator.BeforeUpdate); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新前); 错误 != nil {
 				return
 			}
 		}
@@ -224,7 +224,7 @@ func (c *Collection) X更新一条(上下文 context.Context, 更新条件 inter
 		return 错误
 	}
 	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, operator.AfterUpdate); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新后); 错误 != nil {
 			return
 		}
 	}
@@ -241,7 +241,7 @@ func (c *Collection) X更新并按ID(上下文 context.Context, 更新ID interfa
 			updateOpts = 可选选项[0].UpdateOptions
 		}
 		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, operator.BeforeUpdate); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新前); 错误 != nil {
 				return
 			}
 		}
@@ -255,7 +255,7 @@ func (c *Collection) X更新并按ID(上下文 context.Context, 更新ID interfa
 		return 错误
 	}
 	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, operator.AfterUpdate); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新后); 错误 != nil {
 			return
 		}
 	}
@@ -272,7 +272,7 @@ func (c *Collection) X更新(上下文 context.Context, 更新条件 interface{}
 			updateOpts = 可选选项[0].UpdateOptions
 		}
 		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, operator.BeforeUpdate); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新前); 错误 != nil {
 				return
 			}
 		}
@@ -285,7 +285,7 @@ func (c *Collection) X更新(上下文 context.Context, 更新条件 interface{}
 		return
 	}
 	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, operator.AfterUpdate); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新后); 错误 != nil {
 			return
 		}
 	}
@@ -308,7 +308,7 @@ func (c *Collection) X替换一条(上下文 context.Context, 替换条件 inter
 			h = 可选选项[0].UpdateHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, operator.BeforeReplace, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X替换前, h); 错误 != nil {
 		return
 	}
 	res, 错误 := c.collection.ReplaceOne(上下文, 替换条件, 替换内容, replaceOpts)
@@ -318,7 +318,7 @@ func (c *Collection) X替换一条(上下文 context.Context, 替换条件 inter
 	if 错误 != nil {
 		return 错误
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, operator.AfterReplace, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X替换后, h); 错误 != nil {
 		return
 	}
 
@@ -335,7 +335,7 @@ func (c *Collection) X删除一条(上下文 context.Context, 删除条件 inter
 			deleteOptions = 可选选项[0].DeleteOptions
 		}
 		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, operator.BeforeRemove); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除前); 错误 != nil {
 				return 错误
 			}
 		}
@@ -348,7 +348,7 @@ func (c *Collection) X删除一条(上下文 context.Context, 删除条件 inter
 		return 错误
 	}
 	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, operator.AfterRemove); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除后); 错误 != nil {
 			return 错误
 		}
 	}
@@ -363,7 +363,7 @@ func (c *Collection) X删除并按ID(上下文 context.Context, 删除ID interfa
 			deleteOptions = 可选选项[0].DeleteOptions
 		}
 		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, operator.BeforeRemove); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除前); 错误 != nil {
 				return 错误
 			}
 		}
@@ -377,7 +377,7 @@ func (c *Collection) X删除并按ID(上下文 context.Context, 删除ID interfa
 	}
 
 	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, operator.AfterRemove); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除后); 错误 != nil {
 			return 错误
 		}
 	}
@@ -394,7 +394,7 @@ func (c *Collection) X删除(上下文 context.Context, 删除条件 interface{}
 			deleteOptions = 可选选项[0].DeleteOptions
 		}
 		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, operator.BeforeRemove); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除前); 错误 != nil {
 				return
 			}
 		}
@@ -407,7 +407,7 @@ func (c *Collection) X删除(上下文 context.Context, 删除条件 interface{}
 		return
 	}
 	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, operator.AfterRemove); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除后); 错误 != nil {
 			return
 		}
 	}

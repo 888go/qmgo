@@ -704,7 +704,7 @@ func TestQuery_Apply(t *testing.T) {
 	ast.EqualError(err, mongo.ErrNilDocument.Error())
 
 	change1.X更新替换 = bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"name": "Tom",
 			"age":  18,
 		},
@@ -724,7 +724,7 @@ func TestQuery_Apply(t *testing.T) {
 	ast.Equal(0, res1.Age)
 
 	change1.X更新替换 = bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"name": "Tom",
 			"age":  19,
 		},
@@ -743,7 +743,7 @@ func TestQuery_Apply(t *testing.T) {
 	change2 := Change{
 		X是否返回新文档: true,
 		X更新替换: bson.M{
-			operator.Set: bson.M{
+			操作符.X设置值: bson.M{
 				"name": "Alice",
 				"age":  22,
 			},
@@ -786,7 +786,7 @@ func TestQuery_Apply(t *testing.T) {
 	change4 := Change{
 		X是否替换: true,
 		X更新替换: bson.M{
-			operator.Set: bson.M{
+			操作符.X设置值: bson.M{
 				"name": "Bob",
 				"age":  23,
 			},

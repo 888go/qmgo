@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package operator
+package 操作符
 
 // 聚合管道操作符
 // 参考: https://docs.mongodb.com/manual/reference/operator/aggregation/
@@ -60,7 +60,7 @@ const (
 	Accumulator = "$accumulator"
 	Function    = "$function"
 
-	// 数据大小运算符
+	// Data Size Operators
 	BinarySize = "$binarySize"
 	BsonSize   = "$bsonSize"
 
@@ -72,17 +72,17 @@ const (
 	DayOfMonth     = "$dayOfMonth"
 	DayOfWeek      = "$dayOfWeek"
 	DayOfYear      = "$dayOfYear"
-	Hour           = "$hour" //hs:小时
+	X小时           = "$hour"
 	IsoDayOfWeek   = "$isoDayOfWeek"
-	IsoWeek        = "$isoWeek" //
+	IsoWeek        = "$isoWeek"
 	IsoWeekYear    = "$isoWeekYear"
 	Millisecond    = "$millisecond"
 	Minute         = "$minute"
-	Month          = "$month"  //hs:月
-	Second         = "$second" //hs:秒
+	X月          = "$month"
+	X秒         = "$second"
 	ToDate         = "$toDate"
-	Week           = "$week" //hs:周
-	Year           = "$year" //hs:年
+	X周           = "$week"
+	X年           = "$year"
 
 	// 字面量表达式操作符
 	Literal = "$literal"
@@ -147,13 +147,13 @@ const (
 	IsNumber   = "$isNumber"
 
 	// Accumulators ($group)
-	Avg   = "$avg" //hs:平均值
+	X平均值   = "$avg"
 	First = "$first"
 	Last  = "$last"
 
 	StdDevPop  = "$stdDevPop"
 	StdDevSamp = "$stdDevSamp"
-	Sum        = "$sum" //hs:求和
+	X求和        = "$sum"
 
 	// 变量表达式操作符
 	Let = "$let"

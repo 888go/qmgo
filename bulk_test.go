@@ -27,8 +27,8 @@ func TestBulk(t *testing.T) {
 
 	result, err := cli.X创建批量执行().
 		X插入(lucas).X插入(alias).X插入(jess).
-		X更新一条(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 23}}).X更新并按ID(id, bson.M{operator.Set: bson.M{"age": 23}}).
-		X更新(bson.M{"age": 23}, bson.M{operator.Set: bson.M{"age": 18}}).
+		X更新一条(bson.M{"name": "Jess"}, bson.M{操作符.X设置值: bson.M{"age": 23}}).X更新并按ID(id, bson.M{操作符.X设置值: bson.M{"age": 23}}).
+		X更新(bson.M{"age": 23}, bson.M{操作符.X设置值: bson.M{"age": 18}}).
 		X更新或插入(bson.M{"age": 17}, joe).X更新或插入并按ID(ethanId, ethan).
 		X删除一条(bson.M{"name": "Joe"}).X删除并按ID(ethanId).X删除(bson.M{"age": 18}).
 		X执行(context.Background())
@@ -49,8 +49,8 @@ func TestBulkUpsertOne(t *testing.T) {
 	defer cli.X删除集合(context.Background())
 
 	result, err := cli.X创建批量执行().
-		X更新或插入一条(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 20}, operator.SetOnInsert: bson.M{"weight": 40}}).
-		X更新或插入一条(bson.M{"name": "Jess"}, bson.M{operator.Set: bson.M{"age": 30}, operator.SetOnInsert: bson.M{"weight": 40}}).
+		X更新或插入一条(bson.M{"name": "Jess"}, bson.M{操作符.X设置值: bson.M{"age": 20}, 操作符.SetOnInsert: bson.M{"weight": 40}}).
+		X更新或插入一条(bson.M{"name": "Jess"}, bson.M{操作符.X设置值: bson.M{"age": 30}, 操作符.SetOnInsert: bson.M{"weight": 40}}).
 		X执行(context.Background())
 
 	ast.NoError(err)

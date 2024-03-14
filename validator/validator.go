@@ -18,9 +18,9 @@ func SetValidate(v *validator.Validate) {
 }
 
 // validatorNeeded 检查对于 opType 是否需要验证器
-func validatorNeeded(opType operator.OpType) bool {
+func validatorNeeded(opType 操作符.OpType) bool {
 	switch opType {
-	case operator.BeforeInsert, operator.BeforeUpsert, operator.BeforeReplace:
+	case 操作符.X插入前, 操作符.X更新或插入前, 操作符.X替换前:
 		return true
 	}
 	return false
@@ -28,7 +28,7 @@ func validatorNeeded(opType operator.OpType) bool {
 
 // Do 调用验证器进行检查
 // 在此处不要使用 opts
-func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
+func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil
 	}
@@ -53,7 +53,7 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 }
 
 // sliceHandle 处理切片文档
-func sliceHandle(docs interface{}, opType operator.OpType) error {
+func sliceHandle(docs interface{}, opType 操作符.OpType) error {
 	// []interface{}{UserType{}...} 
 // 创建一个接口类型切片，其中包含零个或多个UserType结构体实例。这里的"..."表示可变数量的参数，表示可以传入任意数量的UserType实例到切片中。
 	if h, ok := docs.([]interface{}); ok {

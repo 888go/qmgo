@@ -34,7 +34,7 @@ type User struct {
 }
 
 func (u *User) CustomFields() CustomFieldsBuilder {
-	return NewCustom().SetCreateAt("CreateTimeAt").SetUpdateAt("UpdateTimeAt").SetId("MyId")
+	return NewCustom().X设置创建时间字段名("CreateTimeAt").X设置更新时间字段名("UpdateTimeAt").X设置ID字段名("MyId")
 }
 
 func TestBeforeInsert(t *testing.T) {
@@ -42,7 +42,7 @@ func TestBeforeInsert(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeInsert)
+	err := Do(ctx, u, 操作符.X插入前)
 	ast.NoError(err)
 	// default fields
 	ast.NotEqual(time.Time{}, u.CreateAt)
@@ -55,7 +55,7 @@ func TestBeforeInsert(t *testing.T) {
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alice", Age: 8}
 	us := []*User{u1, u2}
-	err = Do(ctx, us, operator.BeforeInsert)
+	err = Do(ctx, us, 操作符.X插入前)
 	ast.NoError(err)
 
 	for _, v := range us {
@@ -65,7 +65,7 @@ func TestBeforeInsert(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, operator.BeforeInsert)
+	err = Do(ctx, u3, 操作符.X插入前)
 	ast.NoError(err)
 
 	// 使用有效值进行插入
@@ -79,7 +79,7 @@ func TestBeforeInsert(t *testing.T) {
 	u.CreateTimeAt = tBefore3s
 	u.UpdateTimeAt = tBefore3s.Unix()
 
-	err = Do(ctx, u, operator.BeforeUpsert)
+	err = Do(ctx, u, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	ast.Equal(tBefore3s, u.CreateAt)
@@ -96,7 +96,7 @@ func TestBeforeUpdate(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeUpdate)
+	err := Do(ctx, u, 操作符.X更新前)
 	ast.NoError(err)
 	// default field
 	ast.NotEqual(time.Time{}, u.UpdateAt)
@@ -106,7 +106,7 @@ func TestBeforeUpdate(t *testing.T) {
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alice", Age: 8}
 	us := []*User{u1, u2}
-	err = Do(ctx, us, operator.BeforeUpdate)
+	err = Do(ctx, us, 操作符.X更新前)
 	ast.NoError(err)
 	for _, v := range us {
 		// default field
@@ -117,7 +117,7 @@ func TestBeforeUpdate(t *testing.T) {
 	}
 
 	us1 := []interface{}{u1, u2}
-	err = Do(ctx, us1, operator.BeforeUpdate)
+	err = Do(ctx, us1, 操作符.X更新前)
 	ast.NoError(err)
 	for _, v := range us {
 		// default field
@@ -140,7 +140,7 @@ type UserField struct {
 }
 
 func (u *UserField) CustomFields() CustomFieldsBuilder {
-	return NewCustom().SetCreateAt("CreateTimeAt").SetUpdateAt("UpdateTimeAt").SetId("MyId")
+	return NewCustom().X设置创建时间字段名("CreateTimeAt").X设置更新时间字段名("UpdateTimeAt").X设置ID字段名("MyId")
 }
 
 func TestBeforeUpsert(t *testing.T) {
@@ -149,7 +149,7 @@ func TestBeforeUpsert(t *testing.T) {
 
 	// with empty fields
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeUpsert)
+	err := Do(ctx, u, 操作符.X更新或插入前)
 	ast.NoError(err)
 	// default fields
 	ast.NotEqual(time.Time{}, u.CreateAt)
@@ -162,7 +162,7 @@ func TestBeforeUpsert(t *testing.T) {
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alice", Age: 8}
 	us := []*User{u1, u2}
-	err = Do(ctx, us, operator.BeforeUpsert)
+	err = Do(ctx, us, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	for _, v := range us {
@@ -174,7 +174,7 @@ func TestBeforeUpsert(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, operator.BeforeUpsert)
+	err = Do(ctx, u3, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	// 使用有效值进行更新插入
@@ -188,7 +188,7 @@ func TestBeforeUpsert(t *testing.T) {
 	u.CreateTimeAt = tBefore3s
 	u.UpdateTimeAt = tBefore3s.Unix()
 
-	err = Do(ctx, u, operator.BeforeUpsert)
+	err = Do(ctx, u, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	ast.Equal(tBefore3s, u.CreateAt)
@@ -208,7 +208,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 
 	// with empty fileds
 	u := &UserField{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeUpsert)
+	err := Do(ctx, u, 操作符.X更新或插入前)
 	ast.NoError(err)
 	// default fields
 	ast.NotEqual(time.Time{}, u.CreateAt)
@@ -221,7 +221,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 
 	u1, u2 := &UserField{Name: "Lucas", Age: 7}, &UserField{Name: "Alice", Age: 8}
 	us := []*UserField{u1, u2}
-	err = Do(ctx, us, operator.BeforeUpsert)
+	err = Do(ctx, us, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	for _, v := range us {
@@ -233,7 +233,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, operator.BeforeUpsert)
+	err = Do(ctx, u3, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	// 使用有效值进行更新插入
@@ -247,7 +247,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 	u.CreateTimeAt = tBefore3s.Unix()
 	u.UpdateTimeAt = tBefore3s
 
-	err = Do(ctx, u, operator.BeforeUpsert)
+	err = Do(ctx, u, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 	ast.Equal(tBefore3s, u.CreateAt)
@@ -264,7 +264,7 @@ func TestNilError(t *testing.T) {
 	ast := require.New(t)
 	ctx := context.Background()
 
-	err := Do(ctx, nil, operator.BeforeUpsert)
+	err := Do(ctx, nil, 操作符.X更新或插入前)
 	ast.NoError(err)
 
 }

@@ -150,7 +150,7 @@ func (q *Query) X设置最大返回数(数量 int64) QueryI {
 // 若查询未找到匹配项，则返回错误
 func (q *Query) X取一条(结果指针 interface{}) error {
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.BeforeQuery); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X查询前); err != nil {
 			return err
 		}
 	}
@@ -178,7 +178,7 @@ func (q *Query) X取一条(结果指针 interface{}) error {
 		return err
 	}
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.AfterQuery); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X查询后); err != nil {
 			return err
 		}
 	}
@@ -189,7 +189,7 @@ func (q *Query) X取一条(结果指针 interface{}) error {
 // 结果的静态类型必须是指向切片的指针
 func (q *Query) X取全部(结果指针 interface{}) error {
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.BeforeQuery); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X查询前); err != nil {
 			return err
 		}
 	}
@@ -234,7 +234,7 @@ func (q *Query) X取全部(结果指针 interface{}) error {
 		return err
 	}
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.AfterQuery); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X查询后); err != nil {
 			return err
 		}
 	}

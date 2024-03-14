@@ -413,7 +413,7 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Alice",
 	}
 	update1 := bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"name": "Alice1",
 			"age":  18,
 		},
@@ -428,7 +428,7 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Lily",
 	}
 	update2 := bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"name": "Lily",
 			"age":  20,
 		},
@@ -481,7 +481,7 @@ func TestCollection_UpdateId(t *testing.T) {
 	var err error
 	// 更新已存在的记录
 	update1 := bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"name": "Alice1",
 			"age":  18,
 		},
@@ -532,7 +532,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 		"name": "Alice",
 	}
 	update1 := bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"age": 33,
 		},
 	}
@@ -551,7 +551,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 		"name": "Lily",
 	}
 	update2 := bson.M{
-		operator.Set: bson.M{
+		操作符.X设置值: bson.M{
 			"age": 22,
 		},
 	}

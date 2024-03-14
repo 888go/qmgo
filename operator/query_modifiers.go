@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package operator
+package 操作符
 
 // 查询修饰符
 // 参考: https://docs.mongodb.com/manual/reference/operator/query-modifier/

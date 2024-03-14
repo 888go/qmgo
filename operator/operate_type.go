@@ -1,18 +1,18 @@
-package operator
+package 操作符
 
 type OpType string
 
 const (
-	BeforeInsert  OpType = "beforeInsert"  //hs:插入前
-	AfterInsert   OpType = "afterInsert"   //hs:插入后
-	BeforeUpdate  OpType = "beforeUpdate"  //hs:更新前
-	AfterUpdate   OpType = "afterUpdate"   //hs:更新后
-	BeforeQuery   OpType = "beforeQuery"   //hs:查询前
-	AfterQuery    OpType = "afterQuery"    //hs:查询后
-	BeforeRemove  OpType = "beforeRemove"  //hs:删除前
-	AfterRemove   OpType = "afterRemove"   //hs:删除后
-	BeforeUpsert  OpType = "beforeUpsert"  //hs:更新或插入前
-	AfterUpsert   OpType = "afterUpsert"   //hs:更新或插入后
-	BeforeReplace OpType = "beforeReplace" //hs:替换前
-	AfterReplace  OpType = "afterReplace"  //hs:替换后
+	X插入前  OpType = "beforeInsert"
+	X插入后   OpType = "afterInsert"
+	X更新前  OpType = "beforeUpdate"
+	X更新后   OpType = "afterUpdate"
+	X查询前   OpType = "beforeQuery"
+	X查询后    OpType = "afterQuery"
+	X删除前  OpType = "beforeRemove"
+	X删除后   OpType = "afterRemove"
+	X更新或插入前  OpType = "beforeUpsert"
+	X更新或插入后   OpType = "afterUpsert"
+	X替换前 OpType = "beforeReplace"
+	X替换后  OpType = "afterReplace"
 )

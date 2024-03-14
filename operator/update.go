@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package operator
+package 操作符
 
 // 定义更新操作符
 // 参考: https://docs.mongodb.com/manual/reference/operator/update/
@@ -20,11 +20,11 @@ const (
 	// Fields
 	CurrentDate = "$currentDate"
 	Inc         = "$inc"
-	Min         = "$min" //hs:最小值
-	Max         = "$max" //hs:最大值
+	X最小值         = "$min"
+	X最大值         = "$max"
 	Mul         = "$mul"
 	Rename      = "$rename"
-	Set         = "$set" //hs:设置值
+	X设置值         = "$set"
 	SetOnInsert = "$setOnInsert"
 	Unset       = "$unset"
 

@@ -37,7 +37,7 @@ type UserField struct {
 }
 
 func (u *UserField) CustomFields() field.CustomFieldsBuilder {
-	return field.NewCustom().SetCreateAt("CreateTimeAt").SetUpdateAt("UpdateTimeAt").SetId("MyId")
+	return field.NewCustom().X设置创建时间字段名("CreateTimeAt").X设置更新时间字段名("UpdateTimeAt").X设置ID字段名("MyId")
 }
 
 func TestFieldInsert(t *testing.T) {

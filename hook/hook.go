@@ -20,19 +20,19 @@ import (
 )
 
 // hookHandler 定义了钩子类型与处理函数之间的关联关系
-var hookHandler = map[operator.OpType]func(ctx context.Context, hook interface{}) error{
-	operator.BeforeInsert:  beforeInsert,
-	operator.AfterInsert:   afterInsert,
-	operator.BeforeUpdate:  beforeUpdate,
-	operator.AfterUpdate:   afterUpdate,
-	operator.BeforeQuery:   beforeQuery,
-	operator.AfterQuery:    afterQuery,
-	operator.BeforeRemove:  beforeRemove,
-	operator.AfterRemove:   afterRemove,
-	operator.BeforeUpsert:  beforeUpsert,
-	operator.AfterUpsert:   afterUpsert,
-	operator.BeforeReplace: beforeUpdate,
-	operator.AfterReplace:  afterUpdate,
+var hookHandler = map[操作符.OpType]func(ctx context.Context, hook interface{}) error{
+	操作符.X插入前:  beforeInsert,
+	操作符.X插入后:   afterInsert,
+	操作符.X更新前:  beforeUpdate,
+	操作符.X更新后:   afterUpdate,
+	操作符.X查询前:   beforeQuery,
+	操作符.X查询后:    afterQuery,
+	操作符.X删除前:  beforeRemove,
+	操作符.X删除后:   afterRemove,
+	操作符.X更新或插入前:  beforeUpsert,
+	操作符.X更新或插入后:   afterUpsert,
+	操作符.X替换前: beforeUpdate,
+	操作符.X替换后:  afterUpdate,
 }
 
 // 
@@ -43,7 +43,7 @@ var hookHandler = map[operator.OpType]func(ctx context.Context, hook interface{}
 
 // 根据hType调用特定方法来处理钩子
 // 如果opts中有有效值，则使用它替代原始钩子
-func Do(ctx context.Context, hook interface{}, opType operator.OpType, opts ...interface{}) error {
+func Do(ctx context.Context, hook interface{}, opType 操作符.OpType, opts ...interface{}) error {
 	if len(opts) > 0 {
 		hook = opts[0]
 	}
@@ -69,7 +69,7 @@ func Do(ctx context.Context, hook interface{}, opType operator.OpType, opts ...i
 }
 
 // sliceHandle 处理切片钩子
-func sliceHandle(ctx context.Context, hook interface{}, opType operator.OpType) error {
+func sliceHandle(ctx context.Context, hook interface{}, opType 操作符.OpType) error {
 	// []interface{}{UserType{}...} 
 // 创建一个接口类型切片，其中包含零个或多个UserType结构体实例。这里的"..."表示可变数量的参数，表示可以传入任意数量的UserType实例到切片中。
 	if h, ok := hook.([]interface{}); ok {
@@ -211,7 +211,7 @@ func afterUpsert(ctx context.Context, hook interface{}) error {
 }
 
 // 检查opType是否支持，并调用hookHandler
-func do(ctx context.Context, hook interface{}, opType operator.OpType) error {
+func do(ctx context.Context, hook interface{}, opType 操作符.OpType) error {
 	if f, ok := hookHandler[opType]; !ok {
 		return nil
 	} else {

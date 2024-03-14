@@ -24,11 +24,11 @@ import (
 var nilTime time.Time
 
 // filedHandler 定义了字段类型与处理器之间的关系
-var fieldHandler = map[operator.OpType]func(doc interface{}) error{
-	operator.BeforeInsert:  beforeInsert,
-	operator.BeforeUpdate:  beforeUpdate,
-	operator.BeforeReplace: beforeUpdate,
-	operator.BeforeUpsert:  beforeUpsert,
+var fieldHandler = map[操作符.OpType]func(doc interface{}) error{
+	操作符.X插入前:  beforeInsert,
+	操作符.X更新前:  beforeUpdate,
+	操作符.X替换前: beforeUpdate,
+	操作符.X更新或插入前:  beforeUpsert,
 }
 
 // 注册函数
@@ -39,7 +39,7 @@ var fieldHandler = map[operator.OpType]func(doc interface{}) error{
 
 // 根据fType调用特定方法来处理字段
 // 在此处不要使用opts
-func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
+func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
 		return nil
@@ -61,7 +61,7 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 }
 
 // sliceHandle 处理切片文档
-func sliceHandle(docs interface{}, opType operator.OpType) error {
+func sliceHandle(docs interface{}, opType 操作符.OpType) error {
 	// []interface{}{UserType{}...} 
 // 创建一个接口类型切片，其中包含零个或多个UserType结构体实例。这里的"..."表示可变数量的参数，表示可以传入任意数量的UserType实例到切片中。
 	if h, ok := docs.([]interface{}); ok {
@@ -93,10 +93,10 @@ func beforeInsert(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.CustomFields()
-		fields.(*CustomFields).CustomId(doc)
-		fields.(*CustomFields).CustomCreateTime(doc)
-		fields.(*CustomFields).CustomUpdateTime(doc)
+		fields := ih.X设置更新时间字段名()
+		fields.(*CustomFields).X自定义ID(doc)
+		fields.(*CustomFields).X自定义创建时间(doc)
+		fields.(*CustomFields).X自定义更新时间(doc)
 	}
 	return nil
 }
@@ -107,8 +107,8 @@ func beforeUpdate(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.CustomFields()
-		fields.(*CustomFields).CustomUpdateTime(doc)
+		fields := ih.X设置更新时间字段名()
+		fields.(*CustomFields).X自定义更新时间(doc)
 	}
 	return nil
 }
@@ -124,16 +124,16 @@ func beforeUpsert(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.CustomFields()
-		fields.(*CustomFields).CustomId(doc)
-		fields.(*CustomFields).CustomCreateTime(doc)
-		fields.(*CustomFields).CustomUpdateTime(doc)
+		fields := ih.X设置更新时间字段名()
+		fields.(*CustomFields).X自定义ID(doc)
+		fields.(*CustomFields).X自定义创建时间(doc)
+		fields.(*CustomFields).X自定义更新时间(doc)
 	}
 	return nil
 }
 
 // 检查opType是否支持，并调用fieldHandler
-func do(doc interface{}, opType operator.OpType) error {
+func do(doc interface{}, opType 操作符.OpType) error {
 	if f, ok := fieldHandler[opType]; !ok {
 		return nil
 	} else {
