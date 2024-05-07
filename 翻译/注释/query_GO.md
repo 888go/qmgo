@@ -58,18 +58,18 @@
 <原文结束>
 
 # <翻译开始>
-// SetArrayFilter 用于应用更新数组的操作
+// SetArrayFilter 用于应用更新切片的操作
 // 例如：
 // 声明一个结果变量
 // var res = QueryTestItem{}
 // 定义变更内容
 // change := Change{
-//	Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}}, // 更新数组中符合条件的元素数量为100
+//	Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}}, // 更新切片中符合条件的元素数量为100
 //	ReturnNew: false, // 是否返回更新后的文档，默认为false
 // }
 // 使用cli在上下文中查找指定条件的文档（name为"Lucas"）
 // cli.Find(context.Background(), bson.M{"name": "Lucas"}).
-// 设置数组过滤器，这里匹配"instock"数组中"warehouse"字段包含"C"或"F"的元素
+// 设置切片过滤器，这里匹配"instock"切片中"warehouse"字段包含"C"或"F"的元素
 // .SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
 // 应用上述变更到查询结果，并将更新后的内容存入res变量
 // .Apply(change, &res)

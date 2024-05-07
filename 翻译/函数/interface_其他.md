@@ -38,7 +38,7 @@ cf=2
 qm=设置排序规则
 
 [SetArrayFilters(*options.ArrayFilters) QueryI]
-qm=设置数组过滤
+qm=设置切片过滤
 
 [Sort(fields ...string) QueryI]
 qm=排序

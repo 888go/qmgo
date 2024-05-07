@@ -35,9 +35,9 @@ import (
 // Change 用于在 Query.Apply 方法中执行 findAndModify 命令所需的字段。
 type Change struct {
 	X更新替换    interface{} // 更新/替换文档
-	X是否替换   bool        // 是否替换整个文档而不是更新
+	X是否替换    bool        // 是否替换整个文档而不是更新
 	X是否删除    bool        // 是否移除找到的文档而非更新
-	X未找到是否插入    bool        // Whether to insert in case the document isn't found, take effect when Remove is false
+	X未找到是否插入 bool        // Whether to insert in case the document isn't found, take effect when Remove is false
 	X是否返回新文档 bool        // 是否应返回修改后的文档而非旧文档，仅在Remove为false时生效
 }
 
@@ -53,7 +53,7 @@ type CursorI interface {
 // QueryI Query interface
 type QueryI interface {
 	X设置排序规则(collation *options.Collation) QueryI
-	X设置数组过滤(*options.ArrayFilters) QueryI
+	X设置切片过滤(*options.ArrayFilters) QueryI
 	X排序(fields ...string) QueryI
 	X字段(selector interface{}) QueryI
 	X跳过(n int64) QueryI

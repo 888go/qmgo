@@ -23,7 +23,7 @@ ff=排序
 fields=排序字段
 
 [func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {]
-ff=设置数组过滤
+ff=设置切片过滤
 filter=过滤条件
 
 [func (q *Query) Select(projection interface{}) QueryI {]
@@ -62,7 +62,7 @@ n=数量
 
 [func (q *Query) Distinct(key string, result interface{}) error {]
 ff=去重
-result=数组指针
+result=切片指针
 key=字段名
 
 [func (q *Query) Cursor() CursorI {]

@@ -17,7 +17,7 @@ import (
 	"context"
 	"fmt"
 	"reflect"
-	
+
 	"github.com/888go/qmgo/middleware"
 	"github.com/888go/qmgo/operator"
 	qOpts "github.com/888go/qmgo/options"
@@ -72,7 +72,7 @@ func (q *Query) X设置批量处理数量(数量 int64) QueryI {
 // 例如：{"age", "-name"}，首先按年龄升序排序，然后按姓名降序排序
 func (q *Query) X排序(排序字段 ...string) QueryI {
 	if len(排序字段) == 0 {
-// 若 bson.D 为 nil，则无法正确序列化，但由于此处为空操作（no-op），所以提前返回即可。
+		// 若 bson.D 为 nil，则无法正确序列化，但由于此处为空操作（no-op），所以提前返回即可。
 		return q
 	}
 
@@ -89,22 +89,24 @@ func (q *Query) X排序(排序字段 ...string) QueryI {
 	return newQ
 }
 
-// SetArrayFilter 用于应用更新数组的操作
+// SetArrayFilter 用于应用更新切片的操作
 // 例如：
 // 声明一个结果变量
 // var res = QueryTestItem{}
 // 定义变更内容
-// change := Change{
-//	Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}}, // 更新数组中符合条件的元素数量为100
-//	ReturnNew: false, // 是否返回更新后的文档，默认为false
-// }
+//
+//	change := Change{
+//		Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}}, // 更新切片中符合条件的元素数量为100
+//		ReturnNew: false, // 是否返回更新后的文档，默认为false
+//	}
+//
 // 使用cli在上下文中查找指定条件的文档（name为"Lucas"）
 // cli.Find(context.Background(), bson.M{"name": "Lucas"}).
-// 设置数组过滤器，这里匹配"instock"数组中"warehouse"字段包含"C"或"F"的元素
+// 设置切片过滤器，这里匹配"instock"切片中"warehouse"字段包含"C"或"F"的元素
 // .SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
 // 应用上述变更到查询结果，并将更新后的内容存入res变量
 // .Apply(change, &res)
-func (q *Query) X设置数组过滤(过滤条件 *options.ArrayFilters) QueryI {
+func (q *Query) X设置切片过滤(过滤条件 *options.ArrayFilters) QueryI {
 	newQ := q
 	newQ.arrayFilters = 过滤条件
 	return newQ
@@ -264,8 +266,8 @@ func (q *Query) X取预估数量() (数量 int64, 错误 error) {
 // 结果应通过指针传递给切片
 // 该函数将验证结果切片中元素的静态类型与在mongodb中获取的数据类型是否一致
 // 参考文献：https://docs.mongodb.com/manual/reference/command/distinct/
-func (q *Query) X去重(字段名 string, 数组指针 interface{}) error {
-	resultVal := reflect.ValueOf(数组指针)
+func (q *Query) X去重(字段名 string, 切片指针 interface{}) error {
+	resultVal := reflect.ValueOf(切片指针)
 
 	if resultVal.Kind() != reflect.Ptr {
 		return ErrQueryNotSlicePointer
@@ -292,7 +294,7 @@ func (q *Query) X去重(字段名 string, 数组指针 interface{}) error {
 	}
 
 	rawValue := bson.RawValue{Type: valueType, Value: valueBytes}
-	err = rawValue.Unmarshal(数组指针)
+	err = rawValue.Unmarshal(切片指针)
 	if err != nil {
 		fmt.Printf("rawValue.Unmarshal err: %+v\n", err)
 		return ErrQueryResultTypeInconsistent
@@ -392,7 +394,7 @@ func (q *Query) findOneAndDelete(change Change, result interface{}) error {
 // 参考文献: https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndReplace/
 // 此函数实现的功能是，在MongoDB数据库中查找并替换一条文档数据。
 // 根据提供的查询条件在指定集合中查找匹配的第一条文档，并用新文档替换它。
-//findOneAndReplace 函数用于对 MongoDB 集合执行“查找并替换”操作，
+// findOneAndReplace 函数用于对 MongoDB 集合执行“查找并替换”操作，
 // 它会根据给定的查询条件找到第一条匹配的文档，然后使用新的文档数据进行替换。
 func (q *Query) findOneAndReplace(change Change, result interface{}) error {
 	opts := options.FindOneAndReplace()

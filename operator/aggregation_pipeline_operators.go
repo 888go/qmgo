@@ -34,7 +34,7 @@ const (
 	Subtract = "$subtract"
 	Trunc    = "$trunc"
 
-	// 数组表达式运算符
+	// 切片表达式运算符
 	ArrayElemAt   = "$arrayElemAt"
 	ArrayToObject = "$arrayToObject"
 	ConcatArrays  = "$concatArrays"
@@ -72,17 +72,17 @@ const (
 	DayOfMonth     = "$dayOfMonth"
 	DayOfWeek      = "$dayOfWeek"
 	DayOfYear      = "$dayOfYear"
-	X小时           = "$hour"
+	X小时            = "$hour"
 	IsoDayOfWeek   = "$isoDayOfWeek"
 	IsoWeek        = "$isoWeek"
 	IsoWeekYear    = "$isoWeekYear"
 	Millisecond    = "$millisecond"
 	Minute         = "$minute"
-	X月          = "$month"
-	X秒         = "$second"
+	X月             = "$month"
+	X秒             = "$second"
 	ToDate         = "$toDate"
-	X周           = "$week"
-	X年           = "$year"
+	X周             = "$week"
+	X年             = "$year"
 
 	// 字面量表达式操作符
 	Literal = "$literal"
@@ -147,7 +147,7 @@ const (
 	IsNumber   = "$isNumber"
 
 	// Accumulators ($group)
-	X平均值   = "$avg"
+	X平均值  = "$avg"
 	First = "$first"
 	Last  = "$last"
 

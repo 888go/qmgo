@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"testing"
 	"time"
-	
+
 	"github.com/888go/qmgo/operator"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
@@ -173,9 +173,9 @@ func TestQuery_All(t *testing.T) {
 	var tv int
 	err = cli.X查询(context.Background(), filter1).X取全部(&tv)
 	ast.Error(err)
-// res 是一个可解析的对象，但其 bson 标签与 MongoDB 中的记录不一致，并且不会报告错误
-// 对应的值将根据 res 数据结构的 bson 标签进行映射，没有值的标签将会使用对应类型的默认值
-// res 的长度是经过 filter 条件筛选出的记录数量
+	// res 是一个可解析的对象，但其 bson 标签与 MongoDB 中的记录不一致，并且不会报告错误
+	// 对应的值将根据 res 数据结构的 bson 标签进行映射，没有值的标签将会使用对应类型的默认值
+	// res 的长度是经过 filter 条件筛选出的记录数量
 	var tt []QueryTestItem2
 	err = cli.X查询(context.Background(), filter1).X取全部(&tt)
 	ast.NoError(err)
@@ -440,11 +440,11 @@ func TestQuery_Distinct(t *testing.T) {
 	err = cli.X查询(context.Background(), filter2).X去重("age", &res5)
 	ast.EqualError(err, ErrQueryResultTypeInconsistent.Error())
 
-// 不同版本的mongod表现出不同的行为，v4.4.0返回错误，v4.0.19返回nil
-// 定义一个int32类型的切片变量res6
-// 使用cli调用Find方法并执行Distinct操作，在context.Background()环境下，根据filter2过滤条件，将查询结果存入res6中
-// ast.Error(err) // (Location40352) 当字段路径为空字符串时，无法构建FieldPath，此处捕获到该错误
-// ast.Equal(0, len(res6)) // 断言res6的结果长度为0
+	// 不同版本的mongod表现出不同的行为，v4.4.0返回错误，v4.0.19返回nil
+	// 定义一个int32类型的切片变量res6
+	// 使用cli调用Find方法并执行Distinct操作，在context.Background()环境下，根据filter2过滤条件，将查询结果存入res6中
+	// ast.Error(err) // (Location40352) 当字段路径为空字符串时，无法构建FieldPath，此处捕获到该错误
+	// ast.Equal(0, len(res6)) // 断言res6的结果长度为0
 
 	var res7 []int32
 	filter3 := 1
@@ -811,9 +811,9 @@ func TestQuery_Apply(t *testing.T) {
 	ast.Equal(23, res4.Age)
 
 	change4 = Change{
-		X是否替换:   true,
+		X是否替换:    true,
 		X更新替换:    bson.M{"name": "Bob", "age": 25},
-		X未找到是否插入:    true,
+		X未找到是否插入: true,
 		X是否返回新文档: false,
 	}
 	projection4 := bson.M{
@@ -830,9 +830,9 @@ func TestQuery_Apply(t *testing.T) {
 		"name": "James",
 	}
 	change4 = Change{
-		X是否替换:   true,
+		X是否替换:    true,
 		X更新替换:    bson.M{"name": "James", "age": 26},
-		X未找到是否插入:    true,
+		X未找到是否插入: true,
 		X是否返回新文档: false,
 	}
 	err = cli.X查询(context.Background(), filter4).X执行命令(change4, &res4)
@@ -846,7 +846,7 @@ func TestQuery_Apply(t *testing.T) {
 		X更新替换:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
 		X是否返回新文档: true,
 	}
-	err = cli.X查询(context.Background(), filter5).X设置数组过滤(&options.ArrayFilters{Filters: []interface{}{
+	err = cli.X查询(context.Background(), filter5).X设置切片过滤(&options.ArrayFilters{Filters: []interface{}{
 		bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},
 	}}).X执行命令(change5, &res5)
 	ast.NoError(err)
