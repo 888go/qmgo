@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// 现在返回当前时间的毫秒级别
+// 现在返回当前毫秒时间 md5:72f6986042eee15a
 # <翻译结束>
 
 
@@ -15,7 +15,22 @@
 
 # <翻译开始>
 // NewObjectID 生成一个新的 ObjectID。
-// 注意：它生成 objectID 的方式与 mgo 不同。
+// 注意：它生成 ObjectID 的方式与 mgo 不同。
+// md5:1225b5a9fc54eeee
+# <翻译结束>
+
+
+<原文开始>
+// SplitSortField handle sort symbol: "+"/"-" in front of field
+// if "+"， return sort as 1
+// if "-"， return sort as -1
+<原文结束>
+
+# <翻译开始>
+// SplitSortField 处理排序符号：字段前的"+"或"-" 
+// 如果是"+"，返回排序为1
+// 如果是"-"，返回排序为-1
+// md5:184424f8495a3828
 # <翻译结束>
 
 
@@ -29,8 +44,9 @@
 <原文结束>
 
 # <翻译开始>
-// CompareVersions 比较两个版本号字符串（即由点分隔的正整数）。比较操作会以两者中精度较低的那个为准。例如，3.2 被视为等于 3.2.11，而 3.2.0 则被视为小于 3.2.11。
-//
-// 如果 version1 大于 version2，则返回一个正整数；如果 version1 小于 version2，则返回一个负整数；如果 version1 等于 version2，则返回 0。
+// CompareVersions 比较两个版本号字符串（即由点分隔的正整数）。比较是在两个版本中较低精度的基础上进行的。例如，3.2 被认为等于 3.2.11，而 3.2.0 则被认为小于 3.2.11。
+// 
+// 如果 version1 大于 version2，返回一个正整数；如果 version1 小于 version2，返回一个负整数；如果 version1 等于 version2，则返回 0。
+// md5:4b6863e7e41f1627
 # <翻译结束>
 

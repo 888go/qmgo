@@ -11,4 +11,13 @@
      <tree path="/hook" title="钩子"/>
      <tree path="/validator" title="效验"/>
      <tree path="/aggregate.go" title="聚合方法"/>
- </trees>
+    <tree path="/demo/3.Remove" title="删除文档"/>
+    <tree path="/demo/2.Find" title="查找一个文档"/>
+    <tree path="/demo/1.InsertOne" title="插入一条数据"/>
+    <tree path="/demo/4.InsertMany" title="插入多条数据"/>
+    <tree path="/demo/5.SortLimit" title="批量查找、和SortLimit"/>
+    <tree path="/demo/6.Count" title="计数"/>
+    <tree path="/demo/7.Update" title="更新"/>
+    <tree path="/demo/9.Aggregate" title="自动化更新"/>
+    <tree path="/demo/11.Hooks" title="钩子"/>
+</trees>

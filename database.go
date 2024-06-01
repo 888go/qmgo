@@ -11,33 +11,45 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
-	
-	"github.com/888go/qmgo/options"
+
+	"github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/mongo"
 	officialOpts "go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Database 是一个指向 MongoDB 数据库的句柄
+// Database 是一个指向 MongoDB 数据库的句柄 md5:9217ae5bd9047e3a
+// [提示]
+//
+//	type 数据库 struct {
+//	    数据库实例 *mongo.Database
+//	    编码注册器 *bsoncodec.Registry
+//	}
+//
+// [结束]
 type Database struct {
 	database *mongo.Database
 
 	registry *bsoncodec.Registry
 }
 
-// Collection 从数据库获取集合
-func (d *Database) X取集合(名称 string, 可选选项 ...*options.CollectionOptions) *Collection {
+// Collection 从数据库中获取集合 md5:c5489f5523d5a33d
+// ff:取集合
+// name:名称
+// opts:可选选项
+// [提示:] func (d *数据库) Collection(名称 string, 选项 ...*options.集合选项) *集合 {}
+func (d *Database) Collection(name string, opts ...*options.CollectionOptions) *Collection {
 	var cp *mongo.Collection
-	var opt = make([]*officialOpts.CollectionOptions, 0, len(可选选项))
-	for _, o := range 可选选项 {
+	var opt = make([]*officialOpts.CollectionOptions, 0, len(opts))
+	for _, o := range opts {
 		opt = append(opt, o.CollectionOptions)
 	}
 	collOpt := officialOpts.MergeCollectionOptions(opt...)
-	cp = d.database.Collection(名称, collOpt)
+	cp = d.database.Collection(name, collOpt)
 
 	return &Collection{
 		collection: cp,
@@ -45,39 +57,56 @@ func (d *Database) X取集合(名称 string, 可选选项 ...*options.Collection
 	}
 }
 
-// GetDatabaseName 返回数据库名称
-func (d *Database) X取数据库名称() string {
+// GetDatabaseName 返回数据库的名称 md5:716064a488e6db8b
+// ff:取数据库名称
+// [提示:] func (d *数据库) 获取数据库名称() 字符串 {}
+func (d *Database) GetDatabaseName() string {
 	return d.database.Name()
 }
 
-// DropDatabase 删除数据库
-func (d *Database) X删除数据库(上下文 context.Context) error {
-	return d.database.Drop(上下文)
+// DropDatabase 删除数据库 md5:aeac2378daa25d5f
+// ff:删除数据库
+// ctx:上下文
+// [提示:] func (d *数据库) 删除数据库(ctx 上下文.Context) 错误 {}
+func (d *Database) DropDatabase(ctx context.Context) error {
+	return d.database.Drop(ctx)
 }
 
-// RunCommand 执行给定的命令针对数据库。
+// RunCommand 在数据库上执行给定的命令。
 //
-// runCommand 参数必须是要执行的命令的文档，不能为 nil。它必须是一个保持顺序的类型，如 bson.D。Map 类型如 bson.M 不是有效的。
-// 如果命令文档包含会话 ID 或任何事务特定字段，则行为未定义。
+// runCommand 参数必须是将要执行的命令文档。它不能为 nil。这必须是一个保持顺序的类型，如 bson.D。像 bson.M 这样的映射类型是无效的。
+// 如果命令文档包含会话 ID 或任何事务特定字段，其行为是未定义的。
 //
-// opts 参数可用于为此次操作指定选项（请参阅 options.RunCmdOptions 文档）。
-func (d *Database) X执行命令(上下文 context.Context, runCommand interface{}, 可选选项 ...options.RunCommandOptions) *mongo.SingleResult {
+// 可以使用 opts 参数来指定此操作的选项（参阅 options.RunCmdOptions 的文档）。
+// md5:eb93f7217a15650c
+// ff:执行命令
+// ctx:上下文
+// runCommand:
+// opts:可选选项
+// [提示:] func (d *数据库) 执行命令(ctx 上下文 контекст, runCommand 命令结构体)
+func (d *Database) RunCommand(ctx context.Context, runCommand interface{}, opts ...options.RunCommandOptions) *mongo.SingleResult {
 	option := officialOpts.RunCmd()
-	if len(可选选项) > 0 && 可选选项[0].RunCmdOptions != nil {
-		option = 可选选项[0].RunCmdOptions
+	if len(opts) > 0 && opts[0].RunCmdOptions != nil {
+		option = opts[0].RunCmdOptions
 	}
-	return d.database.RunCommand(上下文, runCommand, option)
+	return d.database.RunCommand(ctx, runCommand, option)
 }
 
-// CreateCollection 执行创建命令，用于在服务器上明确创建一个指定名称的新集合。如果要创建的集合已存在，则此方法将返回 mongo.CommandError。该方法需要驱动版本 1.4.0 或更高版本。
+// CreateCollection 执行一个创建命令，明确在服务器上使用指定名称创建一个新的集合。如果正在创建的集合已经存在，此方法将返回一个 mongo.CommandError。此方法需要驱动程序版本 1.4.0 或更高版本。
 //
-// opts 参数可用于为操作指定选项（请参阅 options.CreateCollectionOptions 文档）。
-func (db *Database) X创建集合(上下文 context.Context, 集合名称 string, 可选选项 ...options.CreateCollectionOptions) error {
-	var option = make([]*officialOpts.CreateCollectionOptions, 0, len(可选选项))
-	for _, opt := range 可选选项 {
+// 参数 opts 可用于指定操作选项（请参阅 options.CreateCollectionOptions 的文档）。
+// md5:7bd165db4ed05d28
+// ff:创建集合
+// ctx:上下文
+// name:集合名称
+// opts:可选选项
+// [提示:] func (db *数据库) 创建集合(ctx 上下文, 名称 string, 选项 ...options.创建集合选项) error {}
+func (db *Database) CreateCollection(ctx context.Context, name string, opts ...options.CreateCollectionOptions) error {
+	var option = make([]*officialOpts.CreateCollectionOptions, 0, len(opts))
+	for _, opt := range opts {
 		if opt.CreateCollectionOptions != nil {
 			option = append(option, opt.CreateCollectionOptions)
 		}
 	}
-	return db.database.CreateCollection(上下文, 集合名称, option...)
+	return db.database.CreateCollection(ctx, name, option...)
 }

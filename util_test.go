@@ -11,36 +11,36 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"fmt"
 	"testing"
 	"time"
-	
+
 	"github.com/stretchr/testify/require"
 )
 
 func TestNow(t *testing.T) {
 	t1 := time.Unix(0, time.Now().UnixNano()/1e6*1e6)
-	t2 := X取当前时间()
+	t2 := Now()
 	fmt.Println(t1, t2)
 }
 
 func TestNewObjectID(t *testing.T) {
-	objId := X生成对象ID()
+	objId := NewObjectID()
 	objId.Hex()
 }
 
 func TestCompareVersions(t *testing.T) {
 	ast := require.New(t)
-	i, err := X比较版本号("4.4.0", "3.0")
+	i, err := CompareVersions("4.4.0", "3.0")
 	ast.NoError(err)
 	ast.True(i > 0)
-	i, err = X比较版本号("3.0.1", "3.0")
+	i, err = CompareVersions("3.0.1", "3.0")
 	ast.NoError(err)
 	ast.True(i == 0)
-	i, err = X比较版本号("3.1.5", "4.0")
+	i, err = CompareVersions("3.1.5", "4.0")
 	ast.NoError(err)
 	ast.True(i < 0)
 }

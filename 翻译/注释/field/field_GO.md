@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// filedHandler 定义了字段类型与处理器之间的关系
+// filedHandler 定义字段类型和处理器之间的关系 md5:c7cd659bd6a053b2
 # <翻译结束>
 
 
@@ -15,11 +15,10 @@
 <原文结束>
 
 # <翻译开始>
-// 注册函数
-//func init() {
-//	// 将Do函数注册到中间件
-//	middleware.Register(Do)
+// 函数 init() {
+// 注册 middleware，参数为 Do
 //}
+// md5:4bdefdddb5ec33c1
 # <翻译结束>
 
 
@@ -29,8 +28,9 @@
 <原文结束>
 
 # <翻译开始>
-// 根据fType调用特定方法来处理字段
-// 在此处不要使用opts
+// Do 调用特定方法根据 fType 处理字段
+// 不在这里使用 opts
+// md5:01967b5b64a19adb
 # <翻译结束>
 
 
@@ -39,7 +39,7 @@
 <原文结束>
 
 # <翻译开始>
-// 输出："不支持的类型"
+//fmt.Println("不支持此类类型") md5:2ba1fad322480d74
 # <翻译结束>
 
 
@@ -48,7 +48,7 @@
 <原文结束>
 
 # <翻译开始>
-// sliceHandle 处理切片文档
+// sliceHandle处理切片文档 md5:92800dd5899836ce
 # <翻译结束>
 
 
@@ -57,8 +57,8 @@
 <原文结束>
 
 # <翻译开始>
-// []interface{}{UserType{}...} 
-// 创建一个接口类型切片，其中包含零个或多个UserType结构体实例。这里的"..."表示可变数量的参数，表示可以传入任意数量的UserType实例到切片中。
+// []interface{}{UserType{}...} 的中文翻译为：
+// []interface{}{UserType实例...} md5:bda81608072dd1ad
 # <翻译结束>
 
 
@@ -71,9 +71,10 @@
 
 # <翻译开始>
 // beforeInsert 在插入前处理字段
-// 如果doc中createAt字段的值有效，upsert不会改变它
-// 如果doc中id字段的值有效，upsert不会改变它
-// 无论如何都会更新updateAt字段的值
+// 如果文档中的createAt字段的值有效，upsert 不会改变它
+// 如果文档中的id字段的值有效，upsert 不会改变它
+// 无论如何，改变updateAt字段的值
+// md5:f49d81597c8212f6
 # <翻译结束>
 
 
@@ -82,7 +83,7 @@
 <原文结束>
 
 # <翻译开始>
-// beforeUpdate 在更新字段前进行处理
+// beforeUpdate处理更新前的字段 md5:a783a1aa99fba490
 # <翻译结束>
 
 
@@ -94,10 +95,11 @@
 <原文结束>
 
 # <翻译开始>
-// beforeUpsert 在执行upsert操作前处理字段
-// 如果doc中createAt字段的值有效，upsert操作不会改变它
-// 如果doc中id字段的值有效，upsert操作也不会改变它
-// 无论如何都会更新updateAt字段的值
+// beforeUpsert 处理字段的before upsert操作
+// 如果doc中field createAt的值有效，upsert操作不会改变它
+// 如果doc中field id的值有效，upsert操作也不会改变它
+// 无论如何都会更新field updateAt的值
+// md5:d286cfb6c0a1f1da
 # <翻译结束>
 
 
@@ -106,6 +108,6 @@
 <原文结束>
 
 # <翻译开始>
-// 检查opType是否支持，并调用fieldHandler
+// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
 # <翻译结束>
 

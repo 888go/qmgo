@@ -7,51 +7,59 @@
 [![GoDoc](https://pkg.go.dev/badge/github.com/qiniu/qmgo?status.svg)](https://pkg.go.dev/github.com/qiniu/qmgo?tab=doc) 
 
 English | [简体中文](README_ZH.md)
-# Qmgo
 
-`Qmgo` 是一款`Go`语言的`MongoDB` `driver`，它基于[MongoDB 官方 driver](https://github.com/mongodb/mongo-go-driver) 开发实现，同时使用更易用的接口设计，比如参考[mgo](https://github.com/go-mgo/mgo) （比如`mgo`的链式调用）。
+`Qmgo` is a `Go` `driver` for `MongoDB` . It is based on [MongoDB official driver](https://github.com/mongodb/mongo-go-driver), but easier to use like [mgo](https://github.com/go-mgo/mgo) (such as the chain call). 
 
-- `Qmgo`让您以更优雅的姿势使用`MongoDB`的新特性。
+- `Qmgo` allows users to use the new features of `MongoDB` in a more elegant way.
 
-- `Qmgo`是从`mgo`迁移到新`MongoDB driver`的第一选择，对代码的改动影响最小。
+- `Qmgo` is the first choice for migrating from `mgo` to the new `MongoDB driver` with minimal code changes.
 
-## 要求
+## # 需求：
 
-- `Go 1.10` 及以上。
-- `MongoDB 2.6` 及以上。
+- Go 1.10 及以上版本。
+- MongoDB 2.6 及以上版本。
 
-## 功能
+# 需求：
 
-- 文档的增删改查, 均支持官方driver支持的所有options
-- `Sort`、`limit`、`count`、`select`、`distinct`
-- 事务
-- `Hooks`
-- 自动化更新的默认和定制fields
-- 预定义操作符
-- 聚合`Aggregate`、索引操作、`cursor`
-- `validation tags` 基于tag的字段验证
-- 可自定义插件化编程
+- Go 1.10 及以上版本。
+- MongoDB 2.6 及以上版本。
 
-## 安装
+// md5:352d18eff92a20ab
+- CRUD to documents, with all official supported options
+- Sort、limit、count、select、distinct
+- Transactions
+- Hooks
+- Automatically default and custom fields
+- Predefine operator keys
+- Aggregate、indexes operation、cursor
+- Validation tags
+- Plugin
 
-推荐方式是使用`go mod`，通过在源码中`import github.com/qiniu/qmgo` 来自动安装依赖。
+## # 安装
 
-当然，通过下面方式同样可行：
+- 使用`go mod`通过`import github.com/qiniu/qmgo`自动安装依赖项
 
-```
-go get github.com/qiniu/qmgo
-```
+或者
 
-## Usage
+- 使用`go get github.com/qiniu/qmgo`手动下载并安装
 
-- 开始
+# 安装
 
-  `import`并新建连接
+- 使用`go mod`通过`import github.com/qiniu/qmgo`自动安装依赖项
 
+或者
+
+- 使用`go get github.com/qiniu/qmgo`手动下载并安装
+
+// md5:b6c170957e20a6ac
+
+- Start
+
+    `import` and create a new connection
     ```go
-    import(
+    import (
         "context"
-    
+      
         "github.com/qiniu/qmgo"
     )
     
@@ -59,33 +67,31 @@ go get github.com/qiniu/qmgo
     client, err := qmgo.NewClient(ctx, &qmgo.Config{Uri: "mongodb://localhost:27017"})
     db := client.Database("class")
     coll := db.Collection("user")
-    
     ```
-
-  如果你的连接是指向固定的 database 和 collection，我们推荐使用下面的更方便的方法初始化连接，后续操作都基于`cli`而不用再关心 database 和 collection
-
+    If your connection points to a fixed database and collection, recommend using the following way to initialize the connection.
+    All operations can be based on `cli`:
+    
     ```go
     cli, err := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://localhost:27017", Database: "class", Coll: "user"})
     ```
-
-  **_后面都会基于`cli`来举例，如果你使用第一种传统的方式进行初始化，根据上下文，将`cli`替换成`client`、`db` 或 `coll`即可_**
-
-  在初始化成功后，请`defer`来关闭连接
-
+    
+    ***The following examples will be based on `cli`, if you use the first way for initialization, replace `cli` with `client`、`db` or `coll`***
+    
+    Make sure to defer a call to Disconnect after instantiating your client:
+    
     ```go
     defer func() {
-        if err = cli.Close(ctx); err != nil {
+    if err = cli.Close(ctx); err != nil {
             panic(err)
         }
     }()
     ```
 
-- 创建索引
+- Create index
 
-  做操作前，我们先初始化一些数据：
-
-    ```go
+    Before doing the operation, we first initialize some data:
     
+    ```go
     type UserInfo struct {
         Name   string `bson:"name"`
         Age    uint16 `bson:"age"`
@@ -93,41 +99,41 @@ go get github.com/qiniu/qmgo
     }
     
     var userInfo = UserInfo{
-        Name:   "xm",
-        Age:    7,
+        Name: "xm",
+        Age: 7,
         Weight: 40,
     }
     ```
-
-  创建索引
-
+    
+    Create index
+    
     ```go
     cli.CreateOneIndex(context.Background(), options.IndexModel{Key: []string{"name"}})
     cli.CreateIndexes(context.Background(), []options.IndexModel{{Key: []string{"id2", "id3"}}})
     ```
 
-- 插入一个文档
+- Insert a document
 
     ```go
     // insert one document
     result, err := cli.InsertOne(ctx, userInfo)
     ```
 
-- 查找一个文档
+- Find a document
 
     ```go
-        // find one document
-    one := UserInfo{}
-    err = cli.Find(ctx, bson.M{"name": userInfo.Name}).One(&one)
+    // find one document
+      one := UserInfo{}
+      err = cli.Find(ctx, bson.M{"name": userInfo.Name}).One(&one)
     ```
 
-- 删除文档
-
+- Delete documents
+    
     ```go
     err = cli.Remove(ctx, bson.M{"age": 7})
     ```
 
-- 插入多条数据
+- Insert multiple data
 
     ```go
     // multiple insert
@@ -142,35 +148,33 @@ go get github.com/qiniu/qmgo
     result, err = cli.Collection.InsertMany(ctx, userInfos)
     ```
 
-- 批量查找、`Sort`和`Limit`
-
+- Search all, sort and limit
     ```go
-    // find all 、sort and limit
+    // find all, sort and limit
     batch := []UserInfo{}
     cli.Find(ctx, bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
     ```
-
 - Count
 
-    ```go
+    ````go
     count, err := cli.Find(ctx, bson.M{"age": 6}).Count()
-    ```
+    ````
 
 - Update
 
-    ```go
+    ````go
     // UpdateOne one
     err := cli.UpdateOne(ctx, bson.M{"name": "d4"}, bson.M{"$set": bson.M{"age": 7}})
     
     // UpdateAll
     result, err := cli.UpdateAll(ctx, bson.M{"age": 6}, bson.M{"$set": bson.M{"age": 10}})
-    ```
+    ````
 
 - Select
 
-    ```go
+    ````go
     err := cli.Find(ctx, bson.M{"age": 10}).Select(bson.M{"age": 1}).One(&one)
-    ```
+    ````
 
 - Aggregate
 
@@ -181,9 +185,9 @@ go get github.com/qiniu/qmgo
     err = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}).All(&showsWithInfo)
     ```
 
-- 建立连接时支持所有 mongoDB 的`Options`
+- Support All mongoDB Options when create connection
 
-    ```go
+    ````go
     poolMonitor := &event.PoolMonitor{
         Event: func(evt *event.PoolEvent) {
             switch evt.Type {
@@ -194,19 +198,18 @@ go get github.com/qiniu/qmgo
             }
         },
     }
-    
     opt := options.Client().SetPoolMonitor(poolMonitor)  // more options use the chain options.
-    cli, err := Open(ctx, &Config{Uri: URI, Database: DATABASE, Coll: COLL}, opt)
+    cli, err := Open(ctx, &Config{Uri: URI, Database: DATABASE, Coll: COLL}, opt) 
     
-    ```
+    
+    ````
 
-- 事务
+- Transactions
 
-  有史以来最简单和强大的事务, 同时还有超时和重试等功能:
-
-    ```go
+    The super simple and powerful transaction, with features like `timeout`、`retry`:
+    ````go
     callback := func(sessCtx context.Context) (interface{}, error) {
-        // 重要：确保事务中的每一个操作，都使用传入的sessCtx参数
+        // Important: make sure the sessCtx used in every operation in the whole transaction
         if _, err := cli.InsertOne(sessCtx, bson.D{{"abc", int32(1)}}); err != nil {
             return nil, err
         }
@@ -216,25 +219,24 @@ go get github.com/qiniu/qmgo
         return nil, nil
     }
     result, err = cli.DoTransaction(ctx, callback)
-    ```
+    ````
+    [More about transaction](https://github.com/qiniu/qmgo/wiki/Transactions)
 
-  [关于事务的更多内容](https://github.com/qiniu/qmgo/wiki/Transactions)
+- Predefine operator keys
 
-- 预定义操作符
-
-    ```go
+    ````go
     // aggregate
     matchStage := bson.D{{operator.Match, []bson.E{{"weight", bson.D{{operator.Gt, 30}}}}}}
     groupStage := bson.D{{operator.Group, bson.D{{"_id", "$name"}, {"total", bson.D{{operator.Sum, "$age"}}}}}}
     var showsWithInfo []bson.M
     err = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}).All(&showsWithInfo)
-    ```
+    ````
 
 - Hooks
 
-  Qmgo 灵活的 hooks:
+    Qmgo flexible hooks:
 
-    ```go
+    ````go
     type User struct {
         Name         string    `bson:"name"`
         Age          int       `bson:"age"`
@@ -250,35 +252,33 @@ go get github.com/qiniu/qmgo
     
     u := &User{Name: "Alice", Age: 7}
     _, err := cli.InsertOne(context.Background(), u)
-    ```
+    ````
+    [More about hooks](https://github.com/qiniu/qmgo/wiki/Hooks)
 
-  [Hooks 详情介绍](<https://github.com/qiniu/qmgo/wiki/Hooks--(%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87)>)
+- Automatically fields
 
-
-- 自动化更新fields
-
-  Qmgo支持2种方式来自动化更新特定的字段
-
-  - 默认 fields
-
-  在文档结构体里注入 `field.DefaultField`, `Qmgo` 会自动在更新和插入操作时更新 `createAt`、`updateAt` and `_id` field的值.
-
+    Qmgo support two ways to make specific fields automatically update in specific API
+   
+    - Default fields
+    
+    Inject `field.DefaultField` in document struct, Qmgo will update `createAt`、`updateAt` and `_id` in update and insert operation.
+    
     ````go
     type User struct {
-        field.DefaultField `bson:",inline"`
-        
-        Name string `bson:"name"`
-        Age  int    `bson:"age"`
+      field.DefaultField `bson:",inline"`
+    
+      Name string `bson:"name"`
+      Age  int    `bson:"age"`
     }
   
   	u := &User{Name: "Lucas", Age: 7}
   	_, err := cli.InsertOne(context.Background(), u)
-    // tag为createAt、updateAt 和 _id 的字段会自动更新插入
+    // Fields with tag createAt、updateAt and _id will be generated automatically 
     ```` 
 
-  - Custom fields
-
-  可以自定义field名, `Qmgo` 会自动在更新和插入操作时更新他们.
+    - Custom fields
+    
+    Define the custom fields, Qmgo will update them in update and insert operation.
 
     ```go
     type User struct {
@@ -289,29 +289,30 @@ go get github.com/qiniu/qmgo
         CreateTimeAt time.Time `bson:"createTimeAt"`
         UpdateTimeAt int64     `bson:"updateTimeAt"`
     }
-    // 指定自定义field的field名
+    // Define the custom fields
     func (u *User) CustomFields() field.CustomFieldsBuilder {
         return field.NewCustom().SetCreateAt("CreateTimeAt").SetUpdateAt("UpdateTimeAt").SetId("MyId")
     }
   
     u := &User{Name: "Lucas", Age: 7}
     _, err := cli.InsertOne(context.Background(), u)
-    // CreateTimeAt、UpdateTimeAt and MyId 会自动更新并插入DB 
+    // CreateTimeAt、UpdateTimeAt and MyId will be generated automatically 
   
-    // 假设Id和ui已经初始化
+    // suppose Id and ui is ready
   	err = cli.ReplaceOne(context.Background(), bson.M{"_id": Id}, &ui)
-    // UpdateTimeAt 会被自动更新
+    // UpdateTimeAt will update
     ```
 
-  [例子介绍](https://github.com/qiniu/qmgo/blob/master/field_test.go)
+    Check [examples here](https://github.com/qiniu/qmgo/blob/master/field_test.go)
 
-  [自动化 fields 详情介绍](https://github.com/qiniu/qmgo/wiki/Automatically-update-fields)
+    [More about automatically fields](https://github.com/qiniu/qmgo/wiki/Automatically-update-fields)
 
-- `Validation tags` 基于tag的字段验证
+- Validation tags
 
-  功能基于[go-playground/validator](https://github.com/go-playground/validator)实现。
-
-  所以`Qmgo`支持所有[go-playground/validator 的struct验证规则](https://github.com/go-playground/validator#usage-and-documentation)，比如：
+    Qmgo Validation tags is Based on [go-playground/validator](https://github.com/go-playground/validator).
+    
+    So Qmgo support [all validations on structs in go-playground/validator](https://github.com/go-playground/validator#usage-and-documentation), such as:
+    
     ```go
     type User struct {
         FirstName string            `bson:"fname"`
@@ -322,70 +323,113 @@ go get github.com/qiniu/qmgo
         Relations map[string]string `bson:"relations" validate:"max=2"`       // Relations can't has more than 2 elements
     }
     ```
+    
+    Qmgo tags only supported in following API：
+    ` InsertOne、InsertyMany、Upsert、UpsertId、ReplaceOne `
 
-  本功能只对以下API有效：
-  ` InsertOne、InsertyMany、Upsert、UpsertId、ReplaceOne `
-
-- 插件化编程
-
-  - 实现以下方法
+- Plugin
+    
+    - Implement following method:
+    
     ```go
     func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error{
       // do anything
     }
     ```
-
-  - 调用middleware包的Register方法，注入`Do`
-    Qmgo会在支持的[操作](operator/operate_type.go)执行前后调用`Do`
+    
+    - Call Register() in package middleware, register the method `Do`
+    
+      Qmgo will call `Do` before and after the [operation](operator/operate_type.go)
+      
     ```go
     middleware.Register(Do)
     ```
-  [Example](middleware/middleware_test.go)
+    [Example](middleware/middleware_test.go)
+    
+    The `hook`、`automatically fields` and `validation tags` in Qmgo run on **plugin**.
+    
+## # `Qmgo` 与 `go.mongodb.org/mongo-driver` 对比
 
-  Qmgo的hook、自动更新field和validation tags都基于plugin的方式实现
+以下是一个多文件搜索、排序和限制的例子，以展示 `qmgo` 和 `mgo` 之间的相似性，以及与 `go.mongodb.org/mongo-driver` 的改进之处。
 
-## `qmgo` vs `go.mongodb.org/mongo-driver`
-
-下面我们举一个多文件查找、`sort`和`limit`的例子, 说明`qmgo`和`mgo`的相似，以及对`go.mongodb.org/mongo-driver`的改进
-
-官方`Driver`需要这样实现
+在 `go.mongodb.org/mongo-driver` 中我们如何操作：
 
 ```go
 // go.mongodb.org/mongo-driver
-// find all 、sort and limit
+// 查找所有，排序并限制
 findOptions := options.Find()
-findOptions.SetLimit(7)  // set limit
-var sorts D
-sorts = append(sorts, E{Key: "weight", Value: 1})
-findOptions.SetSort(sorts) // set sort
+findOptions.SetLimit(7)       // 设置限制
+var sorts bson.D
+sorts = append(sorts, bson.E{Key: "weight", Value: 1})
+findOptions.SetSort(sorts)     // 设置排序
 
 batch := []UserInfo{}
 cur, err := coll.Find(ctx, bson.M{"age": 6}, findOptions)
 cur.All(ctx, &batch)
 ```
 
-`Qmgo`和`mgo`更简单，而且实现相似：
+在 `Qmgo` 和 `mgo` 中我们如何操作：
 
 ```go
 // qmgo
-// find all 、sort and limit
+// 查找所有，排序并限制
 batch := []UserInfo{}
 cli.Find(ctx, bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
 
 // mgo
-// find all 、sort and limit
+// 查找所有，排序并限制
 coll.Find(bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
 ```
 
-## `Qmgo` vs `mgo`
+从上述代码中可以看出，`Qmgo` 和 `mgo` 的语法更加简洁直接，与 `go.mongodb.org/mongo-driver` 相比，它们在进行查询操作时的链式调用更直观易读。
 
-[Qmgo 和 Mgo 的差异](https://github.com/qiniu/qmgo/wiki/Differences-between-Qmgo-and-Mgo)
+# `Qmgo` 与 `go.mongodb.org/mongo-driver` 对比
 
-## Contributing
+以下是一个多文件搜索、排序和限制的例子，以展示 `qmgo` 和 `mgo` 之间的相似性，以及与 `go.mongodb.org/mongo-driver` 的改进之处。
 
-非常欢迎您对`Qmgo`的任何贡献，非常感谢您的帮助！
+在 `go.mongodb.org/mongo-driver` 中我们如何操作：
 
+```go
+// go.mongodb.org/mongo-driver
+// 查找所有，排序并限制
+findOptions := options.Find()
+findOptions.SetLimit(7)       // 设置限制
+var sorts bson.D
+sorts = append(sorts, bson.E{Key: "weight", Value: 1})
+findOptions.SetSort(sorts)     // 设置排序
 
-## 沟通交流:
+batch := []UserInfo{}
+cur, err := coll.Find(ctx, bson.M{"age": 6}, findOptions)
+cur.All(ctx, &batch)
+```
 
-- 加入 [qmgo discussions](https://github.com/qiniu/qmgo/discussions)
+在 `Qmgo` 和 `mgo` 中我们如何操作：
+
+```go
+// qmgo
+// 查找所有，排序并限制
+batch := []UserInfo{}
+cli.Find(ctx, bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
+
+// mgo
+// 查找所有，排序并限制
+coll.Find(bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
+```
+
+从上述代码中可以看出，`Qmgo` 和 `mgo` 的语法更加简洁直接，与 `go.mongodb.org/mongo-driver` 相比，它们在进行查询操作时的链式调用更直观易读。
+
+// md5:321c33fe0a12b621
+[Differences between qmgo and mgo](https://github.com/qiniu/qmgo/wiki/Differences-between-Qmgo-and-Mgo)
+ 
+## # 贡献
+
+Qmgo项目欢迎所有贡献者。我们非常感谢您的帮助！
+
+# 贡献
+
+Qmgo项目欢迎所有贡献者。我们非常感谢您的帮助！
+
+// md5:47351fd09a8eca92
+
+- Join [qmgo discussions](https://github.com/qiniu/qmgo/discussions)
+

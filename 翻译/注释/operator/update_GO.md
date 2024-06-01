@@ -7,6 +7,6 @@
 # <翻译开始>
 // 定义更新操作符
 // 参考: https://docs.mongodb.com/manual/reference/operator/update/
-// （这段代码注释表明了接下来要定义MongoDB的更新操作符，并提供了官方文档的参考链接，以便查阅具体的更新操作符详情。）
+// md5:166a573087a3fb27
 # <翻译结束>
 

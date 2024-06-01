@@ -11,27 +11,74 @@
  limitations under the License.
 */
 
-package 操作符
+package operator //bm:操作符
 
-// 定义查询和投影操作符
-// 参考：https://docs.mongodb.com/manual/reference/operator/query/
-// （这段代码注释表明接下来将定义在MongoDB中用于查询和投影的相关操作符，并提供了官方文档的参考链接，以便查阅更详细的使用说明。）
+// define the query and projection operators
+// [提示]
+// const (
+//
+//	等于  = "$eq"
+//	大于  = "$gt"
+//	大于等于 = "$gte"
+//	包含  = "$in"
+//	小于  = "$lt"
+//	小于等于 = "$lte"
+//	不等于  = "$ne"
+//	不在其中 = "$nin"
+//
+//	与  = "$and"
+//	非  = "$not"
+//	或非  = "$nor"
+//	或  = "$or"
+//
+//	存在  = "$exists"
+//	类型   = "$type"
+//
+//	表达式       = "$expr"
+//	JSON模式 = "$jsonSchema"
+//	取模        = "$mod"
+//	正则表达式      = "$regex"
+//	文本       = "$text"
+//	在哪里      = "$where"
+//
+//	地理相交 = "$geoIntersects"
+//	地理包含 = "$geoWithin"
+//	近       = "$near"
+//	近似球面 = "$nearSphere"
+//
+//	全部       = "$all"
+//	元素匹配 = "$elemMatch"
+//	大小      = "$size"
+//
+//	位全清零 = "$bitsAllClear"
+//	位全置一 = "$bitsAllSet"
+//	位任意清零 = "$bitsAnyClear"
+//	位任意置一 = "$bitsAnySet"
+//
+//	注释 = "$comment"
+//
+//	美元符号 = "$"
+//	元数据   = "$meta"
+//	切片     = "$slice"
+//
+// )
+// [结束]
 const (
 	// Comparison
-	X等于  = "$eq"
-	X大于  = "$gt"
-	X大于等于 = "$gte"
-	X包含  = "$in"
-	X小于  = "$lt"
-	X小于等于 = "$lte"
-	X不等于  = "$ne"
-	X不包含 = "$nin"
+	Eq  = "$eq"  //qm:等于
+	Gt  = "$gt"  //qm:大于
+	Gte = "$gte" //qm:大于等于
+	In  = "$in"  //qm:包含
+	Lt  = "$lt"  //qm:小于
+	Lte = "$lte" //qm:小于等于
+	Ne  = "$ne"  //qm:不等于
+	Nin = "$nin" //qm:不包含
 
 	// Logical
-	X且 = "$and"
+	And = "$and" //qm:且
 	Not = "$not"
 	Nor = "$nor"
-	X或  = "$or"
+	Or  = "$or" //qm:或
 
 	// Element
 	Exists = "$exists"

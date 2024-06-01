@@ -11,21 +11,20 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
-import (
-	"go.mongodb.org/mongo-driver/bson"
-)
+import "go.mongodb.org/mongo-driver/bson"
 
-// 对mongo驱动的bson原生类型进行别名定义
-// 这样用户就不需要直接导入go.mongodb.org/mongo-driver/mongo包，所有相关类型都在qmgo包中提供
+// 别名mongo驱动的bson原语
+// 因此用户不需要导入go.mongodb.org/mongo-driver/mongo，所有内容都在qmgo中可用
+// md5:2f6e3ba77edc7a63
 type (
-	// M 是 bson.M 的别名
+	// M 是 bson.M 的别名 md5:66b7bee0d7904542
 	M = bson.M
-	// A 是 bson.A 的别名
+	// A是bson.A的别名 md5:7a6f09b99ea36324
 	A = bson.A
-	// D 是 bson.D 的别名
+	// D 是 bson.D 的别名 md5:a2fd7b05e87775b6
 	D = bson.D
-	// E 是 bson.E 的别名
+	// E是bson.E的别名 md5:d1a800789b88ac58
 	E = bson.E
 )

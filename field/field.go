@@ -17,29 +17,38 @@ import (
 	"context"
 	"reflect"
 	"time"
-	
-	"github.com/888go/qmgo/operator"
+
+	"github.com/qiniu/qmgo/operator"
 )
 
 var nilTime time.Time
 
-// filedHandler 定义了字段类型与处理器之间的关系
-var fieldHandler = map[操作符.OpType]func(doc interface{}) error{
-	操作符.X插入前:  beforeInsert,
-	操作符.X更新前:  beforeUpdate,
-	操作符.X替换前: beforeUpdate,
-	操作符.X更新或插入前:  beforeUpsert,
+// filedHandler 定义字段类型和处理器之间的关系 md5:c7cd659bd6a053b2
+var fieldHandler = map[operator.OpType]func(doc interface{}) error{
+	operator.BeforeInsert:  beforeInsert,
+	operator.BeforeUpdate:  beforeUpdate,
+	operator.BeforeReplace: beforeUpdate,
+	operator.BeforeUpsert:  beforeUpsert,
 }
 
-// 注册函数
-//func init() {
-//	// 将Do函数注册到中间件
-//	middleware.Register(Do)
+// 函数 init() {
+// 注册 middleware，参数为 Do
 //}
+// md5:4bdefdddb5ec33c1
 
-// 根据fType调用特定方法来处理字段
-// 在此处不要使用opts
-func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error {
+// Do 调用特定方法根据 fType 处理字段
+// 不在这里使用 opts
+// md5:01967b5b64a19adb
+// ff:
+// ctx:
+// doc:
+// opType:
+// opts:
+// [提示]
+// // 执行上下文，文档接口
+// func ExecuteInContext(操作上下文 context.Context, 文档 interface{})
+// [结束]
+func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
 		return nil
@@ -56,14 +65,15 @@ func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...i
 			return do(doc, opType)
 		}
 	}
-	// 输出："不支持的类型"
+	//fmt.Println("不支持此类类型") md5:2ba1fad322480d74
 	return nil
 }
 
-// sliceHandle 处理切片文档
-func sliceHandle(docs interface{}, opType 操作符.OpType) error {
-	// []interface{}{UserType{}...} 
-// 创建一个接口类型切片，其中包含零个或多个UserType结构体实例。这里的"..."表示可变数量的参数，表示可以传入任意数量的UserType实例到切片中。
+// sliceHandle处理切片文档 md5:92800dd5899836ce
+func sliceHandle(docs interface{}, opType operator.OpType) error {
+	// []interface{}{UserType{}...} 的中文翻译为：
+	// []interface{}{UserType{}...} 的中文翻译为：
+	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v, opType); err != nil {
@@ -83,9 +93,10 @@ func sliceHandle(docs interface{}, opType 操作符.OpType) error {
 }
 
 // beforeInsert 在插入前处理字段
-// 如果doc中createAt字段的值有效，upsert不会改变它
-// 如果doc中id字段的值有效，upsert不会改变它
-// 无论如何都会更新updateAt字段的值
+// 如果文档中的createAt字段的值有效，upsert 不会改变它
+// 如果文档中的id字段的值有效，upsert 不会改变它
+// 无论如何，改变updateAt字段的值
+// md5:f49d81597c8212f6
 func beforeInsert(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultId()
@@ -93,30 +104,31 @@ func beforeInsert(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.X设置更新时间字段名()
-		fields.(*CustomFields).X自定义ID(doc)
-		fields.(*CustomFields).X自定义创建时间(doc)
-		fields.(*CustomFields).X自定义更新时间(doc)
+		fields := ih.CustomFields()
+		fields.(*CustomFields).CustomId(doc)
+		fields.(*CustomFields).CustomCreateTime(doc)
+		fields.(*CustomFields).CustomUpdateTime(doc)
 	}
 	return nil
 }
 
-// beforeUpdate 在更新字段前进行处理
+// beforeUpdate处理更新前的字段 md5:a783a1aa99fba490
 func beforeUpdate(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.X设置更新时间字段名()
-		fields.(*CustomFields).X自定义更新时间(doc)
+		fields := ih.CustomFields()
+		fields.(*CustomFields).CustomUpdateTime(doc)
 	}
 	return nil
 }
 
-// beforeUpsert 在执行upsert操作前处理字段
-// 如果doc中createAt字段的值有效，upsert操作不会改变它
-// 如果doc中id字段的值有效，upsert操作也不会改变它
-// 无论如何都会更新updateAt字段的值
+// beforeUpsert 处理字段的before upsert操作
+// 如果doc中field createAt的值有效，upsert操作不会改变它
+// 如果doc中field id的值有效，upsert操作也不会改变它
+// 无论如何都会更新field updateAt的值
+// md5:d286cfb6c0a1f1da
 func beforeUpsert(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultId()
@@ -124,16 +136,16 @@ func beforeUpsert(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.X设置更新时间字段名()
-		fields.(*CustomFields).X自定义ID(doc)
-		fields.(*CustomFields).X自定义创建时间(doc)
-		fields.(*CustomFields).X自定义更新时间(doc)
+		fields := ih.CustomFields()
+		fields.(*CustomFields).CustomId(doc)
+		fields.(*CustomFields).CustomCreateTime(doc)
+		fields.(*CustomFields).CustomUpdateTime(doc)
 	}
 	return nil
 }
 
-// 检查opType是否支持，并调用fieldHandler
-func do(doc interface{}, opType 操作符.OpType) error {
+// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
+func do(doc interface{}, opType operator.OpType) error {
 	if f, ok := fieldHandler[opType]; !ok {
 		return nil
 	} else {

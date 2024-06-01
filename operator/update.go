@@ -11,20 +11,45 @@
  limitations under the License.
 */
 
-package 操作符
+package operator
 
-// 定义更新操作符
-// 参考: https://docs.mongodb.com/manual/reference/operator/update/
-// （这段代码注释表明了接下来要定义MongoDB的更新操作符，并提供了官方文档的参考链接，以便查阅具体的更新操作符详情。）
+// define the update operators
+// [提示]
+// const (
+//
+//	当前日期 = "$currentDate"
+//	增加     = "$inc"
+//	最小值   = "$min"
+//	最大值   = "$max"
+//	乘以     = "$mul"
+//	重命名   = "$rename"
+//	设置     = "$set"
+//	插入时设置 = "$setOnInsert"
+//	取消设置 = "$unset"
+//
+//	添加到集合 = "$addToSet"
+//	弹出       = "$pop"
+//	拉取       = "$pull"
+//	推入       = "$push"
+//	拉取全部   = "$pullAll"
+//
+//	每个     = "$each"
+//	位置     = "$position"
+//	排序     = "$sort"
+//
+//	位操作 = "$bit"
+//
+// )
+// [结束]
 const (
 	// Fields
 	CurrentDate = "$currentDate"
 	Inc         = "$inc"
-	X最小值         = "$min"
-	X最大值         = "$max"
+	Min         = "$min" //qm:最小值
+	Max         = "$max" //qm:最大值
 	Mul         = "$mul"
 	Rename      = "$rename"
-	X设置值         = "$set"
+	Set         = "$set" //qm:设置值
 	SetOnInsert = "$setOnInsert"
 	Unset       = "$unset"
 

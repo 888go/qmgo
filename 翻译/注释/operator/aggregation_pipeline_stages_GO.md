@@ -6,8 +6,8 @@
 
 # <翻译开始>
 // 定义聚合管道阶段
-// 参考: https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
-// （这段代码的注释表明了接下来要定义MongoDB聚合管道中使用的各个处理阶段，聚合管道用于对数据进行多步骤处理和转换，参考链接提供了关于MongoDB聚合管道操作符的详细文档。）
+// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+// md5:40bdaebb510f842e
 # <翻译结束>
 
 
@@ -16,7 +16,7 @@
 <原文结束>
 
 # <翻译开始>
-// 集合聚合阶段
+// 集合聚合阶段 md5:37e4a0637949107b
 # <翻译结束>
 
 
@@ -25,6 +25,6 @@
 <原文结束>
 
 # <翻译开始>
-// 数据库聚合阶段
+// 数据库聚合阶段 md5:b35520d72e009304
 # <翻译结束>
 

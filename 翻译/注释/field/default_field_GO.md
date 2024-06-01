@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// DefaultFieldHook 定义了一个接口，用于通过钩子方式修改默认字段
+// DefaultFieldHook 定义了一个接口，用于通过钩子修改默认字段 md5:1e0917183e9bb23c
 # <翻译结束>
 
 
@@ -14,8 +14,11 @@
 <原文结束>
 
 # <翻译开始>
-// DefaultField 定义了在操作发生时默认处理的字段
-// 在文档结构体中导入 DefaultField 以使其生效
+// ```go
+// 默认字段定义了在操作发生时要处理的默认字段
+// 将DefaultField导入文档结构体使其生效
+// ```
+// md5:542fb0f78cfb4fad
 # <翻译结束>
 
 
@@ -24,7 +27,7 @@
 <原文结束>
 
 # <翻译开始>
-// DefaultUpdateAt 修改默认的 updateAt 字段
+// DefaultUpdateAt 更改默认的更新时间字段 md5:2aac31da652c649b
 # <翻译结束>
 
 
@@ -33,7 +36,7 @@
 <原文结束>
 
 # <翻译开始>
-// DefaultCreateAt 修改默认的 createAt 字段
+// DefaultCreateAt 更改默认的创建时间字段 md5:1438b66e329ae785
 # <翻译结束>
 
 
@@ -42,6 +45,6 @@
 <原文结束>
 
 # <翻译开始>
-// DefaultId 更改默认的 _id 字段
+// DefaultId 修改默认的 _id 字段 md5:32bb6b194f03905a
 # <翻译结束>
 

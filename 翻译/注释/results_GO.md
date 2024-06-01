@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// InsertOneResult 是 InsertOne 操作返回的结果类型。
+// InsertOneResult 是InsertOne 操作返回的结果类型。 md5:6a10fcb030441781
 # <翻译结束>
 
 
@@ -13,7 +13,7 @@
 <原文结束>
 
 # <翻译开始>
-// 插入文档的 _id。由驱动程序生成的值将为 primitive.ObjectID 类型。
+// 插入文档的 `_id`。驱动程序生成的值将为 primitive.ObjectID 类型。 md5:3e182da948916b02
 # <翻译结束>
 
 
@@ -22,7 +22,7 @@
 <原文结束>
 
 # <翻译开始>
-// InsertManyResult 是由 InsertMany 操作返回的一种结果类型。
+// InsertManyResult 是一个由 InsertMany 操作返回的结果类型。 md5:9dcc2360964506ed
 # <翻译结束>
 
 
@@ -31,7 +31,7 @@
 <原文结束>
 
 # <翻译开始>
-// 插入文档的 _id 值。由驱动程序生成的值将为 primitive.ObjectID 类型。
+// 插入文档的 `_id` 值。驱动程序生成的值类型为 `primitive.ObjectID`。 md5:7f2e18379f71d07a
 # <翻译结束>
 
 
@@ -40,7 +40,7 @@
 <原文结束>
 
 # <翻译开始>
-// UpdateResult 是从 UpdateOne、UpdateMany 和 ReplaceOne 操作返回的结果类型。
+// UpdateResult是从UpdateOne，UpdateMany和ReplaceOne操作返回的结果类型。 md5:fb4b146a87ac30bf
 # <翻译结束>
 
 
@@ -49,7 +49,7 @@
 <原文结束>
 
 # <翻译开始>
-// 匹配过滤器的文档数量。
+// 过滤器匹配到的文档数量。 md5:cac9d662a816ba41
 # <翻译结束>
 
 
@@ -58,7 +58,7 @@
 <原文结束>
 
 # <翻译开始>
-// 此操作修改的文档数量。
+// 该操作修改的文档数量。 md5:d5082cfa94d1e2ea
 # <翻译结束>
 
 
@@ -67,7 +67,7 @@
 <原文结束>
 
 # <翻译开始>
-// 该操作执行的文档更新或插入的数量。
+// 由该操作上载的文档数量。 md5:0872523e362c0f10
 # <翻译结束>
 
 
@@ -76,7 +76,7 @@
 <原文结束>
 
 # <翻译开始>
-// _id字段是更新文档（upsert document）中的_id字段，如果未执行任何更新操作，则为nil。
+// upsert文档的_id字段，如果没有进行upsert操作则为nil。 md5:681ec03a43493d1c
 # <翻译结束>
 
 
@@ -85,7 +85,7 @@
 <原文结束>
 
 # <翻译开始>
-// DeleteResult 是由 DeleteOne 和 DeleteMany 操作返回的结果类型。
+// DeleteResult 是 DeleteOne 和 DeleteMany 操作返回的结果类型。 md5:2c6c8718a901fb46
 # <翻译结束>
 
 
@@ -94,6 +94,6 @@
 <原文结束>
 
 # <翻译开始>
-// 删除的文档数量。
+// 删除的文档数量。 md5:8872e8629ebbcf3c
 # <翻译结束>
 

@@ -11,11 +11,9 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
-import (
-	"go.mongodb.org/mongo-driver/mongo/options"
-)
+import "go.mongodb.org/mongo-driver/mongo/options"
 
 // CollectionI
 // 集合操作接口
@@ -32,48 +30,59 @@ import (
 //	EnsureIndexes(uniques []string, indexes []string)
 //}
 
-// Change 用于在 Query.Apply 方法中执行 findAndModify 命令所需的字段。
+// Change 包含了通过 Query.Apply 方法运行 findAndModify 命令时所需字段。 md5:39a15027acb265c1
+// [提示]
+//
+//	type 变更 struct {
+//	    更新    interface{}
+//	    替换   bool
+//	    删除   bool
+//	    若不存在插入 bool
+//	    返回新文档 bool
+//	}
+//
+// [结束]
 type Change struct {
-	X更新替换    interface{} // 更新/替换文档
-	X是否替换    bool        // 是否替换整个文档而不是更新
-	X是否删除    bool        // 是否移除找到的文档而非更新
-	X未找到是否插入 bool        // Whether to insert in case the document isn't found, take effect when Remove is false
-	X是否返回新文档 bool        // 是否应返回修改后的文档而非旧文档，仅在Remove为false时生效
+	Update    interface{} // 更新/替换文档 md5:f186fdee95ec3578
+	Replace   bool        //qm:是否替换          // 是否替换文档而不是更新 md5:876d0fb0ea394e91
+	Remove    bool        //qm:是否删除          // 是否在找到文档后删除它，而不是更新 md5:af3a9b450dfa43f8
+	Upsert    bool        //qm:未找到是否插入          // Whether to insert in case the document isn't found, take effect when Remove is false
+	ReturnNew bool        //qm:是否返回新文档          // 当Remove为false时，是否返回修改后的文档而不是旧的文档 md5:52269f57ce5c8033
 }
 
-// CursorI：游标接口
+// CursorI：Cursor 接口 md5:8a6fa5bfcb19cd93
 type CursorI interface {
-	X下一个(result interface{}) bool
-	X关闭() error
-	X取错误() error
-	X取全部(results interface{}) error
+	Next(result interface{}) bool  //qm:下一个
+	Close() error                  //qm:关闭
+	Err() error                    //qm:取错误
+	All(results interface{}) error //qm:取全部
 	//ID() int64
 }
 
 // QueryI Query interface
 type QueryI interface {
-	X设置排序规则(collation *options.Collation) QueryI
-	X设置切片过滤(*options.ArrayFilters) QueryI
-	X排序(fields ...string) QueryI
-	X字段(selector interface{}) QueryI
-	X跳过(n int64) QueryI
-	X设置批量处理数量(n int64) QueryI
-	X设置不超时(n bool) QueryI
-	X设置最大返回数(n int64) QueryI
-	X取一条(result interface{}) error
-	X取全部(result interface{}) error
-	X取数量() (n int64, err error)
-	X取预估数量() (n int64, err error)
-	X去重(key string, result interface{}) error
-	X取结果集() CursorI
-	X执行命令(change Change, result interface{}) error
-	X指定索引字段(hint interface{}) QueryI
+	Collation(collation *options.Collation) QueryI //qm:设置排序规则
+	SetArrayFilters(*options.ArrayFilters) QueryI  //qm:设置切片过滤
+	Sort(fields ...string) QueryI                  //qm:排序
+	Select(selector interface{}) QueryI            //qm:字段
+	Skip(n int64) QueryI                           //qm:跳过
+	BatchSize(n int64) QueryI                      //qm:设置批量处理数量
+	NoCursorTimeout(n bool) QueryI                 //qm:设置不超时
+	Limit(n int64) QueryI                          //qm:设置最大返回数
+	One(result interface{}) error                  //qm:取一条
+	All(result interface{}) error                  //qm:取全部
+	Count() (n int64, err error)                   //qm:取数量
+	EstimatedCount() (n int64, err error)          //qm:取预估数量
+	Distinct(key string, result interface{}) error //qm:去重
+	Cursor() CursorI                               //qm:取结果集
+	Apply(change Change, result interface{}) error //qm:执行命令
+	Hint(hint interface{}) QueryI                  //qm:指定索引字段
 }
 
-// AggregateI 定义了聚合的接口
+// AggregateI 定义聚合接口 md5:e67c5263d98eafa6
 type AggregateI interface {
-	X取全部(results interface{}) error
-	X取一条(result interface{}) error
-	Iter弃用() CursorI // 已弃用，请改用Cursor
-	X取结果集() CursorI
+	All(results interface{}) error //qm:取全部
+	One(result interface{}) error  //qm:取一条
+	Iter() CursorI                 // 被弃用，请使用Cursor替代 md5:56d9bc403e9aa9a9
+	Cursor() CursorI               //qm:取结果集
 }

@@ -11,15 +11,15 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
 	"errors"
-	opts "github.com/888go/qmgo/options"
+	opts "github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"testing"
-	
+
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -28,9 +28,9 @@ import (
 func TestAggregate(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), nil, []string{"name"})
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), nil, []string{"name"})
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -44,7 +44,7 @@ func TestAggregate(t *testing.T) {
 		QueryTestItem{Id: id4, Name: "Lucas", Age: 22},
 		QueryTestItem{Id: id5, Name: "Lucas", Age: 44},
 	}
-	cli.X插入多个(context.Background(), docs)
+	cli.InsertMany(context.Background(), docs)
 	matchStage := bson.D{{"$match", []bson.E{{"age", bson.D{{"$gt", 11}}}}}}
 	groupStage := bson.D{{"$group", bson.D{{"_id", "$name"}, {"total", bson.D{{"$sum", "$age"}}}}}}
 	var showsWithInfo []bson.M
@@ -53,7 +53,7 @@ func TestAggregate(t *testing.T) {
 		AggregateOptions: options.Aggregate().SetAllowDiskUse(true),
 	}
 	// aggregate ALL()
-	err := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt).X取全部(&showsWithInfo)
+	err := cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}, opt).All(&showsWithInfo)
 	ast.NoError(err)
 	ast.Equal(2, len(showsWithInfo))
 	for _, v := range showsWithInfo {
@@ -68,9 +68,9 @@ func TestAggregate(t *testing.T) {
 		ast.Error(errors.New("error"), "impossible")
 	}
 	// Iter()
-	iter := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage})
+	iter := cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage})
 	ast.NotNil(iter)
-	err = iter.X取全部(&showsWithInfo)
+	err = iter.All(&showsWithInfo)
 	ast.NoError(err)
 	for _, v := range showsWithInfo {
 		if "Alice" == v["_id"] {
@@ -89,35 +89,35 @@ func TestAggregate(t *testing.T) {
 	opt = opts.AggregateOptions{
 		AggregateOptions: options.Aggregate().SetAllowDiskUse(true),
 	}
-	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt)
+	iter = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}, opt)
 	ast.NotNil(iter)
-	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage})
+	iter = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage})
 	ast.NotNil(iter)
-	err = iter.X取一条(&oneInfo)
+	err = iter.One(&oneInfo)
 	ast.NoError(err)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 
 	// iter
-	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt)
+	iter = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}, opt)
 	ast.NotNil(iter)
 
-	i := iter.Iter弃用()
+	i := iter.Iter()
 
-	ct := i.X下一个(&oneInfo)
+	ct := i.Next(&oneInfo)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 	ast.Equal(true, ct)
-	ct = i.X下一个(&oneInfo)
+	ct = i.Next(&oneInfo)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 	ast.Equal(true, ct)
-	ct = i.X下一个(&oneInfo)
+	ct = i.Next(&oneInfo)
 	ast.Equal(false, ct)
 
 	// err
-	ast.Error(cli.X聚合(context.Background(), 1).X取全部(&showsWithInfo))
-	ast.Error(cli.X聚合(context.Background(), 1).X取一条(&showsWithInfo))
-	ast.Error(cli.X聚合(context.Background(), 1).Iter弃用().X取错误())
+	ast.Error(cli.Aggregate(context.Background(), 1).All(&showsWithInfo))
+	ast.Error(cli.Aggregate(context.Background(), 1).One(&showsWithInfo))
+	ast.Error(cli.Aggregate(context.Background(), 1).Iter().Err())
 	matchStage = bson.D{{"$match", []bson.E{{"age", bson.D{{"$gt", 100}}}}}}
 	groupStage = bson.D{{"$group", bson.D{{"_id", "$name"}, {"total", bson.D{{"$sum", "$age"}}}}}}
-	ast.Error(cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).X取一条(&showsWithInfo))
+	ast.Error(cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}).One(&showsWithInfo))
 
 }

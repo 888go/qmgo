@@ -11,108 +11,139 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
 	"fmt"
 	"reflect"
 	"strings"
-	
-	"github.com/888go/qmgo/middleware"
-	"github.com/888go/qmgo/operator"
-	opts "github.com/888go/qmgo/options"
+
+	"github.com/qiniu/qmgo/middleware"
+	"github.com/qiniu/qmgo/operator"
+	opts "github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Collection 是对 MongoDB 集合的一个引用句柄
+// Collection 是一个MongoDB集合的句柄 md5:be1b94030609bdd1
+// [提示]
+//
+//	type 文档集合 struct {
+//	    文档集合接口 *mongo.DocumentCollection
+//	    编码注册器 *bsoncodec.Registry
+//	}
+//
+// [结束]
 type Collection struct {
 	collection *mongo.Collection
 
 	registry *bsoncodec.Registry
 }
 
-// Find find by condition filter，return QueryI
-func (c *Collection) X查询(上下文 context.Context, 查询条件 interface{}, 可选选项 ...opts.FindOptions) QueryI {
+// Find 通过条件过滤并查找，返回QueryI md5:bda4cc0c85d800a1
+// ff:查询
+// ctx:上下文
+// filter:查询条件
+// opts:可选选项
+// [提示:] func (c *集合) 查找(ctx 上下文, 过滤器 interface{})
+func (c *Collection) Find(ctx context.Context, filter interface{}, opts ...opts.FindOptions) QueryI {
 
 	return &Query{
-		ctx:        上下文,
+		ctx:        ctx,
 		collection: c.collection,
-		filter:     查询条件,
-		opts:       可选选项,
+		filter:     filter,
+		opts:       opts,
 		registry:   c.registry,
 	}
 }
 
-// InsertOne 将一个文档插入集合中
-// 如果 opts 中设置了 InsertHook，那么钩子会作用于它，否则钩子尝试将文档当作钩子处理
-// 参考：https://docs.mongodb.com/manual/reference/command/insert/
-func (c *Collection) X插入(上下文 context.Context, 待插入文档 interface{}, 可选选项 ...opts.InsertOneOptions) (插入结果 *InsertOneResult, 错误 error) {
-	h := 待插入文档
+// InsertOne insert one document into the collection
+// If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook
+// ff:插入
+// ctx:上下文
+// doc:待插入文档
+// opts:可选选项
+// result:插入结果
+// err:错误
+// [提示:] func (c *集合) 插入一个(ctx 上下文, 文档 interface{})
+func (c *Collection) InsertOne(ctx context.Context, doc interface{}, opts ...opts.InsertOneOptions) (result *InsertOneResult, err error) {
+	h := doc
 	insertOneOpts := options.InsertOne()
-	if len(可选选项) > 0 {
-		if 可选选项[0].InsertOneOptions != nil {
-			insertOneOpts = 可选选项[0].InsertOneOptions
+	if len(opts) > 0 {
+		if opts[0].InsertOneOptions != nil {
+			insertOneOpts = opts[0].InsertOneOptions
 		}
-		if 可选选项[0].InsertHook != nil {
-			h = 可选选项[0].InsertHook
+		if opts[0].InsertHook != nil {
+			h = opts[0].InsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入前, h); 错误 != nil {
+	if err = middleware.Do(ctx, doc, operator.BeforeInsert, h); err != nil {
 		return
 	}
-	res, 错误 := c.collection.InsertOne(上下文, 待插入文档, insertOneOpts)
+	res, err := c.collection.InsertOne(ctx, doc, insertOneOpts)
 	if res != nil {
-		插入结果 = &InsertOneResult{InsertedID: res.InsertedID}
+		result = &InsertOneResult{InsertedID: res.InsertedID}
 	}
-	if 错误 != nil {
+	if err != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入后, h); 错误 != nil {
+	if err = middleware.Do(ctx, doc, operator.AfterInsert, h); err != nil {
 		return
 	}
 	return
 }
 
-// InsertMany 执行一个插入命令，将多个文档插入到集合中。
-// 如果 opts 中设置了 InsertHook，则在该 hook 上执行操作；否则尝试将 doc 作为 hook 使用
-// 参考文献：https://docs.mongodb.com/manual/reference/command/insert/
-func (c *Collection) X插入多个(上下文 context.Context, 待插入文档 interface{}, 可选选项 ...opts.InsertManyOptions) (插入结果 *InsertManyResult, 错误 error) {
-	h := 待插入文档
+// InsertMany executes an insert command to insert multiple documents into the collection.
+// If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook多个多个多个多个多个
+// ff:插入多个
+// ctx:上下文
+// docs:待插入文档
+// opts:可选选项
+// result:插入结果
+// err:错误
+// [提示]
+// func (c *集合) 插入多条(ctx 上下文, 文档 interface{}) (插入结果 []interface{}, 错误 error) {
+//
+// }
+//
+// // 注意：这里仅做简单翻译，具体方法名和参数名在实际编程中应保持英文，以符合Go语言的编程规范和社区习惯。
+// [结束]
+func (c *Collection) InsertMany(ctx context.Context, docs interface{}, opts ...opts.InsertManyOptions) (result *InsertManyResult, err error) {
+	h := docs
 	insertManyOpts := options.InsertMany()
-	if len(可选选项) > 0 {
-		if 可选选项[0].InsertManyOptions != nil {
-			insertManyOpts = 可选选项[0].InsertManyOptions
+	if len(opts) > 0 {
+		if opts[0].InsertManyOptions != nil {
+			insertManyOpts = opts[0].InsertManyOptions
 		}
-		if 可选选项[0].InsertHook != nil {
-			h = 可选选项[0].InsertHook
+		if opts[0].InsertHook != nil {
+			h = opts[0].InsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入前, h); 错误 != nil {
+	if err = middleware.Do(ctx, docs, operator.BeforeInsert, h); err != nil {
 		return
 	}
-	sDocs := interfaceToSliceInterface(待插入文档)
+	sDocs := interfaceToSliceInterface(docs)
 	if sDocs == nil {
 		return nil, ErrNotValidSliceToInsert
 	}
 
-	res, 错误 := c.collection.InsertMany(上下文, sDocs, insertManyOpts)
+	res, err := c.collection.InsertMany(ctx, sDocs, insertManyOpts)
 	if res != nil {
-		插入结果 = &InsertManyResult{InsertedIDs: res.InsertedIDs}
+		result = &InsertManyResult{InsertedIDs: res.InsertedIDs}
 	}
-	if 错误 != nil {
+	if err != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X插入后, h); 错误 != nil {
+	if err = middleware.Do(ctx, docs, operator.AfterInsert, h); err != nil {
 		return
 	}
 	return
 }
 
-// interfaceToSliceInterface 将接口转换为切片接口
+// interfaceToSliceInterface 将接口类型转换为切片接口类型 md5:49f6ad81d7f669e3
 func interfaceToSliceInterface(docs interface{}) []interface{} {
 	if reflect.Slice != reflect.TypeOf(docs).Kind() {
 		return nil
@@ -128,306 +159,428 @@ func interfaceToSliceInterface(docs interface{}) []interface{} {
 	return sDocs
 }
 
-// Upsert：如果过滤条件匹配，则更新一条文档；如果不匹配，则插入一条文档。当过滤条件无效时，将返回错误。
-// replacement 参数必须是一个用于替换所选文档的文档对象，不能为 nil，并且不能包含任何更新操作符。
-// 参考文献：https://docs.mongodb.com/manual/reference/operator/update/
-// 如果 replacement 中包含 "_id" 字段，并且该文档已存在，请确保初始化时使用现有 id（即使启用了 Qmgo 的默认字段特性）。
-// 否则，将会出现 "（不可变字段）'_id' 被修改" 的错误。
-func (c *Collection) X更新或插入(上下文 context.Context, 更新条件 interface{}, 更新内容 interface{}, 可选选项 ...opts.UpsertOptions) (更新结果 *UpdateResult, 错误 error) {
-	h := 更新内容
+// Upsert updates one documents if filter match, inserts one document if filter is not match, Error when the filter is invalid
+// The replacement parameter must be a document that will be used to replace the selected document. It cannot be nil
+// and cannot contain any update operators
+// If replacement has "_id" field and the document is existed, please initial it with existing id(even with Qmgo default field feature).
+// Otherwise, "the (immutable) field '_id' altered" error happens.
+// ff:更新或插入
+// ctx:上下文
+// filter:更新条件
+// replacement:更新内容
+// opts:可选选项
+// result:更新结果
+// err:错误
+// [提示]
+// func (c *集合) 更新或插入(ctx 上下文.Context, 过滤器 interface{}) (写入结果 WriteResult, 错误 error) {
+//
+// }
+// [结束]
+func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {
+	h := replacement
 	officialOpts := options.Replace().SetUpsert(true)
 
-	if len(可选选项) > 0 {
-		if 可选选项[0].ReplaceOptions != nil {
-			可选选项[0].ReplaceOptions.SetUpsert(true)
-			officialOpts = 可选选项[0].ReplaceOptions
+	if len(opts) > 0 {
+		if opts[0].ReplaceOptions != nil {
+			opts[0].ReplaceOptions.SetUpsert(true)
+			officialOpts = opts[0].ReplaceOptions
 		}
-		if 可选选项[0].UpsertHook != nil {
-			h = 可选选项[0].UpsertHook
+		if opts[0].UpsertHook != nil {
+			h = opts[0].UpsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入前, h); 错误 != nil {
+	if err = middleware.Do(ctx, replacement, operator.BeforeUpsert, h); err != nil {
 		return
 	}
 
-	res, 错误 := c.collection.ReplaceOne(上下文, 更新条件, 更新内容, officialOpts)
+	res, err := c.collection.ReplaceOne(ctx, filter, replacement, officialOpts)
 
 	if res != nil {
-		更新结果 = translateUpdateResult(res)
+		result = translateUpdateResult(res)
 	}
-	if 错误 != nil {
+	if err != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入后, h); 错误 != nil {
+	if err = middleware.Do(ctx, replacement, operator.AfterUpsert, h); err != nil {
 		return
 	}
 	return
 }
 
-// UpsertId 如果_id匹配则更新一条文档，如果不匹配则插入一条文档，并将_id注入到该文档中
-// replacement参数必须是一个用于替换所选文档的文档，不能为nil
-// 且不能包含任何更新操作符
-// 参考文献：https://docs.mongodb.com/manual/reference/operator/update/
-func (c *Collection) X更新或插入并按ID(上下文 context.Context, 更新ID interface{}, 更新内容 interface{}, 可选选项 ...opts.UpsertOptions) (更新结果 *UpdateResult, 错误 error) {
-	h := 更新内容
+// UpsertId updates one documents if id match, inserts one document if id is not match and the id will inject into the document
+// The replacement parameter must be a document that will be used to replace the selected document. It cannot be nil
+// and cannot contain any update operators并按ID并按ID并按ID并按ID并按ID
+// ff:更新或插入并按ID
+// ctx:上下文
+// id:更新ID
+// replacement:更新内容
+// opts:可选选项
+// result:更新结果
+// err:错误
+// [提示:] func (c *集合) 更新或插入Id(ctx 上下文, id 接口{}
+func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {
+	h := replacement
 	officialOpts := options.Replace().SetUpsert(true)
 
-	if len(可选选项) > 0 {
-		if 可选选项[0].ReplaceOptions != nil {
-			可选选项[0].ReplaceOptions.SetUpsert(true)
-			officialOpts = 可选选项[0].ReplaceOptions
+	if len(opts) > 0 {
+		if opts[0].ReplaceOptions != nil {
+			opts[0].ReplaceOptions.SetUpsert(true)
+			officialOpts = opts[0].ReplaceOptions
 		}
-		if 可选选项[0].UpsertHook != nil {
-			h = 可选选项[0].UpsertHook
+		if opts[0].UpsertHook != nil {
+			h = opts[0].UpsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入前, h); 错误 != nil {
+	if err = middleware.Do(ctx, replacement, operator.BeforeUpsert, h); err != nil {
 		return
 	}
-	res, 错误 := c.collection.ReplaceOne(上下文, bson.M{"_id": 更新ID}, 更新内容, officialOpts)
+	res, err := c.collection.ReplaceOne(ctx, bson.M{"_id": id}, replacement, officialOpts)
 	if res != nil {
-		更新结果 = translateUpdateResult(res)
+		result = translateUpdateResult(res)
 	}
-	if 错误 != nil {
+	if err != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 更新内容, 操作符.X更新或插入后, h); 错误 != nil {
+	if err = middleware.Do(ctx, replacement, operator.AfterUpsert, h); err != nil {
 		return
 	}
 	return
 }
 
-// UpdateOne 执行一个更新命令，用于在集合中最多更新一条文档。
-// 参考文献：https://docs.mongodb.com/manual/reference/operator/update/
-func (c *Collection) X更新一条(上下文 context.Context, 更新条件 interface{}, 更新内容 interface{}, 可选选项 ...opts.UpdateOptions) (错误 error) {
+// UpdateOne executes an update command to update at most one document in the collection.
+// ff:更新一条
+// ctx:上下文
+// filter:更新条件
+// update:更新内容
+// opts:可选选项
+// err:错误
+// [提示]
+// func (c *集合) 更新一条数据(ctx 上下文, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
+//
+// }
+//
+// // UpdateResult 是更新操作的结果类型
+//
+//	type UpdateResult struct {
+//	    MatchedCount int64  // 匹配文档数
+//	    ModifiedCount int64  // 修改文档数
+//	    UpsertedID    *primitive.ObjectID // 新增文档的_id，如果进行了upsert操作
+//	}
+//
+// func (c *Collection) InsertOne(ctx context.Context, document interface{}) (插入结果 InsertOneResult, 错误 error) {
+//
+// }
+//
+// // InsertOneResult 插入操作的结果类型
+//
+//	type InsertOneResult struct {
+//	    InsertedID *primitive.ObjectID // 插入文档的_id
+//	}
+//
+// func (c *Collection) DeleteOne(ctx context.Context, filter interface{}) (删除结果 DeleteResult, 错误 error) {
+//
+// }
+//
+// // DeleteResult 删除操作的结果类型
+//
+//	type DeleteResult struct {
+//	    DeletedCount int64 // 删除的文档数
+//	}
+//
+// func (c *Collection) Find(ctx context.Context, filter interface{}) *Query {
+//
+// }
+//
+// // Query 是用于构建查询的类型
+//
+//	type Query struct {
+//	    // 包含了多个查询相关的配置和方法
+//	}
+//
+// [结束]
+func (c *Collection) UpdateOne(ctx context.Context, filter interface{}, update interface{}, opts ...opts.UpdateOptions) (err error) {
 	updateOpts := options.Update()
 
-	if len(可选选项) > 0 {
-		if 可选选项[0].UpdateOptions != nil {
-			updateOpts = 可选选项[0].UpdateOptions
+	if len(opts) > 0 {
+		if opts[0].UpdateOptions != nil {
+			updateOpts = opts[0].UpdateOptions
 		}
-		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新前); 错误 != nil {
+		if opts[0].UpdateHook != nil {
+			if err = middleware.Do(ctx, opts[0].UpdateHook, operator.BeforeUpdate); err != nil {
 				return
 			}
 		}
 	}
 
-	res, 错误 := c.collection.UpdateOne(上下文, 更新条件, 更新内容, updateOpts)
+	res, err := c.collection.UpdateOne(ctx, filter, update, updateOpts)
 	if res != nil && res.MatchedCount == 0 {
-		// UpdateOne 支持 Upsert 功能
+		// UpdateOne支持upsert功能 md5:aaec7189323f1660
 		if updateOpts.Upsert == nil || !*updateOpts.Upsert {
-			错误 = ErrNoSuchDocuments
+			err = ErrNoSuchDocuments
 		}
 	}
-	if 错误 != nil {
-		return 错误
+	if err != nil {
+		return err
 	}
-	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新后); 错误 != nil {
+	if len(opts) > 0 && opts[0].UpdateHook != nil {
+		if err = middleware.Do(ctx, opts[0].UpdateHook, operator.AfterUpdate); err != nil {
 			return
 		}
 	}
-	return 错误
+	return err
 }
 
-// UpdateId 执行一个更新命令，用于在集合中最多更新一个文档。
-// 参考文献：https://docs.mongodb.com/manual/reference/operator/update/
-func (c *Collection) X更新并按ID(上下文 context.Context, 更新ID interface{}, 更新内容 interface{}, 可选选项 ...opts.UpdateOptions) (错误 error) {
+// UpdateId executes an update command to update at most one document in the collection.
+// ff:更新并按ID
+// ctx:上下文
+// id:更新ID
+// update:更新内容
+// opts:可选选项
+// err:错误
+// [提示:] func (c *集合) 更新Id(ctx 上下文, id 任意类型) (结果 Result, 错误 error)
+func (c *Collection) UpdateId(ctx context.Context, id interface{}, update interface{}, opts ...opts.UpdateOptions) (err error) {
 	updateOpts := options.Update()
 
-	if len(可选选项) > 0 {
-		if 可选选项[0].UpdateOptions != nil {
-			updateOpts = 可选选项[0].UpdateOptions
+	if len(opts) > 0 {
+		if opts[0].UpdateOptions != nil {
+			updateOpts = opts[0].UpdateOptions
 		}
-		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新前); 错误 != nil {
+		if opts[0].UpdateHook != nil {
+			if err = middleware.Do(ctx, opts[0].UpdateHook, operator.BeforeUpdate); err != nil {
 				return
 			}
 		}
 	}
 
-	res, 错误 := c.collection.UpdateOne(上下文, bson.M{"_id": 更新ID}, 更新内容, updateOpts)
+	res, err := c.collection.UpdateOne(ctx, bson.M{"_id": id}, update, updateOpts)
 	if res != nil && res.MatchedCount == 0 {
-		错误 = ErrNoSuchDocuments
+		err = ErrNoSuchDocuments
 	}
-	if 错误 != nil {
-		return 错误
+	if err != nil {
+		return err
 	}
-	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新后); 错误 != nil {
+	if len(opts) > 0 && opts[0].UpdateHook != nil {
+		if err = middleware.Do(ctx, opts[0].UpdateHook, operator.AfterUpdate); err != nil {
 			return
 		}
 	}
-	return 错误
+	return err
 }
 
-// UpdateAll 执行一个更新命令，用于更新集合中的文档。
-// 如果没有文档被更新，UpdateResult 中的 matchedCount 为 0
-// 参考文献：https://docs.mongodb.com/manual/reference/operator/update/
-func (c *Collection) X更新(上下文 context.Context, 更新条件 interface{}, 更新内容 interface{}, 可选选项 ...opts.UpdateOptions) (更新结果 *UpdateResult, 错误 error) {
+// UpdateAll executes an update command to update documents in the collection.
+// The matchedCount is 0 in UpdateResult if no document updated
+// ff:更新
+// ctx:上下文
+// filter:更新条件
+// update:更新内容
+// opts:可选选项
+// result:更新结果
+// err:错误
+// [提示:] func (c *集合) 更新所有(ctx 上下文.Context, 过滤器 interface{})
+func (c *Collection) UpdateAll(ctx context.Context, filter interface{}, update interface{}, opts ...opts.UpdateOptions) (result *UpdateResult, err error) {
 	updateOpts := options.Update()
-	if len(可选选项) > 0 {
-		if 可选选项[0].UpdateOptions != nil {
-			updateOpts = 可选选项[0].UpdateOptions
+	if len(opts) > 0 {
+		if opts[0].UpdateOptions != nil {
+			updateOpts = opts[0].UpdateOptions
 		}
-		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新前); 错误 != nil {
+		if opts[0].UpdateHook != nil {
+			if err = middleware.Do(ctx, opts[0].UpdateHook, operator.BeforeUpdate); err != nil {
 				return
 			}
 		}
 	}
-	res, 错误 := c.collection.UpdateMany(上下文, 更新条件, 更新内容, updateOpts)
+	res, err := c.collection.UpdateMany(ctx, filter, update, updateOpts)
 	if res != nil {
-		更新结果 = translateUpdateResult(res)
+		result = translateUpdateResult(res)
 	}
-	if 错误 != nil {
+	if err != nil {
 		return
 	}
-	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X更新后); 错误 != nil {
+	if len(opts) > 0 && opts[0].UpdateHook != nil {
+		if err = middleware.Do(ctx, opts[0].UpdateHook, operator.AfterUpdate); err != nil {
 			return
 		}
 	}
 	return
 }
 
-// ReplaceOne 执行一个更新命令，最多替换集合中的一个文档。
-// 如果opts中的UpdateHook已设置，则在该hook上执行操作，否则尝试将doc作为hook处理
-// 预期doc的类型应为用户定义的文档类型
-func (c *Collection) X替换一条(上下文 context.Context, 替换条件 interface{}, 替换内容 interface{}, 可选选项 ...opts.ReplaceOptions) (错误 error) {
-	h := 替换内容
+// ReplaceOne 执行更新命令，最多更新集合中的一个文档。如果 opts 中的 UpdateHook 被设置，那么 Hook 将在其上执行，否则 Hook 尝试将 doc 作为 Hook。预期 doc 的类型是用户定义的文档的定义。
+// md5:1d830477f8b32e37
+// ff:替换一条
+// ctx:上下文
+// filter:替换条件
+// doc:替换内容
+// opts:可选选项
+// err:错误
+// [提示]
+// func (c *集合) 替换单个文档(ctx 上下文 контекст, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
+//
+// }
+//
+// // UpdateResult 是一个返回结果的结构体，可能包含匹配的文档数和任何操作错误。
+//
+//	type UpdateResult struct {
+//	    MatchedCount int64  // 匹配文档数量
+//	    ModifiedCount int64  // 修改文档数量
+//	    UpsertedID    interface{} // 新插入文档的ID（如果进行了upsert操作）
+//	    Err           error       // 操作错误
+//	}
+//
+// [结束]
+func (c *Collection) ReplaceOne(ctx context.Context, filter interface{}, doc interface{}, opts ...opts.ReplaceOptions) (err error) {
+	h := doc
 	replaceOpts := options.Replace()
 
-	if len(可选选项) > 0 {
-		if 可选选项[0].ReplaceOptions != nil {
-			replaceOpts = 可选选项[0].ReplaceOptions
+	if len(opts) > 0 {
+		if opts[0].ReplaceOptions != nil {
+			replaceOpts = opts[0].ReplaceOptions
 			replaceOpts.SetUpsert(false)
 		}
-		if 可选选项[0].UpdateHook != nil {
-			h = 可选选项[0].UpdateHook
+		if opts[0].UpdateHook != nil {
+			h = opts[0].UpdateHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X替换前, h); 错误 != nil {
+	if err = middleware.Do(ctx, doc, operator.BeforeReplace, h); err != nil {
 		return
 	}
-	res, 错误 := c.collection.ReplaceOne(上下文, 替换条件, 替换内容, replaceOpts)
+	res, err := c.collection.ReplaceOne(ctx, filter, doc, replaceOpts)
 	if res != nil && res.MatchedCount == 0 {
-		错误 = ErrNoSuchDocuments
+		err = ErrNoSuchDocuments
 	}
-	if 错误 != nil {
-		return 错误
+	if err != nil {
+		return err
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X替换后, h); 错误 != nil {
+	if err = middleware.Do(ctx, doc, operator.AfterReplace, h); err != nil {
 		return
 	}
 
-	return 错误
+	return err
 }
 
 // Remove executes a delete command to delete at most one document from the collection.
 // if filter is bson.M{}，DeleteOne will delete one document in collection
-// Reference: https://docs.mongodb.com/manual/reference/command/delete/
-func (c *Collection) X删除一条(上下文 context.Context, 删除条件 interface{}, 可选选项 ...opts.RemoveOptions) (错误 error) {
+// ff:删除一条
+// ctx:上下文
+// filter:删除条件
+// opts:可选选项
+// err:错误
+// [提示:] func (c *集合) 删除(ctx 上下文, 过滤器 interface{})
+func (c *Collection) Remove(ctx context.Context, filter interface{}, opts ...opts.RemoveOptions) (err error) {
 	deleteOptions := options.Delete()
-	if len(可选选项) > 0 {
-		if 可选选项[0].DeleteOptions != nil {
-			deleteOptions = 可选选项[0].DeleteOptions
+	if len(opts) > 0 {
+		if opts[0].DeleteOptions != nil {
+			deleteOptions = opts[0].DeleteOptions
 		}
-		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除前); 错误 != nil {
-				return 错误
+		if opts[0].RemoveHook != nil {
+			if err = middleware.Do(ctx, opts[0].RemoveHook, operator.BeforeRemove); err != nil {
+				return err
 			}
 		}
 	}
-	res, 错误 := c.collection.DeleteOne(上下文, 删除条件, deleteOptions)
+	res, err := c.collection.DeleteOne(ctx, filter, deleteOptions)
 	if res != nil && res.DeletedCount == 0 {
-		错误 = ErrNoSuchDocuments
+		err = ErrNoSuchDocuments
 	}
-	if 错误 != nil {
-		return 错误
+	if err != nil {
+		return err
 	}
-	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除后); 错误 != nil {
-			return 错误
+	if len(opts) > 0 && opts[0].RemoveHook != nil {
+		if err = middleware.Do(ctx, opts[0].RemoveHook, operator.AfterRemove); err != nil {
+			return err
 		}
 	}
-	return 错误
+	return err
 }
 
-// RemoveId 执行一个删除命令，从集合中最多删除一个文档。
-func (c *Collection) X删除并按ID(上下文 context.Context, 删除ID interface{}, 可选选项 ...opts.RemoveOptions) (错误 error) {
+// RemoveId 执行删除命令，从集合中删除最多一个文档。 md5:6516d8a8963d018c
+// ff:删除并按ID
+// ctx:上下文
+// id:删除ID
+// opts:可选选项
+// err:错误
+// [提示:] func (c *集合) 删除ById(ctx 上下文, id interface{}) (删除结果 error)
+func (c *Collection) RemoveId(ctx context.Context, id interface{}, opts ...opts.RemoveOptions) (err error) {
 	deleteOptions := options.Delete()
-	if len(可选选项) > 0 {
-		if 可选选项[0].DeleteOptions != nil {
-			deleteOptions = 可选选项[0].DeleteOptions
+	if len(opts) > 0 {
+		if opts[0].DeleteOptions != nil {
+			deleteOptions = opts[0].DeleteOptions
 		}
-		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除前); 错误 != nil {
-				return 错误
+		if opts[0].RemoveHook != nil {
+			if err = middleware.Do(ctx, opts[0].RemoveHook, operator.BeforeRemove); err != nil {
+				return err
 			}
 		}
 	}
-	res, 错误 := c.collection.DeleteOne(上下文, bson.M{"_id": 删除ID}, deleteOptions)
+	res, err := c.collection.DeleteOne(ctx, bson.M{"_id": id}, deleteOptions)
 	if res != nil && res.DeletedCount == 0 {
-		错误 = ErrNoSuchDocuments
+		err = ErrNoSuchDocuments
 	}
-	if 错误 != nil {
-		return 错误
+	if err != nil {
+		return err
 	}
 
-	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除后); 错误 != nil {
-			return 错误
+	if len(opts) > 0 && opts[0].RemoveHook != nil {
+		if err = middleware.Do(ctx, opts[0].RemoveHook, operator.AfterRemove); err != nil {
+			return err
 		}
 	}
-	return 错误
+	return err
 }
 
 // RemoveAll executes a delete command to delete documents from the collection.
 // If filter is bson.M{}，all ducuments in Collection will be deleted
-// Reference: https://docs.mongodb.com/manual/reference/command/delete/
-func (c *Collection) X删除(上下文 context.Context, 删除条件 interface{}, 可选选项 ...opts.RemoveOptions) (删除结果 *DeleteResult, 错误 error) {
+// ff:删除
+// ctx:上下文
+// filter:删除条件
+// opts:可选选项
+// result:删除结果
+// err:错误
+// [提示:] func (c *集合) 全部移除(ctx 上下文, 过滤器 interface{})
+func (c *Collection) RemoveAll(ctx context.Context, filter interface{}, opts ...opts.RemoveOptions) (result *DeleteResult, err error) {
 	deleteOptions := options.Delete()
-	if len(可选选项) > 0 {
-		if 可选选项[0].DeleteOptions != nil {
-			deleteOptions = 可选选项[0].DeleteOptions
+	if len(opts) > 0 {
+		if opts[0].DeleteOptions != nil {
+			deleteOptions = opts[0].DeleteOptions
 		}
-		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除前); 错误 != nil {
+		if opts[0].RemoveHook != nil {
+			if err = middleware.Do(ctx, opts[0].RemoveHook, operator.BeforeRemove); err != nil {
 				return
 			}
 		}
 	}
-	res, 错误 := c.collection.DeleteMany(上下文, 删除条件, deleteOptions)
+	res, err := c.collection.DeleteMany(ctx, filter, deleteOptions)
 	if res != nil {
-		删除结果 = &DeleteResult{DeletedCount: res.DeletedCount}
+		result = &DeleteResult{DeletedCount: res.DeletedCount}
 	}
-	if 错误 != nil {
+	if err != nil {
 		return
 	}
-	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X删除后); 错误 != nil {
+	if len(opts) > 0 && opts[0].RemoveHook != nil {
+		if err = middleware.Do(ctx, opts[0].RemoveHook, operator.AfterRemove); err != nil {
 			return
 		}
 	}
 	return
 }
 
-// Aggregate 对集合执行聚合命令，并返回一个 AggregateI 以便获取结果文档。
-func (c *Collection) X聚合(上下文 context.Context, 聚合管道 interface{}, 可选选项 ...opts.AggregateOptions) AggregateI {
+// Aggregate 在集合上执行聚合命令，并返回一个 AggregateI，用于获取结果文档。 md5:e57ffed517c59fbc
+// ff:聚合
+// ctx:上下文
+// pipeline:聚合管道
+// opts:可选选项
+// [提示:] func (c *集合) 批处理聚合操作(ctx 上下文, 管道 interface{})
+func (c *Collection) Aggregate(ctx context.Context, pipeline interface{}, opts ...opts.AggregateOptions) AggregateI {
 	return &Aggregate{
-		ctx:        上下文,
+		ctx:        ctx,
 		collection: c.collection,
-		pipeline:   聚合管道,
-		options:    可选选项,
+		pipeline:   pipeline,
+		options:    opts,
 	}
 }
 
 // ensureIndex create multiple indexes on the collection and returns the names of
 // Example：indexes = []string{"idx1", "-idx2", "idx3,idx4"}
 // Three indexes will be created, index idx1 with ascending order, index idx2 with descending order, idex3 and idex4 are Compound ascending sort index
-// Reference: https://docs.mongodb.com/manual/reference/command/createIndexes/
 func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel) error {
 	var indexModels []mongo.IndexModel
 	for _, idx := range indexes {
@@ -459,13 +612,19 @@ func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel)
 	return nil
 }
 
-// EnsureIndexes 已弃用
-// 建议使用 CreateIndexes / CreateOneIndex 以获得更多的功能)
-// EnsureIndexes 在集合中创建唯一索引和非唯一索引
-// 索引的组合方式与 CreateIndexes 不同：
-// 如果 uniques/indexes 是 []string{"name"}，表示创建名为 "name" 的索引
-// 如果 uniques/indexes 是 []string{"name,-age","uid"}，表示首先创建复合索引：name 和 -age（按 name 升序、age 降序），然后创建一个名为 uid 的单字段索引
-func (c *Collection) EnsureIndexes弃用(ctx context.Context, uniques []string, indexes []string) (err error) {
+// 确保索引（已弃用）
+// 建议使用CreateIndexes / CreateOneIndex以获取更多功能）
+// EnsureIndexes 在集合中创建唯一和非唯一的索引，与CreateIndexes的组合不同：
+// 如果uniques/indexes是`[]string{"name"}`，意味着创建名为"name"的索引
+// 如果uniques/indexes是`[]string{"name,-age", "uid"}`，表示创建复合索引：name和-age，然后创建一个索引：uid
+// md5:c595ad59f9c60c06
+// ff:EnsureIndexes弃用
+// ctx:
+// uniques:
+// indexes:
+// err:
+// [提示:] func (c *集合) 确保索引(ctx 上下文, 唯一索引 []string, 普通索引 []string) (错误 error) {}
+func (c *Collection) EnsureIndexes(ctx context.Context, uniques []string, indexes []string) (err error) {
 	var uniqueModel []opts.IndexModel
 	var indexesModel []opts.IndexModel
 	for _, v := range uniques {
@@ -475,7 +634,7 @@ func (c *Collection) EnsureIndexes弃用(ctx context.Context, uniques []string, 
 		model := opts.IndexModel{Key: vv, IndexOptions: indexOpts}
 		uniqueModel = append(uniqueModel, model)
 	}
-	if err = c.X索引多条(ctx, uniqueModel); err != nil {
+	if err = c.CreateIndexes(ctx, uniqueModel); err != nil {
 		return
 	}
 
@@ -484,54 +643,68 @@ func (c *Collection) EnsureIndexes弃用(ctx context.Context, uniques []string, 
 		model := opts.IndexModel{Key: vv}
 		indexesModel = append(indexesModel, model)
 	}
-	if err = c.X索引多条(ctx, indexesModel); err != nil {
+	if err = c.CreateIndexes(ctx, indexesModel); err != nil {
 		return
 	}
 	return
 }
 
 // CreateIndexes 在集合中创建多个索引
-// 如果opts.IndexModel中的Key为[]string{"name"}，表示创建名为"name"的索引
-// 如果opts.IndexModel中的Key为[]string{"name","-age"}，表示创建复合索引：按"name"和"-age"（降序）字段
-// 进一步详细解释：
-// ```go
-// CreateIndexes 函数用于在指定的数据库集合中创建多个索引。
-// 当 opts.IndexModel 中的 Key 字段是一个包含单个元素 "name" 的字符串切片时，例如 []string{"name"}，
-// 这意味着将根据字段 "name" 创建一个升序索引。
-// 若 opts.IndexModel 中的 Key 字段是一个包含两个元素 "name" 和 "-age" 的字符串切片，例如 []string{"name", "-age"}，
-// 这表示将创建一个复合索引，其中先按 "name" 字段升序排序，然后按 "age" 字段降序排序。
-func (c *Collection) X索引多条(上下文 context.Context, 索引s []opts.IndexModel) (错误 error) {
-	错误 = c.ensureIndex(上下文, 索引s)
+// 如果opts.IndexModel中的Key为[]string{"name"}，表示创建索引：name
+// 如果opts.IndexModel中的Key为[]string{"name", "-age"}，表示创建复合索引：name和-age
+// md5:822a787892c2186f
+// ff:索引多条
+// ctx:上下文
+// indexes:索引s
+// err:错误
+// [提示:] func (c *Collection) 创建索引(ctx context.Context, 索引模型 []opts.IndexModel) (错误 error) {}
+func (c *Collection) CreateIndexes(ctx context.Context, indexes []opts.IndexModel) (err error) {
+	err = c.ensureIndex(ctx, indexes)
 	return
 }
 
 // CreateOneIndex 创建一个索引
-// 如果 opts.IndexModel 中的 Key 为 []string{"name"}，表示创建名为 "name" 的索引
-// 如果 opts.IndexModel 中的 Key 为 []string{"name", "-age"}，表示创建组合索引：包含 name 和 -age（按 name 正序、age 倒序）
-func (c *Collection) X索引一条(上下文 context.Context, 索引 opts.IndexModel) error {
-	return c.ensureIndex(上下文, []opts.IndexModel{索引})
+// 如果opts.IndexModel中的Key为[]string{"name"}，表示创建名为"name"的索引
+// 如果opts.IndexModel中的Key为[]string{"name","-age"}，表示创建复合索引：按照"name"升序和"age"降序
+// md5:70c27ea42ff3bbbf
+// ff:索引一条
+// ctx:上下文
+// index:索引
+// [提示:] func (c *集合) 创建单个索引(ctx 上下文, index 索引模型) 错误 {}
+func (c *Collection) CreateOneIndex(ctx context.Context, index opts.IndexModel) error {
+	return c.ensureIndex(ctx, []opts.IndexModel{index})
 
 }
 
-// DropAllIndexes 从集合中删除所有索引，但保留_id字段的索引
-// 如果集合上只有_id字段的索引，函数调用将报告错误
-func (c *Collection) X删除全部索引(上下文 context.Context) (错误 error) {
-	_, 错误 = c.collection.Indexes().DropAll(上下文)
-	return 错误
+// DropAllIndexes 会删除集合上除了_id字段索引之外的所有索引
+// 如果集合上只有_id字段的索引，该函数调用将报告错误
+// md5:e7655b40436f93df
+// ff:删除全部索引
+// ctx:上下文
+// err:错误
+// [提示:] func (c *集合) 删除所有索引(ctx 上下文环境) (错误 error) {}
+func (c *Collection) DropAllIndexes(ctx context.Context) (err error) {
+	_, err = c.collection.Indexes().DropAll(ctx)
+	return err
 }
 
-// DropIndex 删除集合中的索引，需要删除的索引应与输入的索引一致
-// 索引indexes为[]string{"name"}表示删除名为"name"的索引
-// 索引indexes为[]string{"name","-age"}表示删除由"name"和"-age"组成的复合索引
-func (c *Collection) X删除索引(上下文 context.Context, 索引s []string) error {
-	_, err := c.collection.Indexes().DropOne(上下文, generateDroppedIndex(索引s))
+// DropIndex 从集合中删除索引，需要删除的索引应与输入的索引列表匹配
+// 索引是 []string{"name"} 表示删除名为 "name" 的单个索引
+// 索引是 []string{"name", "-age"} 表示删除复合索引：name 和排除年龄 (-age) 的部分索引
+// md5:4ad77e88557061c7
+// ff:删除索引
+// ctx:上下文
+// indexes:索引s
+// [提示:] func (c *集合) 删除索引(ctx 上下文, 索引列表 []string) error {}
+func (c *Collection) DropIndex(ctx context.Context, indexes []string) error {
+	_, err := c.collection.Indexes().DropOne(ctx, generateDroppedIndex(indexes))
 	if err != nil {
 		return err
 	}
 	return err
 }
 
-// 生成存储在MongoDB中的索引，这些索引可能包含多个索引（例如，[]string{"index1","index2"}将被存储为"index1_1_index2_1"）
+// 生成存储在Mongo中的索引，可能包含多个索引（如[]string{"index1","index2"}存储为"index1_1_index2_1"） md5:15332a053c924233
 func generateDroppedIndex(index []string) string {
 	var res string
 	for _, e := range index {
@@ -546,33 +719,45 @@ func generateDroppedIndex(index []string) string {
 	return res
 }
 
-// DropCollection 删除集合
-// 即使集合不存在，此操作也是安全的
-func (c *Collection) X删除集合(上下文 context.Context) error {
-	return c.collection.Drop(上下文)
+// DropIndexDropIndex 会删除索引
+// 即使索引不存在，这个操作也是安全的
+// md5:e7b65cd93b1de7f7
+// ff:删除集合
+// ctx:上下文
+// [提示:] func (c *集合) 删除集合(ctx 上下文.Context) 错误 {}
+func (c *Collection) DropCollection(ctx context.Context) error {
+	return c.collection.Drop(ctx)
 }
 
-// CloneCollection 创建一个 Collection 的副本
-func (c *Collection) X取副本() (*mongo.Collection, error) {
+// CloneCollection 创建集合的副本 md5:5df787f1c8ebab26
+// ff:取副本
+// [提示:] func (c *集合) 克隆集合() (*mongo.集合, 错误) {}
+func (c *Collection) CloneCollection() (*mongo.Collection, error) {
 	return c.collection.Clone()
 }
 
-// GetCollectionName 返回集合名称
-func (c *Collection) X取集合名() string {
+// GetCollectionName 返回集合的名字 md5:440484db8f2a466d
+// ff:取集合名
+// [提示:] func (c *集合) 获取集合名称() 字符串 {}
+func (c *Collection) GetCollectionName() string {
 	return c.collection.Name()
 }
 
-// Watch 返回一个变更流，用于接收相应集合的所有变更。有关变更流的更多信息，请参阅
-// https://docs.mongodb.com/manual/changeStreams/
-func (c *Collection) X取变更流(上下文 context.Context, 管道 interface{}, 可选选项 ...*opts.ChangeStreamOptions) (*mongo.ChangeStream, error) {
+// Watch returns a change stream for all changes on the corresponding collection. See
+// ff:取变更流
+// ctx:上下文
+// pipeline:管道
+// opts:可选选项
+// [提示:] func (c *集合) 监听(ctx 上下文.Context, 管道 interface{})
+func (c *Collection) Watch(ctx context.Context, pipeline interface{}, opts ...*opts.ChangeStreamOptions) (*mongo.ChangeStream, error) {
 	changeStreamOption := options.ChangeStream()
-	if len(可选选项) > 0 && 可选选项[0].ChangeStreamOptions != nil {
-		changeStreamOption = 可选选项[0].ChangeStreamOptions
+	if len(opts) > 0 && opts[0].ChangeStreamOptions != nil {
+		changeStreamOption = opts[0].ChangeStreamOptions
 	}
-	return c.collection.Watch(上下文, 管道, changeStreamOption)
+	return c.collection.Watch(ctx, pipeline, changeStreamOption)
 }
 
-// translateUpdateResult 将MongoDB更新结果翻译为qmgo定义的UpdateResult
+// translateUpdateResult 将Mongo的更新结果转换为qmgo定义的UpdateResult md5:cb683a73f25cfe75
 func translateUpdateResult(res *mongo.UpdateResult) (result *UpdateResult) {
 	result = &UpdateResult{
 		MatchedCount:  res.MatchedCount,

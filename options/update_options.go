@@ -13,10 +13,16 @@
 
 package options
 
-import (
-	"go.mongodb.org/mongo-driver/mongo/options"
-)
+import "go.mongodb.org/mongo-driver/mongo/options"
 
+// [提示]
+//
+//	type 更新选项 struct {
+//	    更新钩子 interface{}
+//	    *options.更新选项
+//	}
+//
+// [结束]
 type UpdateOptions struct {
 	UpdateHook interface{}
 	*options.UpdateOptions

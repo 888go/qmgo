@@ -20,80 +20,110 @@ import (
 	"time"
 )
 
-// CustomFields 定义了支持的自定义字段的结构体
+// CustomFields 定义了支持的自定义字段的结构体 md5:d6f9da51bb1f9550
+// [提示]
+//
+//	type 自定义字段 struct {
+//	    创建时间 string
+//	    更新时间 string
+//	    ID        string
+//	}
+//
+// [结束]
 type CustomFields struct {
 	createAt string
 	updateAt string
 	id       string
 }
 
-// CustomFieldsHook 定义了一个接口，其中 CustomFields 方法用于返回用户想要修改的自定义字段
+// CustomFieldsHook 定义了接口，CustomFields 返回用户想要自定义的字段 md5:7c964cacd7711950
 type CustomFieldsHook interface {
-	X设置更新时间字段名() CustomFieldsBuilder
+	CustomFields() CustomFieldsBuilder //qm:设置更新时间字段名
 }
 
-// CustomFieldsBuilder 定义了用户用于设置自定义字段的接口
+// CustomFieldsBuilder 定义了用户用来设置自定义字段的接口 md5:68d7427693ef0a18
 type CustomFieldsBuilder interface {
-	X设置更新时间字段名(fieldName string) CustomFieldsBuilder
-	X设置创建时间字段名(fieldName string) CustomFieldsBuilder
-	X设置ID字段名(fieldName string) CustomFieldsBuilder
+	SetUpdateAt(fieldName string) CustomFieldsBuilder //qm:设置更新时间字段名
+	SetCreateAt(fieldName string) CustomFieldsBuilder //qm:设置创建时间字段名
+	SetId(fieldName string) CustomFieldsBuilder       //qm:设置ID字段名
 }
 
-// NewCustom 创建一个新的 Builder，用于设置自定义字段
+// NewCustom 创建一个新的Builder，用于设置自定义字段 md5:f37c4ab7a682c81a
+// ff:
+// [提示:] func 新建自定义Fields构建器() 自定义Fields构建器 {}
 func NewCustom() CustomFieldsBuilder {
 	return &CustomFields{}
 }
 
-// SetUpdateAt 设置自定义的 UpdateAt 字段
-func (c *CustomFields) X设置更新时间字段名(字段名称 string) CustomFieldsBuilder {
-	c.updateAt = 字段名称
+// SetUpdateAt 设置自定义的UpdateAt字段 md5:fa5a62704b166e17设置更新时间字段名设置更新时间字段名设置更新时间字段名设置更新时间字段名设置更新时间字段名
+// ff:设置更新时间字段名
+// fieldName:字段名称
+// [提示:] func (c *自定义字段) 设置更新时间字段(fieldName 字符串) 自定义字段构建器 {}
+func (c *CustomFields) SetUpdateAt(fieldName string) CustomFieldsBuilder {
+	c.updateAt = fieldName
 	return c
 }
 
-// SetCreateAt 设置自定义的 CreateAt 字段
-func (c *CustomFields) X设置创建时间字段名(字段名称 string) CustomFieldsBuilder {
-	c.createAt = 字段名称
+// SetCreateAt 设置自定义的创建时间字段 md5:9d021ddb5b3276d1设置创建时间字段名设置创建时间字段名设置创建时间字段名设置创建时间字段名设置创建时间字段名
+// ff:设置创建时间字段名
+// fieldName:字段名称
+// [提示:] func (c *自定义字段) 设置创建时间(fieldName string) 自定义字段构建器 {}
+func (c *CustomFields) SetCreateAt(fieldName string) CustomFieldsBuilder {
+	c.createAt = fieldName
 	return c
 }
 
-// SetId 设置自定义 Id 字段
-func (c *CustomFields) X设置ID字段名(字段名称 string) CustomFieldsBuilder {
-	c.id = 字段名称
+// SetId 设置自定义Id字段 md5:769568d47e77f5fe设置ID字段名设置ID字段名设置ID字段名设置ID字段名设置ID字段名
+// ff:设置ID字段名
+// fieldName:字段名称
+// [提示:] func (c *自定义字段) 设置唯一标识(fieldName 字符串) 自定义字段构建器 {}
+func (c *CustomFields) SetId(fieldName string) CustomFieldsBuilder {
+	c.id = fieldName
 	return c
 }
 
-// CustomCreateTime 修改自定义创建时间
-func (c CustomFields) X自定义创建时间(待插入文档 interface{}) {
+// CustomCreateTime 更改自定义创建时间 md5:0ddb85c54f1b54c2自定义创建时间自定义创建时间自定义创建时间自定义创建时间自定义创建时间
+// ff:自定义创建时间
+// doc:待插入文档
+// [提示:] func (c 自定义字段) 创建时间定制(doc interface{})
+func (c CustomFields) CustomCreateTime(doc interface{}) {
 	if c.createAt == "" {
 		return
 	}
 	fieldName := c.createAt
-	setTime(待插入文档, fieldName, false)
+	setTime(doc, fieldName, false)
 	return
 }
 
-// CustomUpdateTime 更改自定义更新时间
-func (c CustomFields) X自定义更新时间(待插入文档 interface{}) {
+// CustomUpdateTime 修改自定义更新时间 md5:71153ba9520a179c自定义更新时间自定义更新时间自定义更新时间自定义更新时间自定义更新时间
+// ff:自定义更新时间
+// doc:待插入文档
+// [提示:] func (c 自定义字段) 自定义更新时间(doc interface{})
+func (c CustomFields) CustomUpdateTime(doc interface{}) {
 	if c.updateAt == "" {
 		return
 	}
 	fieldName := c.updateAt
-	setTime(待插入文档, fieldName, true)
+	setTime(doc, fieldName, true)
 	return
 }
 
-// CustomUpdateTime 更改自定义更新时间
-func (c CustomFields) X自定义ID(待插入文档 interface{}) {
+// CustomUpdateTime 修改自定义更新时间 md5:71153ba9520a179c自定义ID自定义ID自定义ID自定义ID自定义ID
+// ff:自定义ID
+// doc:待插入文档
+// [提示:] func (c 自定义字段) 自定义Id(文档 interface{})
+func (c CustomFields) CustomId(doc interface{}) {
 	if c.id == "" {
 		return
 	}
 	fieldName := c.id
-	setId(待插入文档, fieldName)
+	setId(doc, fieldName)
 	return
 }
 
-// setTime 更改自定义时间字段
-// overWrite 定义了当字段已有有效值时是否更改其值
+// setTime 修改自定义时间字段
+// overWrite 参数定义了当字段已有有效值时是否覆盖原有值
+// md5:848f135d11ab4cf8
 func setTime(doc interface{}, fieldName string, overWrite bool) {
 	if reflect.Ptr != reflect.TypeOf(doc).Kind() {
 		fmt.Println("not a point type")
@@ -122,7 +152,7 @@ func setTime(doc interface{}, fieldName string, overWrite bool) {
 	}
 }
 
-// 设置Id：修改自定义Id字段
+// setId 修改自定义标识字段 md5:ef4585873d988b50
 func setId(doc interface{}, fieldName string) {
 	if reflect.Ptr != reflect.TypeOf(doc).Kind() {
 		fmt.Println("not a point type")

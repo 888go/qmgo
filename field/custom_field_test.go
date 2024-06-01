@@ -31,20 +31,20 @@ type CustomUser struct {
 }
 
 func (c *CustomUser) CustomFields() CustomFieldsBuilder {
-	return NewCustom().X设置更新时间字段名("Create").X设置创建时间字段名("Update").X设置ID字段名("MyId")
+	return NewCustom().SetUpdateAt("Create").SetCreateAt("Update").SetId("MyId")
 }
 
 func (c *CustomUser) CustomFieldsIdString() CustomFieldsBuilder {
-	return NewCustom().X设置ID字段名("MyIdString")
+	return NewCustom().SetId("MyIdString")
 }
 
 func TestCustomFields(t *testing.T) {
 	ast := require.New(t)
 	u := &CustomUser{}
 	c := u.CustomFields()
-	c.(*CustomFields).X自定义创建时间(u)
-	c.(*CustomFields).X自定义更新时间(u)
-	c.(*CustomFields).X自定义ID(u)
+	c.(*CustomFields).CustomCreateTime(u)
+	c.(*CustomFields).CustomUpdateTime(u)
+	c.(*CustomFields).CustomId(u)
 	ast.NotEqual(0, u.Update)
 	ast.NotEqual(time.Time{}, u.Create)
 	ast.NotEqual(primitive.NilObjectID, u.MyId)
@@ -52,53 +52,53 @@ func TestCustomFields(t *testing.T) {
 	// id string
 	u1 := &CustomUser{}
 	c1 := u.CustomFieldsIdString()
-	c1.(*CustomFields).X自定义ID(u1)
+	c1.(*CustomFields).CustomId(u1)
 	ast.NotEqual("", u1.MyIdString)
 
 }
 
 func (c *CustomUser) CustomFieldsInvalid() CustomFieldsBuilder {
-	return NewCustom().X设置创建时间字段名("InvalidCreate")
+	return NewCustom().SetCreateAt("InvalidCreate")
 }
 func (c *CustomUser) CustomFieldsInvalid2() CustomFieldsBuilder {
-	return NewCustom().X设置更新时间字段名("InvalidUpdate")
+	return NewCustom().SetUpdateAt("InvalidUpdate")
 }
 
 func (c *CustomUser) CustomFieldsInvalid3() CustomFieldsBuilder {
-	return NewCustom().X设置ID字段名("InvalidId")
+	return NewCustom().SetId("InvalidId")
 }
 
 func TestCustomFieldsInvalid(t *testing.T) {
 	u := &CustomUser{}
 	c := u.CustomFieldsInvalid()
-	c.(*CustomFields).X自定义创建时间(u)
-	c.(*CustomFields).X自定义更新时间(u)
+	c.(*CustomFields).CustomCreateTime(u)
+	c.(*CustomFields).CustomUpdateTime(u)
 	ast := require.New(t)
 	ast.Equal(0, u.InvalidCreate)
 	ast.Equal(float32(0), u.InvalidUpdate)
 
 	u1 := &CustomUser{}
 	c = u1.CustomFieldsInvalid2()
-	c.(*CustomFields).X自定义创建时间(u1)
-	c.(*CustomFields).X自定义更新时间(u1)
+	c.(*CustomFields).CustomCreateTime(u1)
+	c.(*CustomFields).CustomUpdateTime(u1)
 	ast.Equal(0, u1.InvalidCreate)
 	ast.Equal(float32(0), u1.InvalidUpdate)
 
 	u2 := CustomUser{}
 	c = u2.CustomFieldsInvalid()
-	c.(*CustomFields).X自定义创建时间(u2)
-	c.(*CustomFields).X自定义更新时间(u2)
+	c.(*CustomFields).CustomCreateTime(u2)
+	c.(*CustomFields).CustomUpdateTime(u2)
 	ast.Equal(0, u2.InvalidCreate)
 	ast.Equal(float32(0), u2.InvalidUpdate)
 
 	u3 := CustomUser{}
 	c = u3.CustomFieldsInvalid3()
-	c.(*CustomFields).X自定义ID(u3)
+	c.(*CustomFields).CustomId(u3)
 	ast.Equal(0, u3.InvalidId)
 
 	u4 := &CustomUser{}
 	c = u4.CustomFieldsInvalid3()
-	c.(*CustomFields).X自定义ID(u4)
+	c.(*CustomFields).CustomId(u4)
 	ast.Equal(0, u4.InvalidId)
 
 }

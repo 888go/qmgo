@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// Database 是一个指向 MongoDB 数据库的句柄
+// Database 是一个指向 MongoDB 数据库的句柄 md5:9217ae5bd9047e3a
 # <翻译结束>
 
 
@@ -13,7 +13,7 @@
 <原文结束>
 
 # <翻译开始>
-// Collection 从数据库获取集合
+// Collection 从数据库中获取集合 md5:c5489f5523d5a33d
 # <翻译结束>
 
 
@@ -22,7 +22,7 @@
 <原文结束>
 
 # <翻译开始>
-// GetDatabaseName 返回数据库名称
+// GetDatabaseName 返回数据库的名称 md5:716064a488e6db8b
 # <翻译结束>
 
 
@@ -31,7 +31,7 @@
 <原文结束>
 
 # <翻译开始>
-// DropDatabase 删除数据库
+// DropDatabase 删除数据库 md5:aeac2378daa25d5f
 # <翻译结束>
 
 
@@ -46,12 +46,13 @@
 <原文结束>
 
 # <翻译开始>
-// RunCommand 执行给定的命令针对数据库。
+// RunCommand 在数据库上执行给定的命令。
 //
-// runCommand 参数必须是要执行的命令的文档，不能为 nil。它必须是一个保持顺序的类型，如 bson.D。Map 类型如 bson.M 不是有效的。
-// 如果命令文档包含会话 ID 或任何事务特定字段，则行为未定义。
+// runCommand 参数必须是将要执行的命令文档。它不能为 nil。这必须是一个保持顺序的类型，如 bson.D。像 bson.M 这样的映射类型是无效的。
+// 如果命令文档包含会话 ID 或任何事务特定字段，其行为是未定义的。
 //
-// opts 参数可用于为此次操作指定选项（请参阅 options.RunCmdOptions 文档）。
+// 可以使用 opts 参数来指定此操作的选项（参阅 options.RunCmdOptions 的文档）。
+// md5:eb93f7217a15650c
 # <翻译结束>
 
 
@@ -65,8 +66,9 @@
 <原文结束>
 
 # <翻译开始>
-// CreateCollection 执行创建命令，用于在服务器上明确创建一个指定名称的新集合。如果要创建的集合已存在，则此方法将返回 mongo.CommandError。该方法需要驱动版本 1.4.0 或更高版本。
-//
-// opts 参数可用于为操作指定选项（请参阅 options.CreateCollectionOptions 文档）。
+// CreateCollection 执行一个创建命令，明确在服务器上使用指定名称创建一个新的集合。如果正在创建的集合已经存在，此方法将返回一个 mongo.CommandError。此方法需要驱动程序版本 1.4.0 或更高版本。
+// 
+// 参数 opts 可用于指定操作选项（请参阅 options.CreateCollectionOptions 的文档）。
+// md5:7bd165db4ed05d28
 # <翻译结束>
 

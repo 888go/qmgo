@@ -11,14 +11,14 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
 	"fmt"
 	"testing"
-	
-	"github.com/888go/qmgo/options"
+
+	"github.com/qiniu/qmgo/options"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	officialOpts "go.mongodb.org/mongo-driver/mongo/options"
@@ -40,7 +40,7 @@ func initClient(col string) *QmgoClient {
 	cfg.MaxPoolSize = &maxPoolSize
 	cfg.MinPoolSize = &minPoolSize
 	cfg.ReadPreference = &ReadPref{Mode: readpref.PrimaryMode}
-	qClient, err := X创建(context.Background(), &cfg)
+	qClient, err := Open(context.Background(), &cfg)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -59,7 +59,7 @@ func TestQmgoClient(t *testing.T) {
 	}
 
 	var err error
-	_, err = X创建(context.Background(), &cfg)
+	_, err = Open(context.Background(), &cfg)
 	ast.NotNil(err)
 
 	// Open 成功
@@ -76,29 +76,29 @@ func TestQmgoClient(t *testing.T) {
 		ReadPreference:   &ReadPref{Mode: readpref.SecondaryMode, MaxStalenessMS: 500},
 	}
 
-	cli, err := X创建(context.Background(), &cfg)
+	cli, err := Open(context.Background(), &cfg)
 	ast.NoError(err)
-	ast.Equal(cli.X取数据库名称(), "qmgotest")
-	ast.Equal(cli.X取集合名(), "testopen")
+	ast.Equal(cli.GetDatabaseName(), "qmgotest")
+	ast.Equal(cli.GetCollectionName(), "testopen")
 
-	err = cli.X是否存活(5)
+	err = cli.Ping(5)
 	ast.NoError(err)
 
-	res, err := cli.X插入(context.Background(), bson.D{{Key: "x", Value: 1}})
+	res, err := cli.InsertOne(context.Background(), bson.D{{Key: "x", Value: 1}})
 	ast.NoError(err)
 	ast.NotNil(res)
 
-	cli.X删除集合(context.Background())
+	cli.DropCollection(context.Background())
 
 	// close Client
-	cli.X关闭(context.TODO())
-	_, err = cli.X插入(context.Background(), bson.D{{Key: "x", Value: 1}})
+	cli.Close(context.TODO())
+	_, err = cli.InsertOne(context.Background(), bson.D{{Key: "x", Value: 1}})
 	ast.EqualError(err, "client is disconnected")
 
-	err = cli.X是否存活(5)
+	err = cli.Ping(5)
 	ast.Error(err)
 
-	// 主模式，带有最大 staleness（毫秒），错误
+	// 主要模式，带有最大 stalenessMS，可能出现错误 md5:d85c933c21a84fc2
 	cfg = Config{
 		Uri:              "mongodb://localhost:27017",
 		Database:         "qmgotest",
@@ -108,7 +108,7 @@ func TestQmgoClient(t *testing.T) {
 		ReadPreference:   &ReadPref{Mode: readpref.PrimaryMode, MaxStalenessMS: 500},
 	}
 
-	cli, err = X创建(context.Background(), &cfg)
+	cli, err = Open(context.Background(), &cfg)
 	ast.Error(err)
 }
 
@@ -126,17 +126,17 @@ func TestClient(t *testing.T) {
 		MinPoolSize:      &minPoolSize,
 	}
 
-	c, err := X创建客户端(context.Background(), cfg)
+	c, err := NewClient(context.Background(), cfg)
 	ast.Equal(nil, err)
 
 	opts := &options.DatabaseOptions{DatabaseOptions: officialOpts.Database().SetReadPreference(readpref.PrimaryPreferred())}
 	cOpts := &options.CollectionOptions{CollectionOptions: officialOpts.Collection().SetReadPreference(readpref.PrimaryPreferred())}
-	coll := c.X设置数据库("qmgotest", opts).X取集合("testopen", cOpts)
+	coll := c.Database("qmgotest", opts).Collection("testopen", cOpts)
 
-	res, err := coll.X插入(context.Background(), bson.D{{Key: "x", Value: 1}})
+	res, err := coll.InsertOne(context.Background(), bson.D{{Key: "x", Value: 1}})
 	ast.NoError(err)
 	ast.NotNil(res)
-	coll.X删除集合(context.Background())
+	coll.DropCollection(context.Background())
 }
 
 func TestClient_ServerVersion(t *testing.T) {
@@ -149,10 +149,10 @@ func TestClient_ServerVersion(t *testing.T) {
 	}
 
 	ctx := context.Background()
-	cli, err := X创建(ctx, cfg)
+	cli, err := Open(ctx, cfg)
 	ast.NoError(err)
 
-	version := cli.X取版本号()
+	version := cli.ServerVersion()
 	ast.NotEmpty(version)
 	fmt.Println(version)
 }

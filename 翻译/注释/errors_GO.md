@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrQueryNotSlicePointer 当查询结果参数不是指向切片的指针时返回该错误
+// ErrQueryNotSlicePointer 如果结果参数不是一个切片的指针，返回此错误 md5:99bf2bfe686c166d
 # <翻译结束>
 
 
@@ -13,7 +13,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrQueryNotSliceType 当结果参数不是切片地址时返回该错误
+// ErrQueryNotSliceType 如果结果参数不是切片的地址时返回错误 md5:a70365d8a017acd7
 # <翻译结束>
 
 
@@ -22,7 +22,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrQueryResultTypeInconsistent 当查询结果类型与mongodb的值类型不相等时返回该错误
+// ErrQueryResultTypeInconsistent 如果查询结果类型与MongoDB值类型不一致时返回 md5:940d09b0f6052a9f
 # <翻译结束>
 
 
@@ -31,7 +31,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrQueryResultValCanNotChange 当查询结果的值不能被更改时返回该错误
+// ErrQueryResultValCanNotChange 如果结果值不能更改，返回这个错误 md5:95f73ebb72c4463a
 # <翻译结束>
 
 
@@ -40,7 +40,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrNoSuchDocuments 当没有找到任何文档时返回这个错误
+// ErrNoSuchDocuments 如果未找到文档，则返回此错误 md5:381e7dce5c56bc42
 # <翻译结束>
 
 
@@ -49,7 +49,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrTransactionRetry：如果事务需要重试则返回该错误
+// ErrTransactionRetry 如果事务需要重试时返回该错误 md5:82e274f71f7c0175
 # <翻译结束>
 
 
@@ -58,7 +58,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrTransactionNotSupported 当事务不被支持时返回该错误
+// ErrTransactionNotSupported 如果不支持事务，则返回该错误 md5:97ad2e1fbe2e7207
 # <翻译结束>
 
 
@@ -67,7 +67,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrNotSupportedUsername 当用户名无效时返回该错误
+// ErrNotSupportedUsername 如果用户名无效，则返回此错误 md5:c9df5d462362cad6
 # <翻译结束>
 
 
@@ -76,7 +76,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrNotSupportedPassword 当密码无效时返回该错误
+// ErrNotSupportedPassword 如果密码无效时返回 md5:e9df4f7f8304cc70
 # <翻译结束>
 
 
@@ -85,7 +85,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrNotValidSliceToInsert 当插入参数不是一个有效的切片时返回该错误
+// ErrNotValidSliceToInsert 如果插入的参数不是一个有效的切片，返回该错误 md5:2b940e5853972183
 # <翻译结束>
 
 
@@ -94,7 +94,7 @@
 <原文结束>
 
 # <翻译开始>
-// ErrReplacementContainUpdateOperators 当替换文档包含更新操作符时返回错误
+// ErrReplacementContainUpdateOperators 如果替换文档中包含更新操作符，返回错误 md5:4f127578930f91fa
 # <翻译结束>
 
 
@@ -104,7 +104,17 @@
 <原文结束>
 
 # <翻译开始>
-// IsErrNoDocuments 检查 err 是否表示没有文档，包括mongo-go-driver库的错误和qmgo自定义错误
-// 已弃用，直接调用 if err == ErrNoSuchDocuments 或 if err == mongo.ErrNoDocuments 即可
+// IsErrNoDocuments 检查错误是否表示没有找到文档，既包括 mongo-go-driver 的错误也包括 qmgo 自定义的错误
+// 已弃用，直接判断 err == ErrNoSuchDocuments 或者 err == mongo.ErrNoDocuments 即可
+// md5:a9bcbf0c80c5509c
+# <翻译结束>
+
+
+<原文开始>
+// IsDup check if err is mongo E11000 (duplicate err)。
+<原文结束>
+
+# <翻译开始>
+// IsDup 检查错误是否为MongoDB的E11000（重复错误）。 md5:4a3435e9efa67970
 # <翻译结束>
 

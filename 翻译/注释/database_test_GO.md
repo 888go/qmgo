@@ -20,33 +20,38 @@
 <原文结束>
 
 # <翻译开始>
-// TestCreateCollection 是一个测试函数，用于测试创建时间序列集合的功能。
-// 参数 t *testing.T 为 Golang 中的标准测试对象，用于断言和报告测试结果。
+// ```go
+// 测试创建集合
 // func TestCreateCollection(t *testing.T) {
-	// ast := require.New(t) 创建一个新的断言工具对象，方便进行错误判断。
-	// initClient("test") 初始化一个客户端，连接到名为 "test" 的数据库或服务。
+// 初始化断言工具
+// 	ast := require.New(t)
+// 
+// 初始化客户端，连接名为"test"的数据库
 // 	cli := initClient("test")
-	// 定义 TimeSeriesOptions 结构体实例，设置时间字段为 "timestamp"
+// 
+// 设置时间序列选项
 // 	timeSeriesOpt := options.TimeSeriesOptions{
 // 		TimeField: "timestamp",
 // 	}
-	// 设置元数据字段为 "metadata"
+// 设置元数据字段
 // 	timeSeriesOpt.SetMetaField("metadata")
-	// 创建一个空的上下文对象 ctx，用于执行后续操作。
+// 
+// 创建上下文
 // 	ctx := context.Background()
-	// 创建 CreateCollectionOptions 实例，并设置其中的时间序列选项为上面定义的 timeSeriesOpt。
-// 	createCollectionOpts := opts.CreateCollectionOptions{
-// 		CreateCollectionOptions: options.CreateCollection().SetTimeSeriesOptions(&timeSeriesOpt),
-// 	}
-	// 使用 cli 客户端尝试创建名为 "syslog" 的集合，并传入 createCollectionOpts 配置选项。
-	// 如果创建过程中出现错误，则通过断言工具判断 err 是否为 nil，如果不是则测试失败。
+// 创建集合选项，设置时间序列相关选项
+// 	createCollectionOpts := opts.CreateCollectionOptions{CreateCollectionOptions: options.CreateCollection().SetTimeSeriesOptions(&timeSeriesOpt)}
+// 创建名为"syslog"的集合，检查是否出错
 // 	if err := cli.CreateCollection(ctx, "syslog", createCollectionOpts); err != nil {
 // 		ast.NoError(err)
 // 	}
-	// 删除名为 "syslog" 的集合。
+// 删除集合
 // 	cli.DropCollection(ctx)
-	// 删除当前使用的数据库（可能在 initClient 函数中指定）。
+// 删除数据库
 // 	cli.DropDatabase(ctx)
 // }
+// ```
+// 
+// 这段代码是一个测试函数，用于测试在ArangoDB中创建带有时间序列选项的集合。它首先初始化测试所需的工具和客户端，然后定义时间序列的配置，接着在上下文中创建集合。如果在创建过程中没有错误，会删除创建的集合和数据库。
+// md5:79faec56c35696a6
 # <翻译结束>
 

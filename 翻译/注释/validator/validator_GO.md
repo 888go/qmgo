@@ -4,7 +4,7 @@
 <原文结束>
 
 # <翻译开始>
-// 使用单一实例的Validate，它会缓存结构体信息
+// 使用单例的Validate，它缓存结构体信息 md5:37316caf6446b052
 # <翻译结束>
 
 
@@ -13,7 +13,7 @@
 <原文结束>
 
 # <翻译开始>
-// SetValidate 设置验证器，使其可以使用自定义规则
+// SetValidate 允许使用自定义规则进行验证 md5:c45d0acce1bafd26
 # <翻译结束>
 
 
@@ -22,7 +22,7 @@
 <原文结束>
 
 # <翻译开始>
-// validatorNeeded 检查对于 opType 是否需要验证器
+// validatorNeeded 检查操作类型（opType）是否需要验证器 md5:69c24cea9b0cf3e4
 # <翻译结束>
 
 
@@ -32,8 +32,9 @@
 <原文结束>
 
 # <翻译开始>
-// Do 调用验证器进行检查
-// 在此处不要使用 opts
+// Do 调用验证器检查
+// 不要在這裡使用 opts
+// md5:a3e02eb169c74704
 # <翻译结束>
 
 
@@ -42,7 +43,7 @@
 <原文结束>
 
 # <翻译开始>
-// sliceHandle 处理切片文档
+// sliceHandle处理切片文档 md5:92800dd5899836ce
 # <翻译结束>
 
 
@@ -51,8 +52,8 @@
 <原文结束>
 
 # <翻译开始>
-// []interface{}{UserType{}...} 
-// 创建一个接口类型切片，其中包含零个或多个UserType结构体实例。这里的"..."表示可变数量的参数，表示可以传入任意数量的UserType实例到切片中。
+// []interface{}{UserType{}...} 的中文翻译为：
+// []interface{}{UserType实例...} md5:bda81608072dd1ad
 # <翻译结束>
 
 
@@ -61,7 +62,7 @@
 <原文结束>
 
 # <翻译开始>
-// 检查opType是否支持，并调用fieldHandler
+// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
 # <翻译结束>
 
 
@@ -73,5 +74,6 @@
 # <翻译开始>
 // validatorStruct 检查doc的类型是否为validator支持的结构体
 // 实现方式与validator相同
+// md5:566d3931e3bc9c80
 # <翻译结束>
 

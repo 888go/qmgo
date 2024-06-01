@@ -13,6 +13,11 @@
 
 package options
 
+// [提示]
+// type 查找选项 struct {
+// 查询钩子 interface{}
+// }
+// [结束]
 type FindOptions struct {
 	QueryHook interface{}
 }
