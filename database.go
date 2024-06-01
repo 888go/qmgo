@@ -23,6 +23,12 @@ import (
 )
 
 // Database 是一个指向 MongoDB 数据库的句柄 md5:9217ae5bd9047e3a
+// [提示]
+//type 数据库 struct {
+//     数据库实例 *mongo.Database
+//     编码注册器 *bsoncodec.Registry
+// }
+// [结束]
 type Database struct {//hm:数据库  cz:type Database  
 	database *mongo.Database
 
@@ -30,6 +36,7 @@ type Database struct {//hm:数据库  cz:type Database
 }
 
 // Collection 从数据库中获取集合 md5:c5489f5523d5a33d
+// [提示:] func (d *数据库) Collection(名称 string, 选项 ...*options.集合选项) *集合 {}
 // ff:取集合
 // name:名称
 // opts:可选选项
@@ -49,12 +56,14 @@ func (d *Database) Collection(name string, opts ...*options.CollectionOptions) *
 }
 
 // GetDatabaseName 返回数据库的名称 md5:716064a488e6db8b
+// [提示:] func (d *数据库) 获取数据库名称() 字符串 {}
 // ff:取数据库名称
 func (d *Database) GetDatabaseName() string {
 	return d.database.Name()
 }
 
 // DropDatabase 删除数据库 md5:aeac2378daa25d5f
+// [提示:] func (d *数据库) 删除数据库(ctx 上下文.Context) 错误 {}
 // ff:删除数据库
 // ctx:上下文
 func (d *Database) DropDatabase(ctx context.Context) error {
@@ -68,6 +77,7 @@ func (d *Database) DropDatabase(ctx context.Context) error {
 //
 // 可以使用 opts 参数来指定此操作的选项（参阅 options.RunCmdOptions 的文档）。
 // md5:eb93f7217a15650c
+// [提示:] func (d *数据库) 执行命令(ctx 上下文 контекст, runCommand 命令结构体)
 // ff:执行命令
 // ctx:上下文
 // runCommand:
@@ -84,6 +94,7 @@ func (d *Database) RunCommand(ctx context.Context, runCommand interface{}, opts 
 // 
 // 参数 opts 可用于指定操作选项（请参阅 options.CreateCollectionOptions 的文档）。
 // md5:7bd165db4ed05d28
+// [提示:] func (db *数据库) 创建集合(ctx 上下文, 名称 string, 选项 ...options.创建集合选项) error {}
 // ff:创建集合
 // ctx:上下文
 // name:集合名称

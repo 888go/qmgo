@@ -37,4 +37,6 @@
     <tree path="/util_test.go" title="单元测试"/>
     <tree path="/bulk.go" title="批量操作"/>
     <tree path="/bson.go" title="bson"/>
+    <tree path="/results.go" title="操作结果"/>
+    <tree path="/util.go" title="工具方法"/>
 </trees>

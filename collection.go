@@ -29,6 +29,12 @@ import (
 )
 
 // Collection 是一个MongoDB集合的句柄 md5:be1b94030609bdd1
+// [提示]
+//type 文档集合 struct {
+//     文档集合接口 *mongo.DocumentCollection
+//     编码注册器 *bsoncodec.Registry
+// }
+// [结束]
 type Collection struct {//hm:文档集合  cz:type Collection  
 	collection *mongo.Collection
 
@@ -36,6 +42,7 @@ type Collection struct {//hm:文档集合  cz:type Collection
 }
 
 // Find 通过条件过滤并查找，返回QueryI md5:bda4cc0c85d800a1
+// [提示:] func (c *集合) 查找(ctx 上下文, 过滤器 interface{})
 // ff:查询
 // ctx:上下文
 // filter:查询条件
@@ -53,6 +60,7 @@ func (c *Collection) Find(ctx context.Context, filter interface{}, opts ...opts.
 
 // InsertOne insert one document into the collection
 // If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook
+// [提示:] func (c *集合) 插入一个(ctx 上下文, 文档 interface{})
 // ff:插入
 // ctx:上下文
 // doc:待插入文档
@@ -87,7 +95,14 @@ func (c *Collection) InsertOne(ctx context.Context, doc interface{}, opts ...opt
 }
 
 // InsertMany executes an insert command to insert multiple documents into the collection.
-// If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook
+// If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook多个
+// [提示]
+//func (c *集合) 插入多条(ctx 上下文, 文档 interface{}) (插入结果 []interface{}, 错误 error) {
+// 
+// }
+// 
+// // 注意：这里仅做简单翻译，具体方法名和参数名在实际编程中应保持英文，以符合Go语言的编程规范和社区习惯。
+// [结束]
 // ff:插入多个
 // ctx:上下文
 // docs:待插入文档
@@ -147,6 +162,11 @@ func interfaceToSliceInterface(docs interface{}) []interface{} {
 // and cannot contain any update operators
 // If replacement has "_id" field and the document is existed, please initial it with existing id(even with Qmgo default field feature).
 // Otherwise, "the (immutable) field '_id' altered" error happens.
+// [提示]
+//func (c *集合) 更新或插入(ctx 上下文.Context, 过滤器 interface{}) (写入结果 WriteResult, 错误 error) {
+// 
+// }
+// [结束]
 // ff:更新插入
 // ctx:上下文
 // filter:更新条件
@@ -187,7 +207,8 @@ func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement
 
 // UpsertId updates one documents if id match, inserts one document if id is not match and the id will inject into the document
 // The replacement parameter must be a document that will be used to replace the selected document. It cannot be nil
-// and cannot contain any update operators
+// and cannot contain any update operators并按ID
+// [提示:] func (c *集合) 更新或插入Id(ctx 上下文, id 接口{}
 // ff:更新插入并按ID
 // ctx:上下文
 // id:更新ID
@@ -225,6 +246,45 @@ func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement i
 }
 
 // UpdateOne executes an update command to update at most one document in the collection.
+// [提示]
+//func (c *集合) 更新一条数据(ctx 上下文, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
+// 
+// }
+// 
+// // UpdateResult 是更新操作的结果类型
+// type UpdateResult struct {
+//     MatchedCount int64  // 匹配文档数
+//     ModifiedCount int64  // 修改文档数
+//     UpsertedID    *primitive.ObjectID // 新增文档的_id，如果进行了upsert操作
+// }
+// 
+// func (c *Collection) InsertOne(ctx context.Context, document interface{}) (插入结果 InsertOneResult, 错误 error) {
+// 
+// }
+// 
+// // InsertOneResult 插入操作的结果类型
+// type InsertOneResult struct {
+//     InsertedID *primitive.ObjectID // 插入文档的_id
+// }
+// 
+// func (c *Collection) DeleteOne(ctx context.Context, filter interface{}) (删除结果 DeleteResult, 错误 error) {
+// 
+// }
+// 
+// // DeleteResult 删除操作的结果类型
+// type DeleteResult struct {
+//     DeletedCount int64 // 删除的文档数
+// }
+// 
+// func (c *Collection) Find(ctx context.Context, filter interface{}) *Query {
+// 
+// }
+// 
+// // Query 是用于构建查询的类型
+// type Query struct {
+//     // 包含了多个查询相关的配置和方法
+// }
+// [结束]
 // ff:更新一条
 // ctx:上下文
 // filter:更新条件
@@ -264,6 +324,7 @@ func (c *Collection) UpdateOne(ctx context.Context, filter interface{}, update i
 }
 
 // UpdateId executes an update command to update at most one document in the collection.
+// [提示:] func (c *集合) 更新Id(ctx 上下文, id 任意类型) (结果 Result, 错误 error)
 // ff:更新并按ID
 // ctx:上下文
 // id:更新ID
@@ -301,6 +362,7 @@ func (c *Collection) UpdateId(ctx context.Context, id interface{}, update interf
 
 // UpdateAll executes an update command to update documents in the collection.
 // The matchedCount is 0 in UpdateResult if no document updated
+// [提示:] func (c *集合) 更新所有(ctx 上下文.Context, 过滤器 interface{})
 // ff:更新
 // ctx:上下文
 // filter:更新条件
@@ -337,6 +399,19 @@ func (c *Collection) UpdateAll(ctx context.Context, filter interface{}, update i
 
 // ReplaceOne 执行更新命令，最多更新集合中的一个文档。如果 opts 中的 UpdateHook 被设置，那么 Hook 将在其上执行，否则 Hook 尝试将 doc 作为 Hook。预期 doc 的类型是用户定义的文档的定义。
 // md5:1d830477f8b32e37
+// [提示]
+//func (c *集合) 替换单个文档(ctx 上下文 контекст, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
+// 
+// }
+// 
+// // UpdateResult 是一个返回结果的结构体，可能包含匹配的文档数和任何操作错误。
+// type UpdateResult struct {
+//     MatchedCount int64  // 匹配文档数量
+//     ModifiedCount int64  // 修改文档数量
+//     UpsertedID    interface{} // 新插入文档的ID（如果进行了upsert操作）
+//     Err           error       // 操作错误
+// }
+// [结束]
 // ff:替换一条
 // ctx:上下文
 // filter:替换条件
@@ -375,6 +450,7 @@ func (c *Collection) ReplaceOne(ctx context.Context, filter interface{}, doc int
 
 // Remove executes a delete command to delete at most one document from the collection.
 // if filter is bson.M{}，DeleteOne will delete one document in collection
+// [提示:] func (c *集合) 删除(ctx 上下文, 过滤器 interface{})
 // ff:删除一条
 // ctx:上下文
 // filter:删除条件
@@ -408,6 +484,7 @@ func (c *Collection) Remove(ctx context.Context, filter interface{}, opts ...opt
 }
 
 // RemoveId 执行删除命令，从集合中删除最多一个文档。 md5:6516d8a8963d018c
+// [提示:] func (c *集合) 删除ById(ctx 上下文, id interface{}) (删除结果 error)
 // ff:删除并按ID
 // ctx:上下文
 // id:删除ID
@@ -443,6 +520,7 @@ func (c *Collection) RemoveId(ctx context.Context, id interface{}, opts ...opts.
 
 // RemoveAll executes a delete command to delete documents from the collection.
 // If filter is bson.M{}，all ducuments in Collection will be deleted
+// [提示:] func (c *集合) 全部移除(ctx 上下文, 过滤器 interface{})
 // ff:删除
 // ctx:上下文
 // filter:删除条件
@@ -477,6 +555,7 @@ func (c *Collection) RemoveAll(ctx context.Context, filter interface{}, opts ...
 }
 
 // Aggregate 在集合上执行聚合命令，并返回一个 AggregateI，用于获取结果文档。 md5:e57ffed517c59fbc
+// [提示:] func (c *集合) 批处理聚合操作(ctx 上下文, 管道 interface{})
 // ff:聚合
 // ctx:上下文
 // pipeline:聚合管道
@@ -530,6 +609,7 @@ func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel)
 // 如果uniques/indexes是`[]string{"name"}`，意味着创建名为"name"的索引
 // 如果uniques/indexes是`[]string{"name,-age", "uid"}`，表示创建复合索引：name和-age，然后创建一个索引：uid
 // md5:c595ad59f9c60c06
+// [提示:] func (c *集合) 确保索引(ctx 上下文, 唯一索引 []string, 普通索引 []string) (错误 error) {}
 // ff:EnsureIndexes弃用
 // ctx:
 // uniques:
@@ -563,7 +643,8 @@ func (c *Collection) EnsureIndexes(ctx context.Context, uniques []string, indexe
 // CreateIndexes 在集合中创建多个索引
 // 如果opts.IndexModel中的Key为[]string{"name"}，表示创建索引：name
 // 如果opts.IndexModel中的Key为[]string{"name", "-age"}，表示创建复合索引：name和-age
-// md5:822a787892c2186f
+// md5:822a787892c2186f索引s
+// [提示:] func (c *Collection) 创建索引(ctx context.Context, 索引模型 []opts.IndexModel) (错误 error) {}
 // ff:创建多条索引
 // ctx:上下文
 // indexes:索引s
@@ -577,6 +658,7 @@ func (c *Collection) CreateIndexes(ctx context.Context, indexes []opts.IndexMode
 // 如果opts.IndexModel中的Key为[]string{"name"}，表示创建名为"name"的索引
 // 如果opts.IndexModel中的Key为[]string{"name","-age"}，表示创建复合索引：按照"name"升序和"age"降序
 // md5:70c27ea42ff3bbbf
+// [提示:] func (c *集合) 创建单个索引(ctx 上下文, index 索引模型) 错误 {}
 // ff:创建索引
 // ctx:上下文
 // index:索引
@@ -587,7 +669,8 @@ func (c *Collection) CreateOneIndex(ctx context.Context, index opts.IndexModel) 
 
 // DropAllIndexes 会删除集合上除了_id字段索引之外的所有索引
 // 如果集合上只有_id字段的索引，该函数调用将报告错误
-// md5:e7655b40436f93df
+// md5:e7655b40436f93df全部索引
+// [提示:] func (c *集合) 删除所有索引(ctx 上下文环境) (错误 error) {}
 // ff:删除全部索引
 // ctx:上下文
 // err:错误
@@ -599,7 +682,8 @@ func (c *Collection) DropAllIndexes(ctx context.Context) (err error) {
 // DropIndex 从集合中删除索引，需要删除的索引应与输入的索引列表匹配
 // 索引是 []string{"name"} 表示删除名为 "name" 的单个索引
 // 索引是 []string{"name", "-age"} 表示删除复合索引：name 和排除年龄 (-age) 的部分索引
-// md5:4ad77e88557061c7
+// md5:4ad77e88557061c7索引索引s
+// [提示:] func (c *集合) 删除索引(ctx 上下文, 索引列表 []string) error {}
 // ff:删除索引
 // ctx:上下文
 // indexes:索引s
@@ -628,7 +712,8 @@ func generateDroppedIndex(index []string) string {
 
 // DropIndexDropIndex 会删除索引
 // 即使索引不存在，这个操作也是安全的
-// md5:e7b65cd93b1de7f7
+// md5:e7b65cd93b1de7f7集合
+// [提示:] func (c *集合) 删除集合(ctx 上下文.Context) 错误 {}
 // ff:删除集合
 // ctx:上下文
 func (c *Collection) DropCollection(ctx context.Context) error {
@@ -636,18 +721,21 @@ func (c *Collection) DropCollection(ctx context.Context) error {
 }
 
 // CloneCollection 创建集合的副本 md5:5df787f1c8ebab26
+// [提示:] func (c *集合) 克隆集合() (*mongo.集合, 错误) {}
 // ff:取副本
 func (c *Collection) CloneCollection() (*mongo.Collection, error) {
 	return c.collection.Clone()
 }
 
 // GetCollectionName 返回集合的名字 md5:440484db8f2a466d
+// [提示:] func (c *集合) 获取集合名称() 字符串 {}
 // ff:取集合名
 func (c *Collection) GetCollectionName() string {
 	return c.collection.Name()
 }
 
 // Watch returns a change stream for all changes on the corresponding collection. See
+// [提示:] func (c *集合) 监听(ctx 上下文.Context, 管道 interface{})
 // ff:取变更流
 // ctx:上下文
 // pipeline:管道

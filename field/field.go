@@ -39,6 +39,10 @@ var fieldHandler = map[operator.OpType]func(doc interface{}) error{
 // Do 调用特定方法根据 fType 处理字段
 // 不在这里使用 opts
 // md5:01967b5b64a19adb
+// [提示]
+//// 执行上下文，文档接口
+// func ExecuteInContext(操作上下文 context.Context, 文档 interface{}) 
+// [结束]
 // ff:
 // ctx:
 // doc:

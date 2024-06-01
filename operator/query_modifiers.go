@@ -14,6 +14,19 @@
 package operator
 
 //Query Modifiers
+// [提示]
+//const (
+// 	解释 = "$explain"
+// 	提示 = "$hint"
+// 	最大时间毫秒 = "$maxTimeMS"
+// 	排序 = "$orderby"
+// 	查询 = "$query"
+// 	返回键 = "$returnKey"
+// 	显示磁盘位置 = "$showDiskLoc"
+// 	
+// 	自然顺序 = "$natural"
+// )
+// [结束]
 const (
 	// Modifiers
 	Explain     = "$explain"

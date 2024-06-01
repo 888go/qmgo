@@ -47,10 +47,6 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 qm=更新替换
 cz=Update interface{}
 
-[Iter() CursorI]
-qm=Iter弃用
-cz=Iter() CursorI
-
 [Replace bool]
 qm=是否替换
 cz=Replace bool
@@ -60,7 +56,7 @@ qm=是否删除
 cz=Remove bool
 
 [Upsert bool]
-qm=未找到是否插入
+qm=是否未找到时插入
 cz=Upsert bool
 
 [ReturnNew bool]
@@ -144,6 +140,10 @@ cf=2
 qm=取一条
 cz=One(result interface{}) error
 cf=2
+
+[Iter() CursorI]
+qm=Iter弃用
+cz=Iter() CursorI
 
 [Cursor() CursorI]
 qm=取结果集

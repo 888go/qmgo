@@ -15,6 +15,12 @@ package options
 
 import "go.mongodb.org/mongo-driver/mongo/options"
 
+// [提示]
+//type 删除选项 struct {
+//     删除钩子 interface{}
+//     *options.删除选项
+// }
+// [结束]
 type RemoveOptions struct {
 	RemoveHook interface{}
 	*options.DeleteOptions

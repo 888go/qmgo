@@ -21,6 +21,7 @@ var middlewareCallback = []callback{
 }
 
 // Register 将回调函数注册到中间件中 md5:23bc8366f03c6dbb
+// [提示:] func 注册中间件(callback 中间件回调函数) {}
 // ff:
 // cb:
 func Register(cb callback) {
@@ -30,6 +31,7 @@ func Register(cb callback) {
 // 始终调用每个注册
 // 文档始终是操作文档
 // md5:f300f2035d7e8114
+// [提示:] func 执行处理(ctx 上下文, 内容 interface{})
 // ff:
 // ctx:
 // content:

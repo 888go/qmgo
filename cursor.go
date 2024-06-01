@@ -20,6 +20,13 @@ import (
 )
 
 // Cursor struct define
+// [提示]
+//type 笔记本 struct {
+//     上下文     context.Context
+//     数据游标   *mongo.Cursor
+//     错误       error
+// }
+// [结束]
 type Cursor struct {
 	ctx    context.Context
 	cursor *mongo.Cursor
@@ -28,6 +35,7 @@ type Cursor struct {
 
 // Next 获取此游标下的下一个文档。如果未发生错误且游标未耗尽，它将返回true。
 // md5:29446221269baaee
+// [提示:] func (c *游标) 下一个(result interface{}
 // ff:下一个
 // result:
 func (c *Cursor) Next(result interface{}) bool {
@@ -48,6 +56,7 @@ func (c *Cursor) Next(result interface{}) bool {
 // All 使用游标遍历每个文档，并将其解码到结果中。results 参数必须是指向切片的指针。
 // 建议在 struct Query 或 Aggregate 中使用 All() 方法。
 // md5:283225edc771266b
+// [提示:] func (c *游标) 全部结果(results interface{})
 // ff:取全部
 // results:
 func (c *Cursor) All(results interface{}) error {
@@ -67,6 +76,7 @@ func (c *Cursor) All(results interface{}) error {
 // Close 关闭这个游标。在调用 Close 之后，不应再调用 Next 或 TryNext。
 // 当游标对象不再使用时，应主动关闭它。
 // md5:7c67b9468038ed61
+// [提示:] func (c *Cursor) 关闭() error {}
 // ff:关闭
 func (c *Cursor) Close() error {
 	if c.err != nil {
@@ -76,6 +86,7 @@ func (c *Cursor) Close() error {
 }
 
 // Err 返回Cursor的最后一个错误，如果没有发生错误，则返回nil md5:2ebbf5e5b4796f72
+// [提示:] func (c *Cursor) 错误() error {}
 // ff:取错误
 func (c *Cursor) Err() error {
 	if c.err != nil {

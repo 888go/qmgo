@@ -28,7 +28,26 @@ import (
 )
 
 // 定义查询结构体 md5:56541bbc29d4ce15
-type Query struct {
+// [提示]
+//
+//	type 查询 struct {
+//	    筛选条件 interface{}
+//	    排序方式 interface{}
+//	    选择字段 interface{}
+//	    索引指引 interface{}
+//	    数组筛选器 *options.数组筛选选项
+//	    限制数量 *int64
+//	    跳过数量 *int64
+//	    批次大小 *int64
+//	    不超时 *bool
+//	    文档集合 *mongo.Collection
+//	    查询选项 []qOpts.查询选项
+//	    编码注册器 *bsoncodec.Registry
+//	    上下文 context.Context
+//	}
+//
+// [结束]
+type Query struct {//hm:查询  cz:type Query   
 	filter          interface{}
 	sort            interface{}
 	project         interface{}
@@ -45,7 +64,7 @@ type Query struct {
 	opts       []qOpts.FindOptions
 	registry   *bsoncodec.Registry
 }
-
+// [提示:] func (q *Query) 文档排序规则设置(collation *options.Collation) 查询接口I {}
 // ff:设置排序规则
 // collation:规则
 func (q *Query) Collation(collation *options.Collation) QueryI {
@@ -53,7 +72,7 @@ func (q *Query) Collation(collation *options.Collation) QueryI {
 	newQ.collation = collation
 	return newQ
 }
-
+// [提示:] func (q *Query) 不使用超时游标(n bool) QueryI {}
 // ff:设置不超时
 // n:是否不超时
 func (q *Query) NoCursorTimeout(n bool) QueryI {
@@ -65,6 +84,7 @@ func (q *Query) NoCursorTimeout(n bool) QueryI {
 // BatchSize 设置 BatchSize 字段的值。
 // 它表示服务器返回的每批文档的最大数量。
 // md5:66277d16095ac151
+// [提示:] func (q *Query) 设置批次大小(n int64) QueryI {}
 // ff:设置批量处理数量
 // n:数量
 func (q *Query) BatchSize(n int64) QueryI {
@@ -76,12 +96,13 @@ func (q *Query) BatchSize(n int64) QueryI {
 // Sort is Used to set the sorting rules for the returned results
 // When multiple sort fields are passed in at the same time, they are arranged in the order in which the fields are passed in.
 // For example, {"age", "-name"}, first sort by age in ascending order, then sort by name in descending order
+// [提示:] func (q *Query) 排序(字段 ...string) QueryI {}
 // ff:排序
 // fields:排序字段
 func (q *Query) Sort(fields ...string) QueryI {
 	if len(fields) == 0 {
-// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
-// md5:c94b59dcb408353d
+		// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
+		// md5:c94b59dcb408353d
 		return q
 	}
 
@@ -101,16 +122,20 @@ func (q *Query) Sort(fields ...string) QueryI {
 // SetArrayFilter 用于应用更新数组的过滤器
 // 示例：
 // var res = QueryTestItem{}
-// change := Change{
-//     Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
-//     ReturnNew: false,
-// }
+//
+//	change := Change{
+//	    Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
+//	    ReturnNew: false,
+//	}
+//
 // cli.Find(context.Background(), bson.M{"name": "Lucas"}).
-//     SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
-//       Apply(change, &res) 
-// 
+//
+//	SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
+//	  Apply(change, &res)
+//
 // 这段代码的注释说明了`SetArrayFilter`方法是用于设置更新操作中的数组过滤器。它给出了一个例子，展示了如何使用该方法来更新名为"Lucas"的文档中，符合条件（"elem.warehouse"在"C"或"F"中）的`instock`数组元素的`qty`字段为100。`Apply`方法最后将变更应用到查询结果上。
 // md5:3fa80906c918e6a3
+// [提示:] func (q *Query) 设置数组过滤器(filter *选项.数组过滤器) 查询接口 {}
 // ff:设置切片过滤
 // filter:过滤条件
 func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
@@ -131,6 +156,7 @@ func (q *Query) Select(projection interface{}) QueryI {
 }
 
 // Skip skip n records
+// [提示:] func (q *Query) 跳过(n int64) QueryI {}
 // ff:跳过
 // n:跳过数量
 func (q *Query) Skip(n int64) QueryI {
@@ -141,6 +167,7 @@ func (q *Query) Skip(n int64) QueryI {
 
 // Hint 设置Hint字段的值。这应该是字符串形式的索引名称，或者是文档形式的索引规范。默认值为nil，表示不发送提示。
 // md5:3d3535508606dd43
+// [提示:] func (q *Query) 指定索引(hint interface{})
 // ff:指定索引字段
 // hint:索引字段
 func (q *Query) Hint(hint interface{}) QueryI {
@@ -154,6 +181,7 @@ func (q *Query) Hint(hint interface{}) QueryI {
 // 当限制值小于 0 时，负限制类似于正限制，但返回单个批次结果后关闭游标。
 // 参考 https://docs.mongodb.com/manual/reference/method/cursor.limit/index.html
 // md5:9081095bd35be08f
+// [提示:] func (q *查询) 限制(n int64) 查询接口 {}
 // ff:设置最大返回数
 // n:数量
 func (q *Query) Limit(n int64) QueryI {
@@ -165,6 +193,7 @@ func (q *Query) Limit(n int64) QueryI {
 // 对符合过滤条件的记录执行一次查询
 // 如果搜索失败，将返回一个错误
 // md5:68571c814c5cd088
+// [提示:] func (q *Query) 一个(result interface{})
 // ff:取一条
 // result:结果指针
 func (q *Query) One(result interface{}) error {
@@ -207,6 +236,7 @@ func (q *Query) One(result interface{}) error {
 // 用于查询满足过滤条件的所有记录
 // 结果的静态类型必须是切片指针
 // md5:5f57d8aff8afe252
+// [提示:] func (q *Query) 全部获取(result interface{})
 // ff:取全部
 // result:结果指针
 func (q *Query) All(result interface{}) error {
@@ -264,6 +294,7 @@ func (q *Query) All(result interface{}) error {
 }
 
 // Count 计算符合条件的条目数量 md5:7bed3eaaee1ce368
+// [提示:] func (q *Query) 计数() (总数 int64, 错误 error) {}
 // ff:取数量
 // n:数量
 // err:错误
@@ -281,6 +312,7 @@ func (q *Query) Count() (n int64, err error) {
 }
 
 // EstimatedCount 通过元数据计算集合的数量 md5:8c9bd7e463139421
+// [提示:] func (q *Query) 估算计数() (总数 int64, 错误 error) {}
 // ff:取预估数量
 // n:数量
 // err:错误
@@ -293,6 +325,7 @@ func (q *Query) EstimatedCount() (n int64, err error) {
 // 函数会检查result切片元素的静态类型是否与MongoDB中获取的数据类型一致。
 // 参考：https://docs.mongodb.com/manual/reference/command/distinct/
 // md5:b83f3aa5718b2dfd
+// [提示:] func (q *Query) 唯一值(key string, result interface{}
 // ff:去重
 // key:字段名
 // result:切片指针
@@ -336,6 +369,7 @@ func (q *Query) Distinct(key string, result interface{}) error {
 // Cursor 获取一个 Cursor 对象，可用于遍历查询结果集
 // 在获取到 CursorI 对象后，应主动调用 Close 接口来关闭游标
 // md5:b1e9fc62a5f777fe
+// [提示:] func (q *Query) 获取游标() 游标接口 {}
 // ff:取结果集
 func (q *Query) Cursor() CursorI {
 	opt := options.Find()
@@ -389,6 +423,7 @@ func (q *Query) Cursor() CursorI {
 // in the collection and the update parameter must be a document containing update operators;
 // if no objects are found and Change.Upsert is false, it will returns ErrNoDocuments.
 //
+// [提示:] func (q *Query) 应用变更(change 变更, result 结果接口{}
 // ff:执行命令
 // change:
 // result:

@@ -29,6 +29,27 @@ import (
 )
 
 // 初始MongoDB实例的配置 md5:09dcbab1d00adb46
+// [提示]
+//type 配置 struct {
+//     连接URI        string `json:"uri"`
+//     数据库名       string `json:"database"`
+//     集合名         string `json:"coll"`
+//     连接超时毫秒   *int64 `json:"connectTimeoutMS"`
+//     最大连接池大小 *uint64 `json:"maxPoolSize"`
+//     最小连接池大小 *uint64 `json:"minPoolSize"`
+//     套接字超时毫秒 *int64 `json:"socketTimeoutMS"`
+//     读取首选项     *读取偏好 `json:"readPreference"`
+//     认证信息       *凭证   `json:"auth"`
+// }
+// 
+// type 读取偏好 struct {
+//     // ... (ReadPref结构体内的字段也需要翻译)
+// }
+// 
+// type 凭证 struct {
+//     // ... (Credential结构体内的字段也需要翻译)
+// }
+// [结束]
 type Config struct {//hm:配置  cz:type Config  
 // URI 示例：[mongodb://][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
 // URI 参考：https://docs.mongodb.com/manual/reference/connection-string/ 
@@ -76,6 +97,15 @@ type Config struct {//hm:配置  cz:type Config
 //
 // false if no password is specified, indicating that the password should be taken from the context of the running
 // process. For other mechanisms, this field is ignored.
+// [提示]
+//type 身份凭证 struct {
+//     认证机制     string `json:"authMechanism"`
+//     认证源       string `json:"authSource"`
+//     用户名       string `json:"username"`
+//     密码         string `json:"password"`
+//     密码已设置   bool   `json:"passwordSet"`
+// }
+// [结束]
 type Credential struct {//hm:身份凭证  cz:type Credential  
 	AuthMechanism string `json:"authMechanism"`//qm:认证机制  cz:AuthMechanism string `json:"authMechanism"`  
 	AuthSource    string `json:"authSource"`//qm:认证源  cz:AuthSource string `json:"authSource"`  
@@ -85,6 +115,12 @@ type Credential struct {//hm:身份凭证  cz:type Credential
 }
 
 // ReadPref确定哪些服务器适合进行读取操作。 md5:d5ae507a40965ac9
+// [提示]
+//type 读取偏好 struct {
+//     最大延迟毫秒 int64 `json:"maxStalenessMS"`
+//     模式 readpref.模式 `json:"mode"`
+// }
+// [结束]
 type ReadPref struct {//hm:读取偏好  cz:type ReadPref  
 // MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
 // md5:01c3097a5d9a368b
@@ -96,6 +132,13 @@ type ReadPref struct {//hm:读取偏好  cz:type ReadPref
 }
 
 // QmgoClient 指定操作MongoDB的实例 md5:ef9044b4ab2af757
+// [提示]
+//type 七牛Mongo客户端 struct {
+//     集合 *集合操作
+//     数据库 *数据库操作
+//     客户端 *客户端连接
+// }
+// [结束]
 type QmgoClient struct {//hm:Mongo客户端  cz:type QmgoClient  
 	*Collection
 	*Database
@@ -105,6 +148,7 @@ type QmgoClient struct {//hm:Mongo客户端  cz:type QmgoClient
 // Open 根据配置创建客户端实例
 // QmgoClient 可以操作所有 qmgo.client、qmgo.database 和 qmgo.collection
 // md5:bc872aaa93cf801a
+// [提示:] func 连接(ctx 上下文, 配置 *配置, 选项 ...options.ClientOptions) (客户端 *QmgoClient, 错误 error) {}
 // ff:连接
 // ctx:上下文
 // conf:配置
@@ -131,6 +175,13 @@ func Open(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *Q
 }
 
 // Client 创建一个到Mongo的客户端 md5:3527d3de272044c3
+// [提示]
+//type 客户端 struct {
+//     连接 *mongo.Client
+//     配置  Config
+//     注册表 *bsoncodec.Registry
+// }
+// [结束]
 type Client struct {//hm:客户端  cz:type Client  
 	client *mongo.Client
 	conf   Config
@@ -139,6 +190,7 @@ type Client struct {//hm:客户端  cz:type Client
 }
 
 // NewClient 创建 Qmgo MongoDB 客户端 md5:64c9dc0f30edc1ac
+// [提示:] func 新建客户端(ctx 上下文, 配置 *配置, 选项 ...选项客户端) (客户端 *Client, 错误 error) {}
 // ff:创建客户端
 // ctx:上下文
 // conf:配置
@@ -281,6 +333,7 @@ func newReadPref(pref ReadPref) (*readpref.ReadPref, error) {
 }
 
 // Close 关闭到此客户端引用的拓扑结构相关的套接字。 md5:a2c78aacda5cd470
+// [提示:] func (c *客户端) 关闭(ctx 上下文.Context) 错误 {} 
 // ff:关闭连接
 // ctx:上下文
 func (c *Client) Close(ctx context.Context) error {
@@ -289,6 +342,7 @@ func (c *Client) Close(ctx context.Context) error {
 }
 
 // Ping确认连接是否还活着 md5:1b88dbe0bbaa6726
+// [提示:] func (c *客户端) 心跳检查超时时间(timeout 超时时间秒) error {}
 // ff:是否存活
 // timeout:超时时长
 func (c *Client) Ping(timeout int64) error {
@@ -303,6 +357,7 @@ func (c *Client) Ping(timeout int64) error {
 }
 
 // Database 创建到数据库的连接 md5:1aa03639d9adcf41
+// [提示:] func (c *客户端) 数据库(name string, options ...*选项.DatabaseOptions) *数据库 {}
 // ff:设置数据库
 // name:数据库名称
 // options:可选选项
@@ -318,6 +373,7 @@ func (c *Client) Database(name string, options ...*options.DatabaseOptions) *Dat
 // Session：在客户端创建一个会话
 // 注意，操作完成后要关闭会话
 // md5:a25c6035ffabaf48
+// [提示:] func (c *客户端) 会话(opt ...*选项.SessionOptions) (*会话, 错误) {}
 // ff:创建Session
 // opt:可选选项
 func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {
@@ -340,6 +396,7 @@ func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {
 // - 如果回调中的操作返回qmgo.ErrTransactionNotSupported，
 // - 如果ctx参数已经绑定了Session，它将被这个Session替换。
 // md5:f5555fc9e2733cb9
+// [提示:] func (c *客户端) 执行事务(ctx 上下文.Context, 回调函数 func(会话上下文 context.Context) (结果 interface{}
 // ff:事务
 // ctx:上下文
 // callback:回调函数
@@ -358,6 +415,7 @@ func (c *Client) DoTransaction(ctx context.Context, callback func(sessCtx contex
 }
 
 // ServerVersion 获取MongoDB服务器的版本，如4.4.0 md5:85f19b2205255d3a
+// [提示:] func (c *Client) 服务器版本() string {}
 // ff:取版本号
 func (c *Client) ServerVersion() string {
 	var buildInfo bson.Raw

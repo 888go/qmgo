@@ -2,6 +2,22 @@ package operator
 
 type OpType string
 
+// [提示]
+//const (
+// 	插入前 OpType = "beforeInsert"
+// 	插入后   OpType = "afterInsert"
+// 	更新前  OpType = "beforeUpdate"
+// 	更新后   OpType = "afterUpdate"
+// 	查询前   OpType = "beforeQuery"
+// 	查询后    OpType = "afterQuery"
+// 	删除前  OpType = "beforeRemove"
+// 	删除后   OpType = "afterRemove"
+// 	Upsert前  OpType = "beforeUpsert"
+// 	Upsert后   OpType = "afterUpsert"
+// 	替换前  OpType = "beforeReplace"
+// 	替换后   OpType = "afterReplace"
+// )
+// [结束]
 const (
 	BeforeInsert  OpType = "beforeInsert"//qm:插入前  cz:BeforeInsert OpType = "beforeInsert"  
 	AfterInsert   OpType = "afterInsert"//qm:插入后  cz:AfterInsert OpType = "afterInsert"  
