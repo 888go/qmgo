@@ -45,36 +45,48 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [BeforeInsert OpType = "beforeInsert"]
 qm=插入前
+cz=BeforeInsert OpType #等号# "beforeInsert"
 
 [AfterInsert OpType = "afterInsert"]
 qm=插入后
+cz=AfterInsert OpType #等号# "afterInsert"
 
 [BeforeUpdate OpType = "beforeUpdate"]
 qm=更新前
+cz=BeforeUpdate OpType #等号# "beforeUpdate"
 
 [AfterUpdate OpType = "afterUpdate"]
 qm=更新后
+cz=AfterUpdate OpType #等号# "afterUpdate"
 
 [BeforeQuery OpType = "beforeQuery"]
 qm=查询前
+cz=BeforeQuery OpType #等号# "beforeQuery"
 
 [AfterQuery OpType = "afterQuery"]
 qm=查询后
+cz=AfterQuery OpType #等号# "afterQuery"
 
 [BeforeRemove OpType = "beforeRemove"]
 qm=删除前
+cz=BeforeRemove OpType #等号# "beforeRemove"
 
 [AfterRemove OpType = "afterRemove"]
 qm=删除后
+cz=AfterRemove OpType #等号# "afterRemove"
 
 [BeforeUpsert OpType = "beforeUpsert"]
-qm=更新或插入前
+qm=更新插入前
+cz=BeforeUpsert OpType #等号# "beforeUpsert"
 
 [AfterUpsert OpType = "afterUpsert"]
-qm=更新或插入后
+qm=更新插入后
+cz=AfterUpsert OpType #等号# "afterUpsert"
 
 [BeforeReplace OpType = "beforeReplace"]
 qm=替换前
+cz=BeforeReplace OpType #等号# "beforeReplace"
 
 [AfterReplace OpType = "afterReplace"]
 qm=替换后
+cz=AfterReplace OpType #等号# "afterReplace"

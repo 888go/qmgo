@@ -44,10 +44,6 @@ var fieldHandler = map[operator.OpType]func(doc interface{}) error{
 // doc:
 // opType:
 // opts:
-// [提示]
-// // 执行上下文，文档接口
-// func ExecuteInContext(操作上下文 context.Context, 文档 interface{})
-// [结束]
 func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
@@ -72,8 +68,8 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 // sliceHandle处理切片文档 md5:92800dd5899836ce
 func sliceHandle(docs interface{}, opType operator.OpType) error {
 	// []interface{}{UserType{}...} 的中文翻译为：
-	// []interface{}{UserType{}...} 的中文翻译为：
-	// []interface{}{UserType实例...} md5:bda81608072dd1ad
+// []interface{}{UserType{}...} 的中文翻译为：
+// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v, opType); err != nil {

@@ -15,7 +15,6 @@ var validate = validator.New()
 // SetValidate 允许使用自定义规则进行验证 md5:c45d0acce1bafd26
 // ff:
 // v:
-// [提示:] func 设置验证器(验证器指针 *validator.Validate) {}
 func SetValidate(v *validator.Validate) {
 	validate = v
 }
@@ -37,10 +36,6 @@ func validatorNeeded(opType operator.OpType) bool {
 // doc:
 // opType:
 // opts:
-// [提示]
-//// 执行上下文，文档接口
-// func ExecuteInContext(操作上下文 context.Context, 文档 interface{}) 
-// [结束]
 func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil

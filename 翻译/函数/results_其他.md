@@ -35,50 +35,22 @@
 # //zj:
 # 备注结束
 
-提示:
-ff= 方法,重命名方法名称
-qm= 行首,跳转到行首进行重命名.文档内如果有多个相同的,会一起重命名.
-bm= 包名,更换新的包名称
-th= 替换,用于替换文本,文档内如果有多个相同的,会一起替换
-cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interface{}) error"需要重命名.
- 但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
+[type UpdateResult struct {]
+hm=更新结果
+cz=type UpdateResult
 
-[Eq = "$eq"]
-qm=等于
-cz=Eq #等号# "$eq"
+[MatchedCount int64]
+qm=匹配数
+cz=MatchedCount int64
 
-[Gt = "$gt"]
-qm=大于
-cz=Gt #等号# "$gt"
+[ModifiedCount int64]
+qm=修改数
+cz=ModifiedCount int64
 
-[Gte = "$gte"]
-qm=大于等于
-cz=Gte #等号# "$gte"
+[UpsertedCount int64]
+qm=更新插入数
+cz=UpsertedCount int64
 
-[In = "$in"]
-qm=包含
-cz=In #等号# "$in"
-
-[Lt = "$lt"]
-qm=小于
-cz=Lt #等号# "$lt"
-
-[Lte = "$lte"]
-qm=小于等于
-cz=Lte #等号# "$lte"
-
-[Ne = "$ne"]
-qm=不等于
-cz=Ne #等号# "$ne"
-
-[Nin = "$nin"]
-qm=不包含
-cz=Nin #等号# "$nin"
-
-[And = "$and"]
-qm=且
-cz=And #等号# "$and"
-
-[Or = "$or"]
-qm=或
-cz=Or #等号# "$or"
+[UpsertedID interface{}]
+qm=更新插入ID
+cz=UpsertedID interface{}

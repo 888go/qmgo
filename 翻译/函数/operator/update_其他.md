@@ -45,9 +45,12 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [Min = "$min"]
 qm=最小值
+cz=Min #等号# "$min"
 
 [Max = "$max"]
 qm=最大值
+cz=Max #等号# "$max"
 
 [Set = "$set"]
 qm=设置值
+cz=Set #等号# "$set"

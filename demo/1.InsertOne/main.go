@@ -6,6 +6,13 @@ import (
 	"github.com/qiniu/qmgo"
 )
 
+// [提示]
+//type 用户信息 struct {
+//     姓名   string `bson:"name"`
+//     年龄    uint16 `bson:"age"`
+//     体重   uint32 `bson:"weight"`
+// }
+// [结束]
 type UserInfo struct {
 	Name   string `bson:"name"`
 	Age    uint16 `bson:"age"`

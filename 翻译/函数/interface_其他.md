@@ -45,81 +45,107 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [Update interface{}]
 qm=更新替换
-
-[Replace bool]
-qm=是否替换
-
-[Remove bool]
-qm=是否删除
-
-[Upsert bool]
-qm=未找到是否插入
-
-[ReturnNew bool]
-qm=是否返回新文档
-
-[Next(result interface{}) bool]
-qm=下一个
-
-[Close() error]
-qm=关闭
-
-[Err() error]
-qm=取错误
-
-[All(results interface{}) error]
-qm=取全部
-cf=2
-
-[Collation(collation *options.Collation) QueryI]
-qm=设置排序规则
-
-[SetArrayFilters(*options.ArrayFilters) QueryI]
-qm=设置切片过滤
-
-[Sort(fields ...string) QueryI]
-qm=排序
-
-[Select(selector interface{}) QueryI]
-qm=字段
-
-[Skip(n int64) QueryI]
-qm=跳过
-
-[BatchSize(n int64) QueryI]
-qm=设置批量处理数量
-
-[NoCursorTimeout(n bool) QueryI]
-qm=设置不超时
-
-[Limit(n int64) QueryI]
-qm=设置最大返回数
-
-[One(result interface{}) error]
-qm=取一条
-cf=2
-
-[All(result interface{}) error]
-qm=取全部
-
-[Count() (n int64, err error)]
-qm=取数量
-
-[EstimatedCount() (n int64, err error)]
-qm=取预估数量
-
-[Distinct(key string, result interface{}) error]
-qm=去重
-
-[Cursor() CursorI]
-qm=取结果集
-cf=2
-
-[Apply(change Change, result interface{}) error]
-qm=执行命令
-
-[Hint(hint interface{}) QueryI]
-qm=指定索引字段
+cz=Update interface{}
 
 [Iter() CursorI]
 qm=Iter弃用
+cz=Iter() CursorI
+
+[Replace bool]
+qm=是否替换
+cz=Replace bool
+
+[Remove bool]
+qm=是否删除
+cz=Remove bool
+
+[Upsert bool]
+qm=未找到是否插入
+cz=Upsert bool
+
+[ReturnNew bool]
+qm=是否返回新文档
+cz=ReturnNew bool
+
+[Next(result interface{}) bool]
+qm=下一个
+cz=Next(result interface{}) bool
+
+[Close() error]
+qm=关闭
+cz=Close() error
+
+[Err() error]
+qm=取错误
+cz=Err() error
+
+[Collation(collation *options.Collation) QueryI]
+qm=设置排序规则
+cz=Collation(collation *options.Collation) QueryI
+
+[SetArrayFilters(*options.ArrayFilters) QueryI]
+qm=设置切片过滤
+cz=SetArrayFilters(*options.ArrayFilters) QueryI
+
+[Sort(fields ...string) QueryI]
+qm=排序
+cz=Sort(fields ...string) QueryI
+
+[Select(selector interface{}) QueryI]
+qm=字段
+cz=Select(selector interface{}) QueryI
+
+[Skip(n int64) QueryI]
+qm=跳过
+cz=Skip(n int64) QueryI
+
+[BatchSize(n int64) QueryI]
+qm=设置批量处理数量
+cz=BatchSize(n int64) QueryI
+
+[NoCursorTimeout(n bool) QueryI]
+qm=设置不超时
+cz=NoCursorTimeout(n bool) QueryI
+
+[Limit(n int64) QueryI]
+qm=设置最大返回数
+cz=Limit(n int64) QueryI
+
+[All(result interface{}) error]
+qm=取全部
+cz=All(result interface{}) error
+
+[Count() (n int64, err error)]
+qm=取数量
+cz=Count() (n int64, err error)
+
+[EstimatedCount() (n int64, err error)]
+qm=取预估数量
+cz=EstimatedCount() (n int64, err error)
+
+[Distinct(key string, result interface{}) error]
+qm=去重
+cz=Distinct(key string, result interface{}) error
+
+[Apply(change Change, result interface{}) error]
+qm=执行命令
+cz=Apply(change Change, result interface{}) error
+
+[Hint(hint interface{}) QueryI]
+qm=指定索引字段
+cz=Hint(hint interface{}) QueryI
+
+[All(results interface{}) error]
+qm=取全部
+cz=All(results interface{}) error
+cf=2
+
+[One(result interface{}) error]
+qm=取一条
+cz=One(result interface{}) error
+cf=2
+
+[Cursor() CursorI]
+qm=取结果集
+cz=Cursor() CursorI
+cf=2

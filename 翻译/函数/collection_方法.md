@@ -66,7 +66,7 @@ docs=待插入文档
 ctx=上下文
 
 [func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {]
-ff=更新或插入
+ff=更新插入
 err=错误
 result=更新结果
 opts=可选选项
@@ -75,7 +75,7 @@ filter=更新条件
 ctx=上下文
 
 [func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {]
-ff=更新或插入并按ID
+ff=更新插入并按ID
 err=错误
 result=更新结果
 opts=可选选项
@@ -148,13 +148,13 @@ ctx=上下文
 ff=EnsureIndexes弃用
 
 [func (c *Collection) CreateIndexes(ctx context.Context, indexes #左中括号##右中括号#opts.IndexModel) (err error) {]
-ff=索引多条
+ff=创建多条索引
 err=错误
 indexes=索引s
 ctx=上下文
 
 [func (c *Collection) CreateOneIndex(ctx context.Context, index opts.IndexModel) error {]
-ff=索引一条
+ff=创建索引
 index=索引
 ctx=上下文
 

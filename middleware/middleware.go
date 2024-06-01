@@ -23,7 +23,6 @@ var middlewareCallback = []callback{
 // Register 将回调函数注册到中间件中 md5:23bc8366f03c6dbb
 // ff:
 // cb:
-// [提示:] func 注册中间件(callback 中间件回调函数) {}
 func Register(cb callback) {
 	middlewareCallback = append(middlewareCallback, cb)
 }
@@ -36,7 +35,6 @@ func Register(cb callback) {
 // content:
 // opType:
 // opts:
-// [提示:] func 执行处理(ctx 上下文, 内容 interface{})
 func Do(ctx context.Context, content interface{}, opType operator.OpType, opts ...interface{}) error {
 	for _, cb := range middlewareCallback {
 		if err := cb(ctx, content, opType, opts...); err != nil {

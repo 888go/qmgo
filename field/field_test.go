@@ -177,7 +177,7 @@ func TestBeforeUpsert(t *testing.T) {
 	err = Do(ctx, u3, operator.BeforeUpsert)
 	ast.NoError(err)
 
-	// 使用有效值进行更新或插入操作 md5:6dcc17bfca098279
+	// 使用有效值进行更新插入操作 md5:6dcc17bfca098279
 	tBefore3s := time.Now().Add(-3 * time.Second)
 	id := primitive.NewObjectID()
 	u = &User{Name: "Lucas", Age: 7}
@@ -236,7 +236,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 	err = Do(ctx, u3, operator.BeforeUpsert)
 	ast.NoError(err)
 
-	// 使用有效值进行更新或插入操作 md5:6dcc17bfca098279
+	// 使用有效值进行更新插入操作 md5:6dcc17bfca098279
 	tBefore3s := time.Now().Add(-3 * time.Second)
 	id := primitive.NewObjectID()
 	u = &UserField{Name: "Lucas", Age: 7}

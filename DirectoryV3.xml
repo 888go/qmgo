@@ -20,4 +20,21 @@
     <tree path="/demo/7.Update" title="更新"/>
     <tree path="/demo/9.Aggregate" title="自动化更新"/>
     <tree path="/demo/11.Hooks" title="钩子"/>
+    <tree path="/demo" title="例子"/>
+    <tree path="/demo/10.DoTransaction" title="事务"/>
+    <tree path="/client_test.go" title="单元测试"/>
+    <tree path="/aggregate_test.go" title="单元测试"/>
+    <tree path="/bulk_test.go" title="单元测试"/>
+    <tree path="/cursor_test.go" title="单元测试"/>
+    <tree path="/database_test.go" title="单元测试"/>
+    <tree path="/errors_test.go" title="单元测试"/>
+    <tree path="/example_test.go" title="单元测试"/>
+    <tree path="/field_test.go" title="单元测试"/>
+    <tree path="/hook_test.go" title="单元测试"/>
+    <tree path="/query_test.go" title="单元测试"/>
+    <tree path="/session_test.go" title="单元测试"/>
+    <tree path="/validator_test.go" title="单元测试"/>
+    <tree path="/util_test.go" title="单元测试"/>
+    <tree path="/bulk.go" title="批量操作"/>
+    <tree path="/bson.go" title="bson"/>
 </trees>

@@ -67,17 +67,17 @@ ff=删除
 filter=删除条件
 
 [func (b *Bulk) Upsert(filter interface{}, replacement interface{}) *Bulk {]
-ff=更新或插入
+ff=更新插入
 replacement=更新内容
 filter=更新条件
 
 [func (b *Bulk) UpsertOne(filter interface{}, update interface{}) *Bulk {]
-ff=更新或插入一条
+ff=更新插入一条
 update=更新内容
 filter=更新条件
 
 [func (b *Bulk) UpsertId(id interface{}, replacement interface{}) *Bulk {]
-ff=更新或插入并按ID
+ff=更新插入并按ID
 replacement=更新内容
 id=更新ID
 

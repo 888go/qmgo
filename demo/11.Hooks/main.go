@@ -6,15 +6,26 @@ import (
 	"github.com/qiniu/qmgo"
 )
 
+// [提示]
+//type 用户 struct {
+//     姓名 string `bson:"name"`
+//     年龄 int    `bson:"age"`
+// }
+// [结束]
 type User struct {
 	Name string `bson:"name"`
 	Age  int    `bson:"age"`
 }
-
+// [提示:] func (u *用户) 在插入前处理(ctx 上下文.Context) 错误 {}
+// ff:
+// ctx:
 func (u *User) BeforeInsert(ctx context.Context) error {
 	fmt.Println("在调用插入之前")
 	return nil
 }
+// [提示:] func (u *用户) 插入后处理(ctx 上下文.Context) 错误 {} 
+// ff:
+// ctx:
 func (u *User) AfterInsert(ctx context.Context) error {
 	fmt.Println("在调用插入之前")
 	return nil

@@ -20,15 +20,6 @@ import (
 )
 
 // Cursor struct define
-// [提示]
-//
-//	type 笔记本 struct {
-//	    上下文     context.Context
-//	    数据游标   *mongo.Cursor
-//	    错误       error
-//	}
-//
-// [结束]
 type Cursor struct {
 	ctx    context.Context
 	cursor *mongo.Cursor
@@ -39,7 +30,6 @@ type Cursor struct {
 // md5:29446221269baaee
 // ff:下一个
 // result:
-// [提示:] func (c *游标) 下一个(result interface{}
 func (c *Cursor) Next(result interface{}) bool {
 	if c.err != nil {
 		return false
@@ -60,7 +50,6 @@ func (c *Cursor) Next(result interface{}) bool {
 // md5:283225edc771266b
 // ff:取全部
 // results:
-// [提示:] func (c *游标) 全部结果(results interface{})
 func (c *Cursor) All(results interface{}) error {
 	if c.err != nil {
 		return c.err
@@ -79,7 +68,6 @@ func (c *Cursor) All(results interface{}) error {
 // 当游标对象不再使用时，应主动关闭它。
 // md5:7c67b9468038ed61
 // ff:关闭
-// [提示:] func (c *Cursor) 关闭() error {}
 func (c *Cursor) Close() error {
 	if c.err != nil {
 		return c.err
@@ -89,7 +77,6 @@ func (c *Cursor) Close() error {
 
 // Err 返回Cursor的最后一个错误，如果没有发生错误，则返回nil md5:2ebbf5e5b4796f72
 // ff:取错误
-// [提示:] func (c *Cursor) 错误() error {}
 func (c *Cursor) Err() error {
 	if c.err != nil {
 		return c.err

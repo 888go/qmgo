@@ -60,7 +60,7 @@ conf=配置
 ctx=上下文
 
 [func (c *Client) Close(ctx context.Context) error {]
-ff=关闭
+ff=关闭连接
 ctx=上下文
 
 [func (c *Client) Ping(timeout int64) error {]

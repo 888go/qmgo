@@ -45,12 +45,16 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [CustomFields() CustomFieldsBuilder]
 qm=设置更新时间字段名
+cz=CustomFields() CustomFieldsBuilder
 
 [SetUpdateAt(fieldName string) CustomFieldsBuilder]
 qm=设置更新时间字段名
+cz=SetUpdateAt(fieldName string) CustomFieldsBuilder
 
 [SetCreateAt(fieldName string) CustomFieldsBuilder]
 qm=设置创建时间字段名
+cz=SetCreateAt(fieldName string) CustomFieldsBuilder
 
 [SetId(fieldName string) CustomFieldsBuilder]
 qm=设置ID字段名
+cz=SetId(fieldName string) CustomFieldsBuilder

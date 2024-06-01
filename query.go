@@ -28,25 +28,6 @@ import (
 )
 
 // 定义查询结构体 md5:56541bbc29d4ce15
-// [提示]
-//
-//	type 查询 struct {
-//	    筛选条件 interface{}
-//	    排序方式 interface{}
-//	    选择字段 interface{}
-//	    索引指引 interface{}
-//	    数组筛选器 *options.数组筛选选项
-//	    限制数量 *int64
-//	    跳过数量 *int64
-//	    批次大小 *int64
-//	    不超时 *bool
-//	    文档集合 *mongo.Collection
-//	    查询选项 []qOpts.查询选项
-//	    编码注册器 *bsoncodec.Registry
-//	    上下文 context.Context
-//	}
-//
-// [结束]
 type Query struct {
 	filter          interface{}
 	sort            interface{}
@@ -67,7 +48,6 @@ type Query struct {
 
 // ff:设置排序规则
 // collation:规则
-// [提示:] func (q *Query) 文档排序规则设置(collation *options.Collation) 查询接口I {}
 func (q *Query) Collation(collation *options.Collation) QueryI {
 	newQ := q
 	newQ.collation = collation
@@ -76,7 +56,6 @@ func (q *Query) Collation(collation *options.Collation) QueryI {
 
 // ff:设置不超时
 // n:是否不超时
-// [提示:] func (q *Query) 不使用超时游标(n bool) QueryI {}
 func (q *Query) NoCursorTimeout(n bool) QueryI {
 	newQ := q
 	newQ.noCursorTimeout = &n
@@ -88,7 +67,6 @@ func (q *Query) NoCursorTimeout(n bool) QueryI {
 // md5:66277d16095ac151
 // ff:设置批量处理数量
 // n:数量
-// [提示:] func (q *Query) 设置批次大小(n int64) QueryI {}
 func (q *Query) BatchSize(n int64) QueryI {
 	newQ := q
 	newQ.batchSize = &n
@@ -100,11 +78,10 @@ func (q *Query) BatchSize(n int64) QueryI {
 // For example, {"age", "-name"}, first sort by age in ascending order, then sort by name in descending order
 // ff:排序
 // fields:排序字段
-// [提示:] func (q *Query) 排序(字段 ...string) QueryI {}
 func (q *Query) Sort(fields ...string) QueryI {
 	if len(fields) == 0 {
-		// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
-		// md5:c94b59dcb408353d
+// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
+// md5:c94b59dcb408353d
 		return q
 	}
 
@@ -124,22 +101,18 @@ func (q *Query) Sort(fields ...string) QueryI {
 // SetArrayFilter 用于应用更新数组的过滤器
 // 示例：
 // var res = QueryTestItem{}
-//
-//	change := Change{
-//	    Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
-//	    ReturnNew: false,
-//	}
-//
+// change := Change{
+//     Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
+//     ReturnNew: false,
+// }
 // cli.Find(context.Background(), bson.M{"name": "Lucas"}).
-//
-//	SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
-//	  Apply(change, &res)
-//
+//     SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
+//       Apply(change, &res) 
+// 
 // 这段代码的注释说明了`SetArrayFilter`方法是用于设置更新操作中的数组过滤器。它给出了一个例子，展示了如何使用该方法来更新名为"Lucas"的文档中，符合条件（"elem.warehouse"在"C"或"F"中）的`instock`数组元素的`qty`字段为100。`Apply`方法最后将变更应用到查询结果上。
 // md5:3fa80906c918e6a3
 // ff:设置切片过滤
 // filter:过滤条件
-// [提示:] func (q *Query) 设置数组过滤器(filter *选项.数组过滤器) 查询接口 {}
 func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 	newQ := q
 	newQ.arrayFilters = filter
@@ -151,44 +124,6 @@ func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 // When _id is not displayed and is set to 0, it will be returned to display
 // ff:字段
 // projection:字段Map
-// [提示]
-// func (q *Query) 选择(projection interface{})
-//
-// // 下面的方法未给出完整信息，我将提供一般性的翻译，但可能需要根据实际代码上下文进行调整
-//
-//	func (c *Collection) InsertOne(doc interface{}) (insertedIDprimitive, error) {
-//	    // 翻译：在集合中插入一个文档，返回插入的ID和可能的错误
-//	}
-//
-//	func (c *Collection) Find(filter interface{}, opts ...*FindOptions) *Query {
-//	    // 翻译：根据过滤器找到文档，返回一个查询对象，可选的查找选项
-//	}
-//
-//	func (q *Query) Limit(n int) *Query {
-//	    // 翻译：限制查询结果的数量，返回更新后的查询对象
-//	}
-//
-//	func (q *Query) Skip(n int) *Query {
-//	    // 翻译：跳过查询结果的前n个文档，返回更新后的查询对象
-//	}
-//
-//	func (q *Query) Sort(fields ...string) *Query {
-//	    // 翻译：按指定字段排序查询结果，返回更新后的查询对象
-//	}
-//
-//	func (q *Query) All(result interface{}) error {
-//	    // 翻译：将所有查询结果填充到结果接口中，返回可能出现的错误
-//	}
-//
-//	func (q *Query) One(result interface{}) error {
-//	    // 翻译：获取查询结果中的第一条文档并填充到结果接口中，返回可能出现的错误
-//	}
-//
-//	func (q *Query) Count() (int64, error) {
-//	    // 翻译：计算查询结果的文档数量，返回总数和可能的错误
-//	}
-//
-// [结束]
 func (q *Query) Select(projection interface{}) QueryI {
 	newQ := q
 	newQ.project = projection
@@ -198,7 +133,6 @@ func (q *Query) Select(projection interface{}) QueryI {
 // Skip skip n records
 // ff:跳过
 // n:跳过数量
-// [提示:] func (q *Query) 跳过(n int64) QueryI {}
 func (q *Query) Skip(n int64) QueryI {
 	newQ := q
 	newQ.skip = &n
@@ -209,7 +143,6 @@ func (q *Query) Skip(n int64) QueryI {
 // md5:3d3535508606dd43
 // ff:指定索引字段
 // hint:索引字段
-// [提示:] func (q *Query) 指定索引(hint interface{})
 func (q *Query) Hint(hint interface{}) QueryI {
 	newQ := q
 	newQ.hint = hint
@@ -223,7 +156,6 @@ func (q *Query) Hint(hint interface{}) QueryI {
 // md5:9081095bd35be08f
 // ff:设置最大返回数
 // n:数量
-// [提示:] func (q *查询) 限制(n int64) 查询接口 {}
 func (q *Query) Limit(n int64) QueryI {
 	newQ := q
 	newQ.limit = &n
@@ -235,7 +167,6 @@ func (q *Query) Limit(n int64) QueryI {
 // md5:68571c814c5cd088
 // ff:取一条
 // result:结果指针
-// [提示:] func (q *Query) 一个(result interface{})
 func (q *Query) One(result interface{}) error {
 	if len(q.opts) > 0 {
 		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.BeforeQuery); err != nil {
@@ -278,7 +209,6 @@ func (q *Query) One(result interface{}) error {
 // md5:5f57d8aff8afe252
 // ff:取全部
 // result:结果指针
-// [提示:] func (q *Query) 全部获取(result interface{})
 func (q *Query) All(result interface{}) error {
 	if len(q.opts) > 0 {
 		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.BeforeQuery); err != nil {
@@ -337,7 +267,6 @@ func (q *Query) All(result interface{}) error {
 // ff:取数量
 // n:数量
 // err:错误
-// [提示:] func (q *Query) 计数() (总数 int64, 错误 error) {}
 func (q *Query) Count() (n int64, err error) {
 	opt := options.Count()
 
@@ -355,7 +284,6 @@ func (q *Query) Count() (n int64, err error) {
 // ff:取预估数量
 // n:数量
 // err:错误
-// [提示:] func (q *Query) 估算计数() (总数 int64, 错误 error) {}
 func (q *Query) EstimatedCount() (n int64, err error) {
 	return q.collection.EstimatedDocumentCount(q.ctx)
 }
@@ -368,7 +296,6 @@ func (q *Query) EstimatedCount() (n int64, err error) {
 // ff:去重
 // key:字段名
 // result:切片指针
-// [提示:] func (q *Query) 唯一值(key string, result interface{}
 func (q *Query) Distinct(key string, result interface{}) error {
 	resultVal := reflect.ValueOf(result)
 
@@ -410,7 +337,6 @@ func (q *Query) Distinct(key string, result interface{}) error {
 // 在获取到 CursorI 对象后，应主动调用 Close 接口来关闭游标
 // md5:b1e9fc62a5f777fe
 // ff:取结果集
-// [提示:] func (q *Query) 获取游标() 游标接口 {}
 func (q *Query) Cursor() CursorI {
 	opt := options.Find()
 
@@ -466,7 +392,6 @@ func (q *Query) Cursor() CursorI {
 // ff:执行命令
 // change:
 // result:
-// [提示:] func (q *Query) 应用变更(change 变更, result 结果接口{}
 func (q *Query) Apply(change Change, result interface{}) error {
 	var err error
 

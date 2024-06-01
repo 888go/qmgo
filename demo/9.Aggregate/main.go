@@ -18,7 +18,13 @@ func main() {
 		}
 	}()
 
-	type User struct {
+// [提示]
+//type 用户 struct {
+//     姓名 string `bson:"name"`
+//     年龄 int    `bson:"age"`
+// }
+// [结束]
+type User struct {
 		field.DefaultField `bson:",inline"`
 
 		Name string `bson:"name"`
