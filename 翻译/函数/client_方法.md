@@ -73,7 +73,7 @@ options=可选选项
 name=数据库名称
 
 [func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {]
-ff=创建Session
+ff=创建Session事务
 opt=可选选项
 
 [func (c *Client) DoTransaction(ctx context.Context, callback func(sessCtx context.Context) (interface{}, error), opts ...*options.TransactionOptions) (interface{}, error) {]
@@ -81,6 +81,7 @@ ff=事务
 opts=可选选项
 callback=回调函数
 ctx=上下文
+sessCtx=事务上下文
 
 [func (c *Client) ServerVersion() string {]
 ff=取版本号

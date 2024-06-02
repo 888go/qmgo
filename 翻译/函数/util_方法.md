@@ -53,3 +53,8 @@ ff=生成对象ID
 ff=比较版本号
 v2=版本号2
 v1=版本号1
+
+[func SplitSortField(field string) (key string, sort int32) {]
+ff=分割排序字段
+key=名称
+field=文本

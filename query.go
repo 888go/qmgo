@@ -47,7 +47,7 @@ import (
 //	}
 //
 // [结束]
-type Query struct {//hm:查询  cz:type Query   
+type Query struct { //hm:查询  cz:type Query
 	filter          interface{}
 	sort            interface{}
 	project         interface{}
@@ -64,6 +64,7 @@ type Query struct {//hm:查询  cz:type Query
 	opts       []qOpts.FindOptions
 	registry   *bsoncodec.Registry
 }
+
 // [提示:] func (q *Query) 文档排序规则设置(collation *options.Collation) 查询接口I {}
 // ff:设置排序规则
 // collation:规则
@@ -72,6 +73,7 @@ func (q *Query) Collation(collation *options.Collation) QueryI {
 	newQ.collation = collation
 	return newQ
 }
+
 // [提示:] func (q *Query) 不使用超时游标(n bool) QueryI {}
 // ff:设置不超时
 // n:是否不超时
@@ -404,24 +406,24 @@ func (q *Query) Cursor() CursorI {
 	}
 }
 
-// Apply runs the findAndModify command, which allows updating, replacing
-// or removing a document matching a query and atomically returning either the old
-// version (the default) or the new version of the document (when ReturnNew is true)
+// Apply运行findAndModify命令，该命令允许更新、替换
+// 或者删除与查询匹配的文档，然后原子地返回旧的
+// 版本（默认值）或文档的新版本（当ReturnNew为true时）
 //
-// The Sort and Select query methods affect the result of Apply. In case
-// multiple documents match the query, Sort enables selecting which document to
-// act upon by ordering it first. Select enables retrieving only a selection
-// of fields of the new or old document.
+// 排序和选择查询方法会影响应用的结果。万一
+// 多个文档与查询匹配，“排序”允许选择要查询的文档
+// 先按命令行事。“选择”仅允许检索所选内容
+// 新文档或旧文档的字段数。
 //
-// When Change.Replace is true, it means replace at most one document in the collection
-// and the update parameter must be a document and cannot contain any update operators;
-// if no objects are found and Change.Upsert is false, it will returns ErrNoDocuments.
-// When Change.Remove is true, it means delete at most one document in the collection
-// and returns the document as it appeared before deletion; if no objects are found,
-// it will returns ErrNoDocuments.
-// When both Change.Replace and Change.Remove are false，it means update at most one document
-// in the collection and the update parameter must be a document containing update operators;
-// if no objects are found and Change.Upsert is false, it will returns ErrNoDocuments.
+// 当改变。Replace为true，这意味着最多替换集合中的一个文档
+// 并且更新参数必须是文档并且不能包含任何更新运算符；
+// 如果没有找到对象，则更改。Upsert为false，它将返回ErrNoDocuments。
+// 当改变。Remove为true，这意味着最多删除集合中的一个文档
+// 并返回在删除之前出现的文档；如果没有发现对象，
+// 它将返回ErrNoDocuments。
+// 当两者都发生变化时。更换和更改。Remove为false，这意味着最多更新一个文档
+// 并且update参数必须是包含更新运算符的文档；
+// 如果没有找到对象，则更改。Upsert为false，它将返回ErrNoDocuments。
 //
 // [提示:] func (q *Query) 应用变更(change 变更, result 结果接口{}
 // ff:执行命令

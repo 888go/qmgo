@@ -35,30 +35,17 @@
 # //zj:
 # 备注结束
 
-提示:
-ff= 方法,重命名方法名称
-qm= 行首,跳转到行首进行重命名.文档内如果有多个相同的,会一起重命名.
-bm= 包名,更换新的包名称
-th= 替换,用于替换文本,文档内如果有多个相同的,会一起替换
-cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interface{}) error"需要重命名.
- 但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
+[func (s *Session) StartTransaction(ctx context.Context, cb func(sessCtx context.Context) (interface{}, error), opts ...*opts.TransactionOptions) (interface{}, error) {]
+ff=开始事务
+opts=可选选项
+cb=回调函数
+sessCtx=事务上下文
+ctx=上下文
 
-[type CustomFields struct {]
-hm=自定义字段
-cz=type CustomFields
+[func (s *Session) EndSession(ctx context.Context) {]
+ff=结束Session
+ctx=上下文
 
-[CustomFields() CustomFieldsBuilder]
-qm=设置更新时间字段名
-cz=CustomFields() CustomFieldsBuilder
-
-[SetUpdateAt(fieldName string) CustomFieldsBuilder]
-qm=设置更新时间字段名
-cz=SetUpdateAt(fieldName string) CustomFieldsBuilder
-
-[SetCreateAt(fieldName string) CustomFieldsBuilder]
-qm=设置创建时间字段名
-cz=SetCreateAt(fieldName string) CustomFieldsBuilder
-
-[SetId(fieldName string) CustomFieldsBuilder]
-qm=设置ID字段名
-cz=SetId(fieldName string) CustomFieldsBuilder
+[func (s *Session) AbortTransaction(ctx context.Context) error {]
+ff=中止事务
+ctx=上下文

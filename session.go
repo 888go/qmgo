@@ -30,7 +30,7 @@ import (
 //	}
 //
 // [结束]
-type Session struct {
+type Session struct { //hm:Session事务 cz:type Session
 	session mongo.Session
 }
 
@@ -55,7 +55,7 @@ type Session struct {
 // ff:开始事务
 // ctx:上下文
 // cb:回调函数
-// sessCtx:会话上下文
+// sessCtx:事务上下文
 // opts:可选选项
 func (s *Session) StartTransaction(ctx context.Context, cb func(sessCtx context.Context) (interface{}, error), opts ...*opts.TransactionOptions) (interface{}, error) {
 	transactionOpts := options.Transaction()
@@ -71,7 +71,7 @@ func (s *Session) StartTransaction(ctx context.Context, cb func(sessCtx context.
 
 // EndSession 会终止任何现有的事务并关闭会话。 md5:2ee8849531868b7e
 // [提示:] func (s *Session) 结束会话(ctx 上下文Context) {}
-// ff:结束会话
+// ff:结束Session
 // ctx:上下文
 func (s *Session) EndSession(ctx context.Context) {
 	s.session.EndSession(ctx)

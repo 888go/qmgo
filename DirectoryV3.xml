@@ -7,7 +7,8 @@
      <tree path="/interface.go" title="定义接口"/>
      <tree path="/errors.go" title="错误"/>
      <tree path="/cursor.go" title="结果集"/>
-     <tree path="/field" title="字段"/>
+     <tree path="/field" title="自动化更新字段" extension="" presentableText="" tooltipTitle="" icon="" textColor=""
+           backgroundColor=""/>
      <tree path="/hook" title="钩子"/>
      <tree path="/validator" title="效验"/>
      <tree path="/aggregate.go" title="聚合方法"/>
@@ -18,7 +19,8 @@
     <tree path="/demo/5.SortLimit" title="批量查找、和SortLimit"/>
     <tree path="/demo/6.Count" title="计数"/>
     <tree path="/demo/7.Update" title="更新"/>
-    <tree path="/demo/9.Aggregate" title="自动化更新"/>
+    <tree path="/demo/9.Aggregate" title="自动化更新字段" extension="" presentableText="" tooltipTitle="" icon=""
+          textColor="" backgroundColor=""/>
     <tree path="/demo/11.Hooks" title="钩子"/>
     <tree path="/demo" title="例子"/>
     <tree path="/demo/10.DoTransaction" title="事务"/>
@@ -39,4 +41,29 @@
     <tree path="/bson.go" title="bson"/>
     <tree path="/results.go" title="操作结果"/>
     <tree path="/util.go" title="工具方法"/>
+    <tree path="/field/default_field.go" title="默认字段更新" extension="" presentableText="" tooltipTitle="" icon=""
+          textColor="" backgroundColor=""/>
+    <tree path="/field/custom_field.go" title="自定义字段更新"/>
+    <tree path="/demo/9.DefaultField" title="默认自动更新字段" extension="" presentableText="" tooltipTitle="" icon=""
+          textColor="" backgroundColor=""/>
+    <tree path="/demo/10.CustomFields" title="自定义自动更新字段"/>
+    <tree path="/demo/11.Automaticallyfields" title="自动化更新字段"/>
+    <tree path="/demo/11.Automaticallyfields/DefaultField" title="默认字段"/>
+    <tree path="/demo/11.Automaticallyfields/CustomFields" title="自定义字段"/>
+    <tree path="/demo/9.DoTransaction" title="事务"/>
+    <tree path="/demo/9.Transaction" title="事务"/>
+    <tree path="/demo/9.Transaction/StartTransaction" title="会话事务"/>
+    <tree path="/demo/9.Transaction/DoTransaction" title="简单事务"/>
+    <tree path="/session.go" title="事务会话"/>
+    <tree path="/demo/12.Plugin" title="插件"/>
+    <tree path="/middleware" title="中间件"/>
+    <tree path="/operator" title="常量"/>
+    <tree path="/operator/aggregation_pipeline_operators.go" title="运算符常量" extension="" presentableText=""
+          tooltipTitle="" icon="" textColor="" backgroundColor=""/>
+    <tree path="/operator/aggregation_pipeline_stages.go" title="聚合常量"/>
+    <tree path="/operator/operate_type.go" title="钩子常量"/>
+    <tree path="/operator/query_and_projection.go" title="运算符常量"/>
+    <tree path="/operator/update.go" title="更新运算符常量"/>
+    <tree path="/operator/query_modifiers.go" title="查询修饰符常量"/>
+    <tree path="/options" title="内部结构"/>
 </trees>

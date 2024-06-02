@@ -30,56 +30,58 @@ import (
 
 // 初始MongoDB实例的配置 md5:09dcbab1d00adb46
 // [提示]
-//type 配置 struct {
-//     连接URI        string `json:"uri"`
-//     数据库名       string `json:"database"`
-//     集合名         string `json:"coll"`
-//     连接超时毫秒   *int64 `json:"connectTimeoutMS"`
-//     最大连接池大小 *uint64 `json:"maxPoolSize"`
-//     最小连接池大小 *uint64 `json:"minPoolSize"`
-//     套接字超时毫秒 *int64 `json:"socketTimeoutMS"`
-//     读取首选项     *读取偏好 `json:"readPreference"`
-//     认证信息       *凭证   `json:"auth"`
-// }
-// 
-// type 读取偏好 struct {
-//     // ... (ReadPref结构体内的字段也需要翻译)
-// }
-// 
-// type 凭证 struct {
-//     // ... (Credential结构体内的字段也需要翻译)
-// }
+//
+//	type 配置 struct {
+//	    连接URI        string `json:"uri"`
+//	    数据库名       string `json:"database"`
+//	    集合名         string `json:"coll"`
+//	    连接超时毫秒   *int64 `json:"connectTimeoutMS"`
+//	    最大连接池大小 *uint64 `json:"maxPoolSize"`
+//	    最小连接池大小 *uint64 `json:"minPoolSize"`
+//	    套接字超时毫秒 *int64 `json:"socketTimeoutMS"`
+//	    读取首选项     *读取偏好 `json:"readPreference"`
+//	    认证信息       *凭证   `json:"auth"`
+//	}
+//
+//	type 读取偏好 struct {
+//	    // ... (ReadPref结构体内的字段也需要翻译)
+//	}
+//
+//	type 凭证 struct {
+//	    // ... (Credential结构体内的字段也需要翻译)
+//	}
+//
 // [结束]
-type Config struct {//hm:配置  cz:type Config  
-// URI 示例：[mongodb://][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
-// URI 参考：https://docs.mongodb.com/manual/reference/connection-string/ 
-// 
-// 这段注释解释了一个MongoDB连接字符串的格式，包括可选的部分如用户名、密码、多个服务器地址、数据库名以及可选的连接选项。URI以`mongodb://`开头，后面可以包含认证信息、主机列表、数据库路径和查询参数。链接：提供了官方文档的参考。
-// md5:038c28929efbdde0
-	Uri      string `json:"uri"`//qm:连接URI  cz:Uri string `json:"uri"`  
-	Database string `json:"database"`//qm:数据库名  cz:Database string `json:"database"`  
-	Coll     string `json:"coll"`//qm:集合名  cz:Coll string `json:"coll"`  
-// ConnectTimeoutMS 指定了建立到服务器连接时使用的超时时间，以毫秒为单位。
-// 如果设置为 0，则不会使用超时。
-// 默认值为 30 秒。
-// md5:bdc6b23048c25478
-	ConnectTimeoutMS *int64 `json:"connectTimeoutMS"`//qm:连接超时毫秒  cz:ConnectTimeoutMS *int64 `json:"connectTimeoutMS"`  
-// MaxPoolSize 指定驱动程序连接池到每个服务器的最大连接数。
-// 如果设置为 0，则将其设置为 math.MaxInt64，
-// 默认值为 100。
-// md5:6840c2846a8fad6e
-	MaxPoolSize *uint64 `json:"maxPoolSize"`//qm:最大连接池大小  cz:MaxPoolSize *uint64 `json:"maxPoolSize"`  
-// MinPoolSize 指定了驱动程序到每个服务器的连接池中允许的最小连接数。如果此值不为零，将为每个服务器的连接池在后台维护，以确保其大小不低于最小值。这也可以通过 "minPoolSize" URI 选项（如 "minPoolSize=100"）进行设置。默认值为 0。
-// md5:9df8b44a6800236b
-	MinPoolSize *uint64 `json:"minPoolSize"`//qm:最小连接池大小  cz:MinPoolSize *uint64 `json:"minPoolSize"`  
-// SocketTimeoutMS 指定了驱动程序在返回网络错误之前，等待套接字读写操作返回的最长时间（以毫秒为单位）。如果此值为0，则表示不使用超时，套接字操作可能无限期阻塞。默认值为300,000毫秒。
-// md5:1e1ccf1f35a18417
-	SocketTimeoutMS *int64 `json:"socketTimeoutMS"`//qm:套接字超时毫秒  cz:SocketTimeoutMS *int64 `json:"socketTimeoutMS"`  
-// ReadPreference 确定哪些服务器适合进行读取操作。默认为 PrimaryMode。
-// md5:6ca3a191c28443b8
-	ReadPreference *ReadPref `json:"readPreference"`//qm:读取偏好  zz:ReadPreference \*[a-zA-Z0-9_\u4e00-\u9fa5 ]+`json:"readPreference"`  
+type Config struct { //hm:配置  cz:type Config
+	// URI 示例：[mongodb://][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
+	// URI 参考：https://docs.mongodb.com/manual/reference/connection-string/
+	//
+	// 这段注释解释了一个MongoDB连接字符串的格式，包括可选的部分如用户名、密码、多个服务器地址、数据库名以及可选的连接选项。URI以`mongodb://`开头，后面可以包含认证信息、主机列表、数据库路径和查询参数。链接：提供了官方文档的参考。
+	// md5:038c28929efbdde0
+	Uri      string `json:"uri"`      //qm:连接URI  cz:Uri string `json:"uri"`
+	Database string `json:"database"` //qm:数据库名  cz:Database string `json:"database"`
+	Coll     string `json:"coll"`     //qm:集合名  cz:Coll string `json:"coll"`
+	// ConnectTimeoutMS 指定了建立到服务器连接时使用的超时时间，以毫秒为单位。
+	// 如果设置为 0，则不会使用超时。
+	// 默认值为 30 秒。
+	// md5:bdc6b23048c25478
+	ConnectTimeoutMS *int64 `json:"connectTimeoutMS"` //qm:连接超时毫秒  cz:ConnectTimeoutMS *int64 `json:"connectTimeoutMS"`
+	// MaxPoolSize 指定驱动程序连接池到每个服务器的最大连接数。
+	// 如果设置为 0，则将其设置为 math.MaxInt64，
+	// 默认值为 100。
+	// md5:6840c2846a8fad6e
+	MaxPoolSize *uint64 `json:"maxPoolSize"` //qm:最大连接池大小  cz:MaxPoolSize *uint64 `json:"maxPoolSize"`
+	// MinPoolSize 指定了驱动程序到每个服务器的连接池中允许的最小连接数。如果此值不为零，将为每个服务器的连接池在后台维护，以确保其大小不低于最小值。这也可以通过 "minPoolSize" URI 选项（如 "minPoolSize=100"）进行设置。默认值为 0。
+	// md5:9df8b44a6800236b
+	MinPoolSize *uint64 `json:"minPoolSize"` //qm:最小连接池大小  cz:MinPoolSize *uint64 `json:"minPoolSize"`
+	// SocketTimeoutMS 指定了驱动程序在返回网络错误之前，等待套接字读写操作返回的最长时间（以毫秒为单位）。如果此值为0，则表示不使用超时，套接字操作可能无限期阻塞。默认值为300,000毫秒。
+	// md5:1e1ccf1f35a18417
+	SocketTimeoutMS *int64 `json:"socketTimeoutMS"` //qm:套接字超时毫秒  cz:SocketTimeoutMS *int64 `json:"socketTimeoutMS"`
+	// ReadPreference 确定哪些服务器适合进行读取操作。默认为 PrimaryMode。
+	// md5:6ca3a191c28443b8
+	ReadPreference *ReadPref `json:"readPreference"` //qm:读取偏好  zz:ReadPreference \*[a-zA-Z0-9_\u4e00-\u9fa5 ]+`json:"readPreference"`
 	// 可用于在配置客户端时提供身份验证选项。 md5:99c19d7fabc83d2d
-	Auth *Credential `json:"auth"`//qm:身份凭证  zz:Auth \*[a-zA-Z0-9_\u4e00-\u9fa5 ]+ `json:"auth"`  
+	Auth *Credential `json:"auth"` //qm:身份凭证  zz:Auth \*[a-zA-Z0-9_\u4e00-\u9fa5 ]+ `json:"auth"`
 }
 
 // Credential can be used to provide authentication options when configuring a Client.
@@ -98,48 +100,54 @@ type Config struct {//hm:配置  cz:type Config
 // false if no password is specified, indicating that the password should be taken from the context of the running
 // process. For other mechanisms, this field is ignored.
 // [提示]
-//type 身份凭证 struct {
-//     认证机制     string `json:"authMechanism"`
-//     认证源       string `json:"authSource"`
-//     用户名       string `json:"username"`
-//     密码         string `json:"password"`
-//     密码已设置   bool   `json:"passwordSet"`
-// }
+//
+//	type 身份凭证 struct {
+//	    认证机制     string `json:"authMechanism"`
+//	    认证源       string `json:"authSource"`
+//	    用户名       string `json:"username"`
+//	    密码         string `json:"password"`
+//	    密码已设置   bool   `json:"passwordSet"`
+//	}
+//
 // [结束]
-type Credential struct {//hm:身份凭证  cz:type Credential  
-	AuthMechanism string `json:"authMechanism"`//qm:认证机制  cz:AuthMechanism string `json:"authMechanism"`  
-	AuthSource    string `json:"authSource"`//qm:认证源  cz:AuthSource string `json:"authSource"`  
-	Username      string `json:"username"`//qm:用户名  cz:Username string `json:"username"`  
-	Password      string `json:"password"`//qm:密码  cz:Password string `json:"password"`  
+type Credential struct { //hm:身份凭证  cz:type Credential
+	AuthMechanism string `json:"authMechanism"` //qm:认证机制  cz:AuthMechanism string `json:"authMechanism"`
+	AuthSource    string `json:"authSource"`    //qm:认证源  cz:AuthSource string `json:"authSource"`
+	Username      string `json:"username"`      //qm:用户名  cz:Username string `json:"username"`
+	Password      string `json:"password"`      //qm:密码  cz:Password string `json:"password"`
 	PasswordSet   bool   `json:"passwordSet"`
 }
 
 // ReadPref确定哪些服务器适合进行读取操作。 md5:d5ae507a40965ac9
 // [提示]
-//type 读取偏好 struct {
-//     最大延迟毫秒 int64 `json:"maxStalenessMS"`
-//     模式 readpref.模式 `json:"mode"`
-// }
+//
+//	type 读取偏好 struct {
+//	    最大延迟毫秒 int64 `json:"maxStalenessMS"`
+//	    模式 readpref.模式 `json:"mode"`
+//	}
+//
 // [结束]
-type ReadPref struct {//hm:读取偏好  cz:type ReadPref  
-// MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
-// md5:01c3097a5d9a368b
-	MaxStalenessMS int64 `json:"maxStalenessMS"`//qm:最大延迟毫秒  cz:MaxStalenessMS int64 `json:"maxStalenessMS"`  
-// 表示用户在读取操作上的偏好。
-// 默认为PrimaryMode。
-// md5:85d94814e6ac8eca
+type ReadPref struct { //hm:读取偏好  cz:type ReadPref
+	// MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
+	// md5:01c3097a5d9a368b
+	MaxStalenessMS int64 `json:"maxStalenessMS"` //qm:最大延迟毫秒  cz:MaxStalenessMS int64 `json:"maxStalenessMS"`
+	// 表示用户在读取操作上的偏好。
+	// 默认为PrimaryMode。
+	// md5:85d94814e6ac8eca
 	Mode readpref.Mode `json:"mode"`
 }
 
 // QmgoClient 指定操作MongoDB的实例 md5:ef9044b4ab2af757
 // [提示]
-//type 七牛Mongo客户端 struct {
-//     集合 *集合操作
-//     数据库 *数据库操作
-//     客户端 *客户端连接
-// }
+//
+//	type 七牛Mongo客户端 struct {
+//	    集合 *集合操作
+//	    数据库 *数据库操作
+//	    客户端 *客户端连接
+//	}
+//
 // [结束]
-type QmgoClient struct {//hm:Mongo客户端  cz:type QmgoClient  
+type QmgoClient struct { //hm:Mongo客户端  cz:type QmgoClient
 	*Collection
 	*Database
 	*Client
@@ -176,13 +184,15 @@ func Open(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *Q
 
 // Client 创建一个到Mongo的客户端 md5:3527d3de272044c3
 // [提示]
-//type 客户端 struct {
-//     连接 *mongo.Client
-//     配置  Config
-//     注册表 *bsoncodec.Registry
-// }
+//
+//	type 客户端 struct {
+//	    连接 *mongo.Client
+//	    配置  Config
+//	    注册表 *bsoncodec.Registry
+//	}
+//
 // [结束]
-type Client struct {//hm:客户端  cz:type Client  
+type Client struct { //hm:客户端  cz:type Client
 	client *mongo.Client
 	conf   Config
 
@@ -333,7 +343,7 @@ func newReadPref(pref ReadPref) (*readpref.ReadPref, error) {
 }
 
 // Close 关闭到此客户端引用的拓扑结构相关的套接字。 md5:a2c78aacda5cd470
-// [提示:] func (c *客户端) 关闭(ctx 上下文.Context) 错误 {} 
+// [提示:] func (c *客户端) 关闭(ctx 上下文.Context) 错误 {}
 // ff:关闭连接
 // ctx:上下文
 func (c *Client) Close(ctx context.Context) error {
@@ -374,7 +384,7 @@ func (c *Client) Database(name string, options ...*options.DatabaseOptions) *Dat
 // 注意，操作完成后要关闭会话
 // md5:a25c6035ffabaf48
 // [提示:] func (c *客户端) 会话(opt ...*选项.SessionOptions) (*会话, 错误) {}
-// ff:创建Session
+// ff:创建Session事务
 // opt:可选选项
 func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {
 	sessionOpts := officialOpts.Session()
@@ -400,7 +410,7 @@ func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {
 // ff:事务
 // ctx:上下文
 // callback:回调函数
-// sessCtx:
+// sessCtx:事务上下文
 // opts:可选选项
 func (c *Client) DoTransaction(ctx context.Context, callback func(sessCtx context.Context) (interface{}, error), opts ...*options.TransactionOptions) (interface{}, error) {
 	if !c.transactionAllowed() {
@@ -445,11 +455,11 @@ func (c *Client) transactionAllowed() bool {
 		fmt.Println("transaction is not supported because mongo server version is below 4.0")
 		return false
 	}
-// TODO：不知道为什么在`topology()`函数中需要通过`cli, err := Open(ctx, &c.conf)`来获取topo，在弄清楚原因之前，我们只在这个UT（单元测试）中使用这个函数
-//topo, err := c.topology() // 从config对象获取topology信息
-//如果topo是description.Single（单点模式）：
-//    打印 "transaction is not supported because mongo server topology is single"
-//    返回false
-// md5:4d3e4bc17382c028
+	// TODO：不知道为什么在`topology()`函数中需要通过`cli, err := Open(ctx, &c.conf)`来获取topo，在弄清楚原因之前，我们只在这个UT（单元测试）中使用这个函数
+	//topo, err := c.topology() // 从config对象获取topology信息
+	//如果topo是description.Single（单点模式）：
+	//    打印 "transaction is not supported because mongo server topology is single"
+	//    返回false
+	// md5:4d3e4bc17382c028
 	return true
 }

@@ -31,7 +31,16 @@ func main() {
 		}
 	}()
 
-	//删除文档
-	err := cli.Remove(ctx, bson.M{"年龄": 1})
-	fmt.Println(err)
+	callback := func(sessCtx context.Context) (interface{}, error) {
+		// 重要提示：确保在整个事务的每个操作中都使用了sessCtx
+		if _, err := cli.InsertOne(sessCtx, bson.D{{"abc", int32(1)}}); err != nil {
+			return nil, err
+		}
+		if _, err := cli.InsertOne(sessCtx, bson.D{{"xyz", int32(999)}}); err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+	result, err := cli.DoTransaction(ctx, callback)
+	fmt.Println(result, err)
 }

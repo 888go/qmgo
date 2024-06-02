@@ -7,17 +7,10 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-// [提示]
-//type 用户信息 struct {
-//     姓名   string `bson:"name"`
-//     年龄    uint16 `bson:"age"`
-//     体重   uint32 `bson:"weight"`
-// }
-// [结束]
 type UserInfo struct {
-	Name   string `bson:"name"`
-	Age    uint16 `bson:"age"`
-	Weight uint32 `bson:"weight"`
+	Name   string `bson:"名称"`
+	Age    uint16 `bson:"年龄"`
+	Weight uint32 `bson:"重量"`
 }
 
 var userInfo = UserInfo{
@@ -28,6 +21,7 @@ var userInfo = UserInfo{
 
 func main() {
 	ctx := context.Background()
+	//注意要替换连接 mongodb://账号:密码@ip:端口
 	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "class", Coll: "user"})
 
 	//关闭连接
@@ -37,6 +31,6 @@ func main() {
 		}
 	}()
 
-	count, err := cli.Find(ctx, bson.M{"age": 6}).Count()
+	count, err := cli.Find(ctx, bson.M{"年龄": 6}).Count()
 	fmt.Println(count, err)
 }

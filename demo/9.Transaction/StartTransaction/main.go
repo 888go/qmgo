@@ -31,7 +31,21 @@ func main() {
 		}
 	}()
 
-	//删除文档
-	err := cli.Remove(ctx, bson.M{"年龄": 1})
+	//同时，您可以创建会话并使用会话启动交易： （如果不再使用会话，请不要忘记调用 EndSession）
+	s, err := cli.Session()
+	defer s.EndSession(ctx)
+
+	callback := func(sessCtx context.Context) (interface{}, error) {
+		// 重要提示：确保在整个事务的每个操作中都使用了sessCtx
+		if _, err := cli.InsertOne(sessCtx, bson.D{{"abc", int32(1)}}); err != nil {
+			return nil, err
+		}
+		if _, err := cli.InsertOne(sessCtx, bson.D{{"xyz", int32(999)}}); err != nil {
+			return nil, err
+		}
+		return nil, nil
+	}
+
+	_, err = s.StartTransaction(ctx, callback)
 	fmt.Println(err)
 }
