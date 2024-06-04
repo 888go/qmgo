@@ -64,14 +64,17 @@
 // SetArrayFilter 用于应用更新数组的过滤器
 // 示例：
 // var res = QueryTestItem{}
-// change := Change{
-//     Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
-//     ReturnNew: false,
-// }
+//
+//	change := Change{
+//	    Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
+//	    ReturnNew: false,
+//	}
+//
 // cli.Find(context.Background(), bson.M{"name": "Lucas"}).
-//     SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
-//       Apply(change, &res) 
-// 
+//
+//	SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
+//	  Apply(change, &res)
+//
 // 这段代码的注释说明了`SetArrayFilter`方法是用于设置更新操作中的数组过滤器。它给出了一个例子，展示了如何使用该方法来更新名为"Lucas"的文档中，符合条件（"elem.warehouse"在"C"或"F"中）的`instock`数组元素的`qty`字段为100。`Apply`方法最后将变更应用到查询结果上。
 // md5:3fa80906c918e6a3
 # <翻译结束>

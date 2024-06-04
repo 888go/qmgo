@@ -16,7 +16,7 @@
 <原文结束>
 
 # <翻译开始>
-// M 是 bson.M 的别名 md5:66b7bee0d7904542
+// map[string]interface{} , 如:bson.M{"foo": "bar", "hello": "world", "pi": 3.14159}, M是 bson.M 的别名 md5:66b7bee0d7904542
 # <翻译结束>
 
 
@@ -25,7 +25,7 @@
 <原文结束>
 
 # <翻译开始>
-// A是bson.A的别名 md5:7a6f09b99ea36324
+// []interface{},如:bson.A{"bar", "world", 3.14159, bson.D{{"qux", 12345}}} , A是bson.A的别名 md5:7a6f09b99ea36324
 # <翻译结束>
 
 
@@ -34,7 +34,7 @@
 <原文结束>
 
 # <翻译开始>
-// D 是 bson.D 的别名 md5:a2fd7b05e87775b6
+// Key/Value结构体数组, 如:bson.D{{"foo", "bar"}, {"hello", "world"}, {"pi", 3.14159}} ,D是 bson.D 的别名  md5:a2fd7b05e87775b6
 # <翻译结束>
 
 
@@ -43,6 +43,6 @@
 <原文结束>
 
 # <翻译开始>
-// E是bson.E的别名 md5:d1a800789b88ac58
+// Key/Value结构体, E 内部的单个元素,是bson.E的别名 md5:d1a800789b88ac58
 # <翻译结束>
 

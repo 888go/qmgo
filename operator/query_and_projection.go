@@ -65,6 +65,14 @@ package operator //bm:操作符
 // [结束]
 const (
 	// 比较
+	//	等于  = "$eq"
+	//	大于  = "$gt"
+	//	大于等于 = "$gte"
+	//	包含  = "$in"
+	//	小于  = "$lt"
+	//	小于等于 = "$lte"
+	//	不等于  = "$ne"
+	//	不在其中 = "$nin"
 	Eq  = "$eq"  //qm:等于  cz:Eq = "$eq"
 	Gt  = "$gt"  //qm:大于  cz:Gt = "$gt"
 	Gte = "$gte" //qm:大于等于  cz:Gte = "$gte"
@@ -73,22 +81,25 @@ const (
 	Lte = "$lte" //qm:小于等于  cz:Lte = "$lte"
 	Ne  = "$ne"  //qm:不等于  cz:Ne = "$ne"
 	Nin = "$nin" //qm:不包含  cz:Nin = "$nin"
-
+	//	与  = "$and"
+	//	非  = "$not"
+	//	或非  = "$nor"
+	//	或  = "$or"
 	// 必然的
 	And = "$and" //qm:且  cz:And = "$and"
-	Not = "$not"
-	Nor = "$nor"
-	Or  = "$or" //qm:或  cz:Or = "$or"
+	Not = "$not" //qm:非 cz:Not = "$not"
+	Nor = "$nor" //qm:或非 cz:Nor = "$nor"
+	Or  = "$or"  //qm:或  cz:Or = "$or"
 
 	// 要素
-	Exists = "$exists"
+	Exists = "$exists" //qm:存在字段 cz:Exists = "$exists"
 	Type   = "$type"
 
 	// 评价
 	Expr       = "$expr"
 	JsonSchema = "$jsonSchema"
 	Mod        = "$mod"
-	Regex      = "$regex"
+	Regex      = "$regex" //qm:正则表达式 cz:Regex      = "$regex"
 	Text       = "$text"
 	Where      = "$where"
 

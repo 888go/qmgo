@@ -235,7 +235,7 @@
 // CreateIndexes 在集合中创建多个索引
 // 如果opts.IndexModel中的Key为[]string{"name"}，表示创建索引：name
 // 如果opts.IndexModel中的Key为[]string{"name", "-age"}，表示创建复合索引：name和-age
-// md5:822a787892c2186f
+// md5:822a787892c2186f索引s
 # <翻译结束>
 
 
@@ -261,7 +261,7 @@
 # <翻译开始>
 // DropAllIndexes 会删除集合上除了_id字段索引之外的所有索引
 // 如果集合上只有_id字段的索引，该函数调用将报告错误
-// md5:e7655b40436f93df
+// md5:e7655b40436f93df全部索引
 # <翻译结束>
 
 
@@ -275,7 +275,7 @@
 // DropIndex 从集合中删除索引，需要删除的索引应与输入的索引列表匹配
 // 索引是 []string{"name"} 表示删除名为 "name" 的单个索引
 // 索引是 []string{"name", "-age"} 表示删除复合索引：name 和排除年龄 (-age) 的部分索引
-// md5:4ad77e88557061c7
+// md5:4ad77e88557061c7索引索引s
 # <翻译结束>
 
 
@@ -296,7 +296,7 @@
 # <翻译开始>
 // DropIndexDropIndex 会删除索引
 // 即使索引不存在，这个操作也是安全的
-// md5:e7b65cd93b1de7f7
+// md5:e7b65cd93b1de7f7集合
 # <翻译结束>
 
 

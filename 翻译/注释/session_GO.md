@@ -29,13 +29,14 @@
 // - MongoDB服务器版本大于等于v4.0
 // - MongoDB服务器的拓扑结构不是单节点
 // 同时需要注意：
-// - 确保回调中的所有操作将sessCtx作为上下文参数
-// - 如果不再使用session，别忘了调用EndSession
-// - 如果回调中的操作耗时超过（包括等于）120秒，这些操作将不会生效
-// - 如果回调中的操作返回qmgo.ErrTransactionRetry错误，
-//   整个事务将会重试，因此这个事务必须是幂等的
-// - 如果回调中的操作返回qmgo.ErrTransactionNotSupported错误，
-// - 如果ctx参数中已经附加了一个Session，它将被此session替换。
+//   - 确保回调中的所有操作将sessCtx作为上下文参数
+//   - 如果不再使用session，别忘了调用EndSession
+//   - 如果回调中的操作耗时超过（包括等于）120秒，这些操作将不会生效
+//   - 如果回调中的操作返回qmgo.ErrTransactionRetry错误，
+//     整个事务将会重试，因此这个事务必须是幂等的
+//   - 如果回调中的操作返回qmgo.ErrTransactionNotSupported错误，
+//   - 如果ctx参数中已经附加了一个Session，它将被此session替换。
+//
 // md5:7a854b4c45212490
 # <翻译结束>
 

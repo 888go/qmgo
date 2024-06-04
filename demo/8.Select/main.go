@@ -22,7 +22,7 @@ var userInfo = UserInfo{
 func main() {
 	ctx := context.Background()
 	//注意要替换连接 mongodb://账号:密码@ip:端口
-	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "class", Coll: "user"})
+	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "学校数据库", Coll: "用户"})
 
 	//关闭连接
 	defer func() {
@@ -33,7 +33,6 @@ func main() {
 
 	//查找一个文档
 	one := UserInfo{}
-	err := cli.Find(ctx, bson.M{"年龄": 10}).Select(bson.M{"年龄": 1}).One(&one)
+	cli.Find(ctx, bson.M{"年龄": 7}).Select(bson.M{"年龄": 7}).One(&one)
 	fmt.Println(one)
-	fmt.Println(err)
 }

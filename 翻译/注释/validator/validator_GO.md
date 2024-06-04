@@ -52,7 +52,6 @@
 <原文结束>
 
 # <翻译开始>
-// []interface{}{UserType{}...} 的中文翻译为：
 // []interface{}{UserType实例...} md5:bda81608072dd1ad
 # <翻译结束>
 

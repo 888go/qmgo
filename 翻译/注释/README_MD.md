@@ -10,11 +10,6 @@ Requirements
 <原文结束>
 
 # <翻译开始>
-# 需求：
-
-- Go 1.10 及以上版本。
-- MongoDB 2.6 及以上版本。
-
 // md5:352d18eff92a20ab
 # <翻译结束>
 
@@ -63,14 +58,6 @@ Or
 <原文结束>
 
 # <翻译开始>
-# 安装
-
-- 使用`go mod`通过`import github.com/qiniu/qmgo`自动安装依赖项
-
-或者
-
-- 使用`go get github.com/qiniu/qmgo`手动下载并安装
-
 // md5:b6c170957e20a6ac
 # <翻译结束>
 
@@ -420,41 +407,6 @@ coll.Find(bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
 <原文结束>
 
 # <翻译开始>
-# `Qmgo` 与 `go.mongodb.org/mongo-driver` 对比
-
-以下是一个多文件搜索、排序和限制的例子，以展示 `qmgo` 和 `mgo` 之间的相似性，以及与 `go.mongodb.org/mongo-driver` 的改进之处。
-
-在 `go.mongodb.org/mongo-driver` 中我们如何操作：
-
-```go
-// go.mongodb.org/mongo-driver
-// 查找所有，排序并限制
-findOptions := options.Find()
-findOptions.SetLimit(7)       // 设置限制
-var sorts bson.D
-sorts = append(sorts, bson.E{Key: "weight", Value: 1})
-findOptions.SetSort(sorts)     // 设置排序
-
-batch := []UserInfo{}
-cur, err := coll.Find(ctx, bson.M{"age": 6}, findOptions)
-cur.All(ctx, &batch)
-```
-
-在 `Qmgo` 和 `mgo` 中我们如何操作：
-
-```go
-// qmgo
-// 查找所有，排序并限制
-batch := []UserInfo{}
-cli.Find(ctx, bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
-
-// mgo
-// 查找所有，排序并限制
-coll.Find(bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
-```
-
-从上述代码中可以看出，`Qmgo` 和 `mgo` 的语法更加简洁直接，与 `go.mongodb.org/mongo-driver` 相比，它们在进行查询操作时的链式调用更直观易读。
-
 // md5:321c33fe0a12b621
 # <翻译结束>
 
@@ -483,10 +435,6 @@ The Qmgo project welcomes all contributors. We appreciate your help!
 <原文结束>
 
 # <翻译开始>
-# 贡献
-
-Qmgo项目欢迎所有贡献者。我们非常感谢您的帮助！
-
 // md5:47351fd09a8eca92
 # <翻译结束>
 

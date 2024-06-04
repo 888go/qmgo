@@ -79,6 +79,22 @@ cz=Nin #等号# "$nin"
 qm=且
 cz=And #等号# "$and"
 
+[Not = "$not"]
+qm=非
+cz=Not #等号# "$not"
+
+[Nor = "$nor"]
+qm=或非
+cz=Nor #等号# "$nor"
+
 [Or = "$or"]
 qm=或
 cz=Or #等号# "$or"
+
+[Exists = "$exists"]
+qm=存在字段
+cz=Exists #等号# "$exists"
+
+[Regex = "$regex"]
+qm=正则表达式
+cz=Regex #等号# "$regex"

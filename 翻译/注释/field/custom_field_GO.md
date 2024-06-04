@@ -40,7 +40,7 @@
 <原文结束>
 
 # <翻译开始>
-// SetUpdateAt 设置自定义的UpdateAt字段 md5:fa5a62704b166e17
+// SetUpdateAt 设置自定义的UpdateAt字段 md5:fa5a62704b166e17设置更新时间字段名
 # <翻译结束>
 
 
@@ -49,7 +49,7 @@
 <原文结束>
 
 # <翻译开始>
-// SetCreateAt 设置自定义的创建时间字段 md5:9d021ddb5b3276d1
+// SetCreateAt 设置自定义的创建时间字段 md5:9d021ddb5b3276d1设置创建时间字段名
 # <翻译结束>
 
 
@@ -58,7 +58,7 @@
 <原文结束>
 
 # <翻译开始>
-// SetId 设置自定义Id字段 md5:769568d47e77f5fe
+// SetId 设置自定义Id字段 md5:769568d47e77f5fe设置ID字段名
 # <翻译结束>
 
 
@@ -67,7 +67,7 @@
 <原文结束>
 
 # <翻译开始>
-// CustomCreateTime 更改自定义创建时间 md5:0ddb85c54f1b54c2
+// CustomCreateTime 更改自定义创建时间 md5:0ddb85c54f1b54c2自定义创建时间
 # <翻译结束>
 
 
@@ -76,7 +76,7 @@
 <原文结束>
 
 # <翻译开始>
-// CustomUpdateTime 修改自定义更新时间 md5:71153ba9520a179c
+// CustomUpdateTime 修改自定义更新时间 md5:71153ba9520a179c自定义更新时间
 # <翻译结束>
 
 

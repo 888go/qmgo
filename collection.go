@@ -30,12 +30,14 @@ import (
 
 // Collection 是一个MongoDB集合的句柄 md5:be1b94030609bdd1
 // [提示]
-//type 文档集合 struct {
-//     文档集合接口 *mongo.DocumentCollection
-//     编码注册器 *bsoncodec.Registry
-// }
+//
+//	type 文档集合 struct {
+//	    文档集合接口 *mongo.DocumentCollection
+//	    编码注册器 *bsoncodec.Registry
+//	}
+//
 // [结束]
-type Collection struct {//hm:文档集合  cz:type Collection  
+type Collection struct { //hm:文档集合  cz:type Collection
 	collection *mongo.Collection
 
 	registry *bsoncodec.Registry
@@ -97,10 +99,10 @@ func (c *Collection) InsertOne(ctx context.Context, doc interface{}, opts ...opt
 // InsertMany executes an insert command to insert multiple documents into the collection.
 // If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook多个
 // [提示]
-//func (c *集合) 插入多条(ctx 上下文, 文档 interface{}) (插入结果 []interface{}, 错误 error) {
-// 
+// func (c *集合) 插入多条(ctx 上下文, 文档 interface{}) (插入结果 []interface{}, 错误 error) {
+//
 // }
-// 
+//
 // // 注意：这里仅做简单翻译，具体方法名和参数名在实际编程中应保持英文，以符合Go语言的编程规范和社区习惯。
 // [结束]
 // ff:插入多个
@@ -163,8 +165,8 @@ func interfaceToSliceInterface(docs interface{}) []interface{} {
 // If replacement has "_id" field and the document is existed, please initial it with existing id(even with Qmgo default field feature).
 // Otherwise, "the (immutable) field '_id' altered" error happens.
 // [提示]
-//func (c *集合) 更新或插入(ctx 上下文.Context, 过滤器 interface{}) (写入结果 WriteResult, 错误 error) {
-// 
+// func (c *集合) 更新或插入(ctx 上下文.Context, 过滤器 interface{}) (写入结果 WriteResult, 错误 error) {
+//
 // }
 // [结束]
 // ff:更新插入
@@ -247,43 +249,48 @@ func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement i
 
 // UpdateOne executes an update command to update at most one document in the collection.
 // [提示]
-//func (c *集合) 更新一条数据(ctx 上下文, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
-// 
+// func (c *集合) 更新一条数据(ctx 上下文, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
+//
 // }
-// 
+//
 // // UpdateResult 是更新操作的结果类型
-// type UpdateResult struct {
-//     MatchedCount int64  // 匹配文档数
-//     ModifiedCount int64  // 修改文档数
-//     UpsertedID    *primitive.ObjectID // 新增文档的_id，如果进行了upsert操作
-// }
-// 
+//
+//	type UpdateResult struct {
+//	    MatchedCount int64  // 匹配文档数
+//	    ModifiedCount int64  // 修改文档数
+//	    UpsertedID    *primitive.ObjectID // 新增文档的_id，如果进行了upsert操作
+//	}
+//
 // func (c *Collection) InsertOne(ctx context.Context, document interface{}) (插入结果 InsertOneResult, 错误 error) {
-// 
+//
 // }
-// 
+//
 // // InsertOneResult 插入操作的结果类型
-// type InsertOneResult struct {
-//     InsertedID *primitive.ObjectID // 插入文档的_id
-// }
-// 
+//
+//	type InsertOneResult struct {
+//	    InsertedID *primitive.ObjectID // 插入文档的_id
+//	}
+//
 // func (c *Collection) DeleteOne(ctx context.Context, filter interface{}) (删除结果 DeleteResult, 错误 error) {
-// 
+//
 // }
-// 
+//
 // // DeleteResult 删除操作的结果类型
-// type DeleteResult struct {
-//     DeletedCount int64 // 删除的文档数
-// }
-// 
+//
+//	type DeleteResult struct {
+//	    DeletedCount int64 // 删除的文档数
+//	}
+//
 // func (c *Collection) Find(ctx context.Context, filter interface{}) *Query {
-// 
+//
 // }
-// 
+//
 // // Query 是用于构建查询的类型
-// type Query struct {
-//     // 包含了多个查询相关的配置和方法
-// }
+//
+//	type Query struct {
+//	    // 包含了多个查询相关的配置和方法
+//	}
+//
 // [结束]
 // ff:更新一条
 // ctx:上下文
@@ -400,17 +407,19 @@ func (c *Collection) UpdateAll(ctx context.Context, filter interface{}, update i
 // ReplaceOne 执行更新命令，最多更新集合中的一个文档。如果 opts 中的 UpdateHook 被设置，那么 Hook 将在其上执行，否则 Hook 尝试将 doc 作为 Hook。预期 doc 的类型是用户定义的文档的定义。
 // md5:1d830477f8b32e37
 // [提示]
-//func (c *集合) 替换单个文档(ctx 上下文 контекст, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
-// 
+// func (c *集合) 替换单个文档(ctx 上下文 контекст, 过滤器 interface{}) (更新结果 UpdateResult, 错误 error) {
+//
 // }
-// 
+//
 // // UpdateResult 是一个返回结果的结构体，可能包含匹配的文档数和任何操作错误。
-// type UpdateResult struct {
-//     MatchedCount int64  // 匹配文档数量
-//     ModifiedCount int64  // 修改文档数量
-//     UpsertedID    interface{} // 新插入文档的ID（如果进行了upsert操作）
-//     Err           error       // 操作错误
-// }
+//
+//	type UpdateResult struct {
+//	    MatchedCount int64  // 匹配文档数量
+//	    ModifiedCount int64  // 修改文档数量
+//	    UpsertedID    interface{} // 新插入文档的ID（如果进行了upsert操作）
+//	    Err           error       // 操作错误
+//	}
+//
 // [结束]
 // ff:替换一条
 // ctx:上下文
@@ -569,9 +578,9 @@ func (c *Collection) Aggregate(ctx context.Context, pipeline interface{}, opts .
 	}
 }
 
-// ensureIndex create multiple indexes on the collection and returns the names of
-// Example：indexes = []string{"idx1", "-idx2", "idx3,idx4"}
-// Three indexes will be created, index idx1 with ascending order, index idx2 with descending order, idex3 and idex4 are Compound ascending sort index
+// ensureIndex在集合上创建多个索引，并返回的名称
+// 示例：indexes=[]字符串｛“idx1”，“-idx2”，“idx3，idx4”｝
+// 将创建三个索引，索引idx1按升序排列，索引idx2按降序排列，idex3和idex4为复合升序排序索引
 func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel) error {
 	var indexModels []mongo.IndexModel
 	for _, idx := range indexes {
