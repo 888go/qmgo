@@ -582,6 +582,7 @@ func (c *Collection) Aggregate(ctx context.Context, pipeline interface{}, opts .
 // 示例：indexes=[]字符串｛“idx1”，“-idx2”，“idx3，idx4”｝
 // 将创建三个索引，索引idx1按升序排列，索引idx2按降序排列，idex3和idex4为复合升序排序索引
 func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel) error {
+
 	var indexModels []mongo.IndexModel
 	for _, idx := range indexes {
 		var model mongo.IndexModel

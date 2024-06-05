@@ -17,7 +17,7 @@ func Test_插入一条数据(t *testing.T) {
 
 func Test_插入多条数据(t *testing.T) {
 	var userInfos = []UserInfo{
-		{Name: "a1", Age: 6, Weight: 20},
+		{Name: "a1", Age: 99, Weight: 20},
 		{Name: "b2", Age: 6, Weight: 25},
 		{Name: "c3", Age: 6, Weight: 30},
 		{Name: "d4", Age: 6, Weight: 35},

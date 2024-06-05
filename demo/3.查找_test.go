@@ -103,7 +103,18 @@ func Test_字段是否存在(t *testing.T) {
 func Test_求值(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#evaluation
 	batch := []UserInfo{}
+
 	//$regex操作符, 支持正则表达式, 匹配"名称"以b2开头的.
 	cli.Find(ctx, bson.D{{"名称", bson.M{operator.Regex: "^b2.*"}}}).All(&batch)
-	fmt.Println(batch)
+	fmt.Println("$regex操作符-->", batch)
+
+	//$expr操作符, 支持把查询字段作为变量来比较.
+	//查出"重量"比"年龄"字段大的数据.
+	query := bson.D{
+		{"$expr", bson.D{
+			{"$gt", bson.A{"$重量", "$年龄"}},
+		}},
+	}
+	cli.Find(ctx, query).All(&batch)
+	fmt.Println("$expr操作符--->", batch)
 }
