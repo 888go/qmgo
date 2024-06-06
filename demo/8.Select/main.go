@@ -22,7 +22,7 @@ var userInfo = UserInfo{
 func main() {
 	ctx := context.Background()
 	//注意要替换连接 mongodb://账号:密码@ip:端口
-	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "学校数据库", Coll: "用户"})
+	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "数据库_demo", Coll: "记账"})
 
 	//关闭连接
 	defer func() {

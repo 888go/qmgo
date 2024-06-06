@@ -9,18 +9,18 @@ import (
 
 func Test_查找一个文档(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#literal-values
-	var userInfo = UserInfo{
-		Name:   "a1",
-		Age:    7,
-		Weight: 40,
+	var userInfo = X记账{
+		X名称: "a1",
+		X年龄: 7,
+		X重量: 40,
 	}
-	one := UserInfo{}
-	_ = cli.Find(ctx, bson.M{"名称": userInfo.Name}).One(&one)
+	one := X记账{}
+	_ = cli.Find(ctx, bson.M{"名称": userInfo.X名称}).One(&one)
 	fmt.Println(one)
 }
 
 func Test_查找所有_排序和限制(t *testing.T) {
-	batch := []UserInfo{}
+	batch := []X记账{}
 	//用bson.M{}作为条件, 等同
 	cli.Find(ctx, bson.M{"年龄": 6}).Sort("重量").Limit(7).All(&batch)
 	fmt.Println(batch)
@@ -31,7 +31,7 @@ func Test_查找所有_排序和限制(t *testing.T) {
 }
 
 func Test_对比查询操作符(t *testing.T) {
-	batch := []UserInfo{}
+	batch := []X记账{}
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#comparison
 	//$eq匹配等于指定值的值。
 	//$gt匹配大于指定值的值。
@@ -65,7 +65,7 @@ func Test_对比查询操作符(t *testing.T) {
 
 func Test_逻辑查询操作符(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#logical
-	batch := []UserInfo{}
+	batch := []X记账{}
 	//$and使用逻辑 AND 连接查询子句将返回与两个子句的条件匹配的所有文档。
 	//$not反转查询表达式的效果，并返回与查询表达式不匹配的文档。
 	//$nor使用逻辑 NOR 的联接查询子句会返回无法匹配这两个子句的所有文档。
@@ -87,7 +87,7 @@ func Test_逻辑查询操作符(t *testing.T) {
 
 func Test_字段是否存在(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#element
-	batch := []UserInfo{}
+	batch := []X记账{}
 	//备注,在go里面,似乎没办法插入一个空数据,所以,以下很难生效.
 
 	//查找名称为空数据的文档
@@ -102,7 +102,7 @@ func Test_字段是否存在(t *testing.T) {
 
 func Test_求值(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#evaluation
-	batch := []UserInfo{}
+	batch := []X记账{}
 
 	//$regex操作符, 支持正则表达式, 匹配"名称"以b2开头的.
 	cli.Find(ctx, bson.D{{"名称", bson.M{operator.Regex: "^b2.*"}}}).All(&batch)
@@ -117,4 +117,10 @@ func Test_求值(t *testing.T) {
 	}
 	cli.Find(ctx, query).All(&batch)
 	fmt.Println("$expr操作符--->", batch)
+}
+
+func Test_取文档数量(t *testing.T) {
+	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/count/#std-label-golang-estimated-count
+	文档数量, _ := cli.Find(ctx, bson.D{{"名称", bson.M{operator.Regex: "^b.*"}}}).Count()
+	fmt.Println(文档数量)
 }

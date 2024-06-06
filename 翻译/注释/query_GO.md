@@ -162,7 +162,9 @@
 <原文结束>
 
 # <翻译开始>
-// EstimatedCount 通过元数据计算集合的数量 md5:8c9bd7e463139421
+// EstimatedCount 通过元数据计算集合的数量,
+// EstimatedDocumentCount() 方法比 CountDocuments() 方法更快，因为它使用集合的元数据而不是扫描整个集合。
+// md5:8c9bd7e463139421
 # <翻译结束>
 
 

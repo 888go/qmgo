@@ -313,7 +313,9 @@ func (q *Query) Count() (n int64, err error) {
 	return q.collection.CountDocuments(q.ctx, q.filter, opt)
 }
 
-// EstimatedCount 通过元数据计算集合的数量 md5:8c9bd7e463139421
+// EstimatedCount 通过元数据计算集合的数量,
+// EstimatedDocumentCount() 方法比 CountDocuments() 方法更快，因为它使用集合的元数据而不是扫描整个集合。
+// md5:8c9bd7e463139421
 // [提示:] func (q *Query) 估算计数() (总数 int64, 错误 error) {}
 // ff:取预估数量
 // n:数量
