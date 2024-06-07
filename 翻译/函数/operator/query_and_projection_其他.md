@@ -95,6 +95,38 @@ cz=Or #等号# "$or"
 qm=存在字段
 cz=Exists #等号# "$exists"
 
+[Expr = "$expr"]
+qm=表达式
+cz=Expr #等号# "$expr"
+
+[JsonSchema = "$jsonSchema"]
+qm=Json效验
+cz=JsonSchema #等号# "$jsonSchema"
+
+[Mod = "$mod"]
+qm=取模
+cz=Mod #等号# "$mod"
+
 [Regex = "$regex"]
 qm=正则表达式
 cz=Regex #等号# "$regex"
+
+[Text = "$text"]
+qm=全文搜索
+cz=Text #等号# "$text"
+
+[Where = "$where"]
+qm=Js条件
+cz=Where #等号# "$where"
+
+[All = "$all"]
+qm=全部数组
+cz=All #等号# "$all"
+
+[ElemMatch = "$elemMatch"]
+qm=数组匹配条件
+cz=ElemMatch #等号# "$elemMatch"
+
+[Size = "$size"]
+qm=数组数量
+cz=Size #等号# "$size"

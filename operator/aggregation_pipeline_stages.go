@@ -11,40 +11,42 @@
  limitations under the License.
 */
 
-package operator
+package operator //bm:常量
 
 // define the aggregation pipeline stages
 // [提示]
-//const (
-// 	添加字段      = "$addFields"
-// 	桶             = "$bucket"
-// 	自动桶         = "$bucketAuto"
-// 	集合统计       = "$collStats"
-// 	计数           = "$count"
-// 	方面           = "$facet"
-// 	地理近邻       = "$geoNear"
-// 	图形查找       = "$graphLookup"
-// 	分组           = "$group"
-// 	索引统计       = "$indexStats"
-// 	限制           = "$limit"
-// 	列出会话       = "$listSessions"
-// 	连接           = "$lookup"
-// 	匹配           = "$match"
-// 	合并           = "$merge"
-// 	输出           = "$out"
-// 	计划缓存统计   = "$planCacheStats"
-// 	投影           = "$project"
-// 	裁剪           = "$redact"
-// 	替换根         = "$replaceRoot"
-// 	替换为         = "$replaceWith"
-// 	采样           = "$sample"
-// 	跳过           = "$skip"
-// 	按计数排序     = "$sortByCount"
-// 	联合           = "$unionWith"
-// 	展开           = "$unwind"
-// 
-// 	当前操作         = "$currentOp"
-// 	列出本地会话   = "$listLocalSessions"
+// const (
+//
+//	添加字段      = "$addFields"
+//	桶             = "$bucket"
+//	自动桶         = "$bucketAuto"
+//	集合统计       = "$collStats"
+//	计数           = "$count"
+//	方面           = "$facet"
+//	地理近邻       = "$geoNear"
+//	图形查找       = "$graphLookup"
+//	分组           = "$group"
+//	索引统计       = "$indexStats"
+//	限制           = "$limit"
+//	列出会话       = "$listSessions"
+//	连接           = "$lookup"
+//	匹配           = "$match"
+//	合并           = "$merge"
+//	输出           = "$out"
+//	计划缓存统计   = "$planCacheStats"
+//	投影           = "$project"
+//	裁剪           = "$redact"
+//	替换根         = "$replaceRoot"
+//	替换为         = "$replaceWith"
+//	采样           = "$sample"
+//	跳过           = "$skip"
+//	按计数排序     = "$sortByCount"
+//	联合           = "$unionWith"
+//	展开           = "$unwind"
+//
+//	当前操作         = "$currentOp"
+//	列出本地会话   = "$listLocalSessions"
+//
 // )
 // [结束]
 const (
@@ -53,16 +55,16 @@ const (
 	Bucket         = "$bucket"
 	BucketAuto     = "$bucketAuto"
 	CollStats      = "$collStats"
-	Count          = "$count"
+	Count          = "$count" //qm:聚合计数 cz:Count          = "$count"
 	Facet          = "$facet"
 	GeoNear        = "$geoNear"
 	GraphLookup    = "$graphLookup"
-	Group          = "$group"
+	Group          = "$group" //qm:聚合分组 cz:Group          = "$group"
 	IndexStats     = "$indexStats"
 	Limit          = "$limit"
 	ListSessions   = "$listSessions"
 	Lookup         = "$lookup"
-	Match          = "$match"
+	Match          = "$match" //qm:聚合条件 cz:Match          = "$match"
 	Merge          = "$merge"
 	Out            = "$out"
 	PlanCacheStats = "$planCacheStats"

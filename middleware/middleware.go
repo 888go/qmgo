@@ -23,7 +23,7 @@ var middlewareCallback = []callback{
 // Register 将回调函数注册到中间件中 md5:23bc8366f03c6dbb
 // [提示:] func 注册中间件(callback 中间件回调函数) {}
 // ff:
-// cb:
+// cb:回调函数
 func Register(cb callback) {
 	middlewareCallback = append(middlewareCallback, cb)
 }
