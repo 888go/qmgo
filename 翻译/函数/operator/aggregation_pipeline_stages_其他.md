@@ -43,6 +43,14 @@ cz=Count #等号# "$count"
 qm=聚合分组
 cz=Group #等号# "$group"
 
+[Limit = "$limit"]
+qm=聚合限制 Limit #等号# "$limit"
+cz=Limit #等号# "$limit"
+
 [Match = "$match"]
 qm=聚合条件
 cz=Match #等号# "$match"
+
+[Project = "$project"]
+qm=聚合字段
+cz=Project #等号# "$project"

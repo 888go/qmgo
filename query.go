@@ -160,42 +160,6 @@ func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 // md5:3beb3c9bd51ad3fe
 // [提示]
 // func (q *Query) 选择(projection interface{})
-//
-// // 下面的方法未给出完整信息，我将提供一般性的翻译，但可能需要根据实际代码上下文进行调整
-//
-//	func (c *Collection) InsertOne(doc interface{}) (insertedIDprimitive, error) {
-//	    // 翻译：在集合中插入一个文档，返回插入的ID和可能的错误
-//	}
-//
-//	func (c *Collection) Find(filter interface{}, opts ...*FindOptions) *Query {
-//	    // 翻译：根据过滤器找到文档，返回一个查询对象，可选的查找选项
-//	}
-//
-//	func (q *Query) Limit(n int) *Query {
-//	    // 翻译：限制查询结果的数量，返回更新后的查询对象
-//	}
-//
-//	func (q *Query) Skip(n int) *Query {
-//	    // 翻译：跳过查询结果的前n个文档，返回更新后的查询对象
-//	}
-//
-//	func (q *Query) Sort(fields ...string) *Query {
-//	    // 翻译：按指定字段排序查询结果，返回更新后的查询对象
-//	}
-//
-//	func (q *Query) All(result interface{}) error {
-//	    // 翻译：将所有查询结果填充到结果接口中，返回可能出现的错误
-//	}
-//
-//	func (q *Query) One(result interface{}) error {
-//	    // 翻译：获取查询结果中的第一条文档并填充到结果接口中，返回可能出现的错误
-//	}
-//
-//	func (q *Query) Count() (int64, error) {
-//	    // 翻译：计算查询结果的文档数量，返回总数和可能的错误
-//	}
-//
-// [结束]
 // ff:字段
 // q:
 // projection:字段Map

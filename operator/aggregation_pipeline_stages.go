@@ -70,7 +70,7 @@ const (
 	Merge          = "$merge"
 	Out            = "$out"
 	PlanCacheStats = "$planCacheStats"
-	Project        = "$project"
+	Project        = "$project" //qm:聚合字段 cz:Project        = "$project"
 	Redact         = "$redact"
 	ReplaceRoot    = "$replaceRoot"
 	ReplaceWith    = "$replaceWith"

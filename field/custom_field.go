@@ -22,13 +22,15 @@ import (
 
 // CustomFields 定义了支持的自定义字段的结构体 md5:d6f9da51bb1f9550
 // [提示]
-//type 自定义字段 struct {
-//     创建时间 string
-//     更新时间 string
-//     ID        string
-// }
+//
+//	type 自定义字段 struct {
+//	    创建时间 string
+//	    更新时间 string
+//	    ID        string
+//	}
+//
 // [结束]
-type CustomFields struct {//hm:自定义字段  cz:type CustomFields  
+type CustomFields struct { //hm:自定义字段  cz:type CustomFields
 	createAt string
 	updateAt string
 	id       string
@@ -38,100 +40,23 @@ type CustomFields struct {//hm:自定义字段  cz:type CustomFields
 // [提示:] type 自定义字段钩子接口 interface {}
 type CustomFieldsHook interface {
 	// [提示:] 自定义字段() 自定义字段构建器
-CustomFields() CustomFieldsBuilder//qm:设置更新时间字段名  cz:CustomFields() CustomFieldsBuilder  
+	CustomFields() CustomFieldsBuilder //qm:设置更新时间字段名  cz:CustomFields() CustomFieldsBuilder
 }
 
 // CustomFieldsBuilder 定义了用户用来设置自定义字段的接口 md5:68d7427693ef0a18
 // [提示:] type 自定义字段构建器接口 interface {}
 type CustomFieldsBuilder interface {
 	// [提示]
-//设置更新时间字段接口 (SetUpdateTimeField fieldName string) 自定义字段构建器
-// 
-// AddInc(field string, value int64) CustomFieldsBuilder
-// 
-// 添加增量字段接口 (AddIncrementField field string, value int64) 自定义字段构建器
-// 
-// AddSet(field string, values ...interface{}) CustomFieldsBuilder
-// 
-// 添加集合字段接口 (AddSetField field string, values ...interface{}) 自定义字段构建器
-// 
-// AddPushAll(field string, values ...interface{}) CustomFieldsBuilder
-// 
-// 添加推送全部字段接口 (AddPushAllField field string, values ...interface{}) 自定义字段构建器
-// 
-// AddPullAll(field string, values ...interface{}) CustomFieldsBuilder
-// 
-// 添加拉取全部字段接口 (AddPullAllField field string, values ...interface{}) 自定义字段构建器
-// 
-// AddRename(field, newName string) CustomFieldsBuilder
-// 
-// 添加重命名字段接口 (AddRenameField field, newName string) 自定义字段构建器
-// 
-// AddUnset(field string) CustomFieldsBuilder
-// 
-// 添加取消设置字段接口 (AddUnsetField field string) 自定义字段构建器
-// 
-// AddMin(field string, value interface{}) CustomFieldsBuilder
-// 
-// 添加最小值字段接口 (AddMinField field string, value interface{}) 自定义字段构建器
-// 
-// AddMax(field string, value interface{}) CustomFieldsBuilder
-// 
-// 添加最大值字段接口 (AddMaxField field string, value interface{}) 自定义字段构建器
-// 
-// AddCurrentDate(field string) CustomFieldsBuilder
-// 
-// 添加当前日期字段接口 (AddCurrentDateField field string) 自定义字段构建器
-// [结束]
-SetUpdateAt(fieldName string) CustomFieldsBuilder//qm:设置更新时间字段名  cz:SetUpdateAt(fieldName string) CustomFieldsBuilder  
+	//设置更新时间字段接口 (SetUpdateTimeField fieldName string) 自定义字段构建器
+	SetUpdateAt(fieldName string) CustomFieldsBuilder //qm:设置更新时间字段名  cz:SetUpdateAt(fieldName string) CustomFieldsBuilder
 	// [提示]
-//Set创建时间(fieldName string) 自定义字段构建器
-// 
-// SetUpdatedAt(fieldName string) CustomFieldsBuilder
-// 
-// SetDeleteAt(fieldName string) CustomFieldsBuilder
-// 
-// SetIndex(indexType IndexType, fieldNames ...string) CustomFieldsBuilder
-// 
-// SetUniqueIndex(fieldNames ...string) CustomFieldsBuilder
-// 
-// SetHashKey(fieldName string) CustomFieldsBuilder
-// 
-// SetRangeKey(fieldName string) CustomFieldsBuilder
-// 
-// SetGeoHashKey(fieldName string) CustomFieldsBuilder
-// 
-// SetFullTextIndex(fieldName string) CustomFieldsBuilder
-// 
-// SetIndexOptions(options ...IndexOption) CustomFieldsBuilder
-// 
-// Build() FieldMap
-// [结束]
-SetCreateAt(fieldName string) CustomFieldsBuilder//qm:设置创建时间字段名  cz:SetCreateAt(fieldName string) CustomFieldsBuilder  
+	//Set创建时间(fieldName string) 自定义字段构建器
+
+	SetCreateAt(fieldName string) CustomFieldsBuilder //qm:设置创建时间字段名  cz:SetCreateAt(fieldName string) CustomFieldsBuilder
 	// [提示]
-//SetId(字段名 string) 自定义字段构建器
-// 
-// AddField(fieldName string, value interface{}) CustomFieldsBuilder
-// 
-// 添加字段(字段名 string, 值 interface{}) 自定义字段构建器
-// 
-// AddFields(fields ...Field) CustomFieldsBuilder
-// 
-// 添加多个字段(字段 ...Field) 自定义字段构建器
-// 
-// RemoveField(fieldName string) CustomFieldsBuilder
-// 
-// 移除字段(字段名 string) 自定义字段构建器
-// 
-// ClearFields() CustomFieldsBuilder
-// 
-// 清空字段() 自定义字段构建器
-// 
-// Build() (bson.M, error)
-// 
-// 构建(返回 bson.M, 错误 error)
-// [结束]
-SetId(fieldName string) CustomFieldsBuilder//qm:设置ID字段名  cz:SetId(fieldName string) CustomFieldsBuilder  
+	//SetId(字段名 string) 自定义字段构建器
+	// [结束]
+	SetId(fieldName string) CustomFieldsBuilder //qm:设置ID字段名  cz:SetId(fieldName string) CustomFieldsBuilder
 }
 
 // NewCustom 创建一个新的Builder，用于设置自定义字段 md5:f37c4ab7a682c81a
