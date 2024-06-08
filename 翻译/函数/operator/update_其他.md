@@ -43,14 +43,30 @@ th= 替换,用于替换文本,文档内如果有多个相同的,会一起替换
 cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interface{}) error"需要重命名.
  但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
+[CurrentDate = "$currentDate"]
+qm=更新为当前时间
+cz=CurrentDate #等号# "$currentDate"
+
+[Inc = "$inc"]
+qm=更新数值递增
+cz=Inc #等号# "$inc"
+
 [Min = "$min"]
-qm=最小值
+qm=更新最小
 cz=Min #等号# "$min"
 
 [Max = "$max"]
-qm=最大值
+qm=最更新大
 cz=Max #等号# "$max"
 
+[Rename = "$rename"]
+qm=更新字段名
+cz=Rename #等号# "$rename"
+
 [Set = "$set"]
-qm=设置值
+qm=更新值
 cz=Set #等号# "$set"
+
+[Unset = "$unset"]
+qm=删除字段
+cz=Unset #等号# "$unset"

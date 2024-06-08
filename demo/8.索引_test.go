@@ -6,8 +6,10 @@ import (
 	"testing"
 )
 
-func Test_创建索引(t *testing.T) {
-	cli.CreateOneIndex(ctx, options.IndexModel{Key: []string{"名称"}})            //单个索引
+func Test_创建单个索引(t *testing.T) {
+	cli.CreateOneIndex(ctx, options.IndexModel{Key: []string{"名称"}}) //单个索引
+}
+func Test_创建复合索引(t *testing.T) {
 	cli.CreateIndexes(ctx, []options.IndexModel{{Key: []string{"id2", "id3"}}}) //复合索引
 }
 

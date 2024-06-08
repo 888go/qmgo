@@ -214,6 +214,7 @@ func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement
 }
 
 // UpsertId 如果id匹配，则更新一个文档，如果id不匹配，则插入一个新的文档，并将id注入到文档中。
+// 注意,id是十六进制, 不是文本型, 需要转换后查询.
 // 替换参数必须是一个将用于替换所选文档的文档。它不能为空，并且不能包含任何更新操作符。
 // 参考：https://docs.mongodb.com/manual/reference/operator/update/
 // md5:2a704aa664092959

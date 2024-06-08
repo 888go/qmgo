@@ -8,10 +8,9 @@ import (
 
 func Test_插入一条数据(t *testing.T) {
 	var userInfo = X记账{
-		X名称: "xm",
-		X年龄: 7,
-		X重量: 40,
-	}
+		X姓名: "张三", X名称: "a1", X年龄: 99, X重量: 20, X够买产品: []string{"西瓜", "香蕉", "老虎钳"}, X够买时间: time.Now(), X支付方式: X支付方式{
+			X支付方式: "支付宝", X联系方式: "177777777", X可选支付方式: []string{"支付宝", "微信", "银行卡"},
+		}}
 	result, _ := cli.InsertOne(ctx, userInfo)
 	fmt.Println(result.InsertedID)
 }
