@@ -67,6 +67,7 @@ type Query struct { //hm:查询  cz:type Query
 
 // [提示:] func (q *Query) 文档排序规则设置(collation *options.Collation) 查询接口I {}
 // ff:设置排序规则
+// q:
 // collation:规则
 func (q *Query) Collation(collation *options.Collation) QueryI {
 	newQ := q
@@ -76,6 +77,7 @@ func (q *Query) Collation(collation *options.Collation) QueryI {
 
 // [提示:] func (q *Query) 不使用超时游标(n bool) QueryI {}
 // ff:设置不超时
+// q:
 // n:是否不超时
 func (q *Query) NoCursorTimeout(n bool) QueryI {
 	newQ := q
@@ -88,6 +90,7 @@ func (q *Query) NoCursorTimeout(n bool) QueryI {
 // md5:66277d16095ac151
 // [提示:] func (q *Query) 设置批次大小(n int64) QueryI {}
 // ff:设置批量处理数量
+// q:
 // n:数量
 func (q *Query) BatchSize(n int64) QueryI {
 	newQ := q
@@ -95,11 +98,14 @@ func (q *Query) BatchSize(n int64) QueryI {
 	return newQ
 }
 
-// Sort is Used to set the sorting rules for the returned results
-// When multiple sort fields are passed in at the same time, they are arranged in the order in which the fields are passed in.
-// For example, {"age", "-name"}, first sort by age in ascending order, then sort by name in descending order
+// Sort 用于设置返回结果的排序规则
+// 格式："age" 或 "+age" 表示按年龄字段升序排序，"-age" 表示降序排序
+// 同时传入多个排序字段时，按照字段传递的顺序进行排列。
+// 例如，{"age", "-name"}，首先按年龄升序排序，然后按姓名降序排序。
+// md5:0b1b9f5345904541
 // [提示:] func (q *Query) 排序(字段 ...string) QueryI {}
 // ff:排序
+// q:
 // fields:排序字段
 func (q *Query) Sort(fields ...string) QueryI {
 	if len(fields) == 0 {
@@ -139,6 +145,7 @@ func (q *Query) Sort(fields ...string) QueryI {
 // md5:3fa80906c918e6a3
 // [提示:] func (q *Query) 设置数组过滤器(filter *选项.数组过滤器) 查询接口 {}
 // ff:设置切片过滤
+// q:
 // filter:过滤条件
 func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 	newQ := q
@@ -146,10 +153,51 @@ func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 	return newQ
 }
 
-// Select is used to determine which fields are displayed or not displayed in the returned results
-// bson.M{"age": 0} means to display other fields except age
-// When _id is not displayed and is set to 0, it will be returned to display
+// Select用于确定在返回结果中显示或不显示哪些字段
+// 格式：bson.M{"age": 1} 表示只显示age字段
+// bson.M{"age": 0} 表示除了age以外的其他字段都显示
+// 如果不显示_id并且设置为0，它将被返回并显示
+// md5:3beb3c9bd51ad3fe
+// [提示]
+// func (q *Query) 选择(projection interface{})
+//
+// // 下面的方法未给出完整信息，我将提供一般性的翻译，但可能需要根据实际代码上下文进行调整
+//
+//	func (c *Collection) InsertOne(doc interface{}) (insertedIDprimitive, error) {
+//	    // 翻译：在集合中插入一个文档，返回插入的ID和可能的错误
+//	}
+//
+//	func (c *Collection) Find(filter interface{}, opts ...*FindOptions) *Query {
+//	    // 翻译：根据过滤器找到文档，返回一个查询对象，可选的查找选项
+//	}
+//
+//	func (q *Query) Limit(n int) *Query {
+//	    // 翻译：限制查询结果的数量，返回更新后的查询对象
+//	}
+//
+//	func (q *Query) Skip(n int) *Query {
+//	    // 翻译：跳过查询结果的前n个文档，返回更新后的查询对象
+//	}
+//
+//	func (q *Query) Sort(fields ...string) *Query {
+//	    // 翻译：按指定字段排序查询结果，返回更新后的查询对象
+//	}
+//
+//	func (q *Query) All(result interface{}) error {
+//	    // 翻译：将所有查询结果填充到结果接口中，返回可能出现的错误
+//	}
+//
+//	func (q *Query) One(result interface{}) error {
+//	    // 翻译：获取查询结果中的第一条文档并填充到结果接口中，返回可能出现的错误
+//	}
+//
+//	func (q *Query) Count() (int64, error) {
+//	    // 翻译：计算查询结果的文档数量，返回总数和可能的错误
+//	}
+//
+// [结束]
 // ff:字段
+// q:
 // projection:字段Map
 func (q *Query) Select(projection interface{}) QueryI {
 	newQ := q
@@ -160,6 +208,7 @@ func (q *Query) Select(projection interface{}) QueryI {
 // Skip skip n records
 // [提示:] func (q *Query) 跳过(n int64) QueryI {}
 // ff:跳过
+// q:
 // n:跳过数量
 func (q *Query) Skip(n int64) QueryI {
 	newQ := q
@@ -171,6 +220,7 @@ func (q *Query) Skip(n int64) QueryI {
 // md5:3d3535508606dd43
 // [提示:] func (q *Query) 指定索引(hint interface{})
 // ff:指定索引字段
+// q:
 // hint:索引字段
 func (q *Query) Hint(hint interface{}) QueryI {
 	newQ := q
@@ -185,6 +235,7 @@ func (q *Query) Hint(hint interface{}) QueryI {
 // md5:9081095bd35be08f
 // [提示:] func (q *查询) 限制(n int64) 查询接口 {}
 // ff:设置最大返回数
+// q:
 // n:数量
 func (q *Query) Limit(n int64) QueryI {
 	newQ := q
@@ -197,6 +248,7 @@ func (q *Query) Limit(n int64) QueryI {
 // md5:68571c814c5cd088
 // [提示:] func (q *Query) 一个(result interface{})
 // ff:取一条
+// q:
 // result:结果指针
 func (q *Query) One(result interface{}) error {
 	if len(q.opts) > 0 {
@@ -240,6 +292,7 @@ func (q *Query) One(result interface{}) error {
 // md5:5f57d8aff8afe252
 // [提示:] func (q *Query) 全部获取(result interface{})
 // ff:取全部
+// q:
 // result:结果指针
 func (q *Query) All(result interface{}) error {
 	if len(q.opts) > 0 {
@@ -298,6 +351,7 @@ func (q *Query) All(result interface{}) error {
 // Count 计算符合条件的条目数量 md5:7bed3eaaee1ce368
 // [提示:] func (q *Query) 计数() (总数 int64, 错误 error) {}
 // ff:取数量
+// q:
 // n:数量
 // err:错误
 func (q *Query) Count() (n int64, err error) {
@@ -315,9 +369,12 @@ func (q *Query) Count() (n int64, err error) {
 
 // EstimatedCount 通过元数据计算集合的数量,
 // EstimatedDocumentCount() 方法比 CountDocuments() 方法更快，因为它使用集合的元数据而不是扫描整个集合。
+// EstimatedCount 通过元数据计算集合的数量,
+// EstimatedDocumentCount() 方法比 CountDocuments() 方法更快，因为它使用集合的元数据而不是扫描整个集合。
 // md5:8c9bd7e463139421
 // [提示:] func (q *Query) 估算计数() (总数 int64, 错误 error) {}
 // ff:取预估数量
+// q:
 // n:数量
 // err:错误
 func (q *Query) EstimatedCount() (n int64, err error) {
@@ -331,6 +388,7 @@ func (q *Query) EstimatedCount() (n int64, err error) {
 // md5:b83f3aa5718b2dfd
 // [提示:] func (q *Query) 唯一值(key string, result interface{}
 // ff:去重
+// q:
 // key:字段名
 // result:切片指针
 func (q *Query) Distinct(key string, result interface{}) error {
@@ -375,6 +433,7 @@ func (q *Query) Distinct(key string, result interface{}) error {
 // md5:b1e9fc62a5f777fe
 // [提示:] func (q *Query) 获取游标() 游标接口 {}
 // ff:取结果集
+// q:
 func (q *Query) Cursor() CursorI {
 	opt := options.Find()
 
@@ -408,27 +467,19 @@ func (q *Query) Cursor() CursorI {
 	}
 }
 
-// Apply运行findAndModify命令，该命令允许更新、替换
-// 或者删除与查询匹配的文档，然后原子地返回旧的
-// 版本（默认值）或文档的新版本（当ReturnNew为true时）
+// Apply 执行 findAndModify 命令，该命令允许根据查询更新、替换或删除文档，并原子性地返回旧版本（默认）或新版本的文档（当 ReturnNew 为 true 时）。
 //
-// 排序和选择查询方法会影响应用的结果。万一
-// 多个文档与查询匹配，“排序”允许选择要查询的文档
-// 先按命令行事。“选择”仅允许检索所选内容
-// 新文档或旧文档的字段数。
+// Sort 和 Select 查询方法会影响 Apply 的结果。如果有多个文档匹配查询，Sort 可以通过排序来决定操作哪个文档。Select 则可以仅获取新或旧文档中选定字段的内容。
 //
-// 当改变。Replace为true，这意味着最多替换集合中的一个文档
-// 并且更新参数必须是文档并且不能包含任何更新运算符；
-// 如果没有找到对象，则更改。Upsert为false，它将返回ErrNoDocuments。
-// 当改变。Remove为true，这意味着最多删除集合中的一个文档
-// 并返回在删除之前出现的文档；如果没有发现对象，
-// 它将返回ErrNoDocuments。
-// 当两者都发生变化时。更换和更改。Remove为false，这意味着最多更新一个文档
-// 并且update参数必须是包含更新运算符的文档；
-// 如果没有找到对象，则更改。Upsert为false，它将返回ErrNoDocuments。
+// 当 Change.Replace 为 true 时，意味着在集合中最多替换一个文档，且 update 参数必须是一个文档，不能包含任何更新运算符；如果没有找到对象并且 Change.Upsert 为 false，则会返回 ErrNoDocuments 错误。当 Change.Remove 为 true 时，意味着最多删除集合中的一个文档，并返回删除前的文档状态；如果没有找到对象，同样返回 ErrNoDocuments。
 //
+// 如果 Change.Replace 和 Change.Remove 都为 false，则表示最多更新集合中的一个文档，update 参数必须是一个包含更新运算符的文档；如果没有找到对象并且 Change.Upsert 为 false，则返回 ErrNoDocuments。
+//
+// 参考：https://docs.mongodb.com/manual/reference/command/findAndModify/
+// md5:e14e8d7ceac827ac
 // [提示:] func (q *Query) 应用变更(change 变更, result 结果接口{}
 // ff:执行命令
+// q:
 // change:
 // result:
 func (q *Query) Apply(change Change, result interface{}) error {
@@ -446,6 +497,10 @@ func (q *Query) Apply(change Change, result interface{}) error {
 }
 
 // findOneAndDelete
+// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/
+//
+// 这段 Go 代码的注释表示这是一个名为 "findOneAndDelete" 的函数或方法，它用于从 MongoDB 集合中查找并删除第一个匹配的文档。参考链接指向 MongoDB 官方文档，提供了关于该方法的详细说明。
+// md5:23b36fd4f1711d7b
 func (q *Query) findOneAndDelete(change Change, result interface{}) error {
 	opts := options.FindOneAndDelete()
 	if q.sort != nil {
@@ -459,6 +514,8 @@ func (q *Query) findOneAndDelete(change Change, result interface{}) error {
 }
 
 // findOneAndReplace
+// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndReplace/
+// md5:cd4b97a5409057c1
 func (q *Query) findOneAndReplace(change Change, result interface{}) error {
 	opts := options.FindOneAndReplace()
 	if q.sort != nil {
@@ -483,6 +540,10 @@ func (q *Query) findOneAndReplace(change Change, result interface{}) error {
 }
 
 // findOneAndUpdate
+// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
+//
+// 这段Go代码中的注释表示这是一个名为`findOneAndUpdate`的方法，它引用了MongoDB文档中关于`db.collection.findOneAndUpdate`方法的手册参考。这个方法在MongoDB数据库操作中用于根据指定的条件查找并更新第一个匹配的文档。
+// md5:fe84856a45a0b0f1
 func (q *Query) findOneAndUpdate(change Change, result interface{}) error {
 	opts := options.FindOneAndUpdate()
 	if q.sort != nil {
@@ -509,3 +570,21 @@ func (q *Query) findOneAndUpdate(change Change, result interface{}) error {
 
 	return err
 }
+
+// zj:
+func (q *Query) X分页(页码 int, 页大小 int) QueryI {
+	return q.Skip(int64((页大小 * (页码 - 1)))).Limit(int64(页大小))
+}
+
+func (q *Query) X取分页数(perPage int) int {
+	// 获取预估文档总数
+	docCount, _ := q.EstimatedCount()
+	// 计算总分页数
+	totalPages := int(docCount) / perPage
+	if int(docCount)%perPage != 0 {
+		totalPages++
+	}
+	return totalPages
+}
+
+//zj:

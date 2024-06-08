@@ -23,15 +23,15 @@ import (
 // [提示:] type 默认字段钩子接口 interface {}
 type DefaultFieldHook interface {
 	// [提示:] DefaultUpdateTime()
-	DefaultUpdateAt()
+DefaultUpdateAt()
 	// [提示:] `DefaultCreateTime()`
-	DefaultCreateAt()
+DefaultCreateAt()
 	// [提示]
-	//`DefaultId` -> `默认ID`
-	//
-	// 由于没有提供更多的接口，我只能单独翻译这个函数。如果还有其他的接口或者上下文需要翻译，请提供更多信息。
-	// [结束]
-	DefaultId()
+//`DefaultId` -> `默认ID`
+// 
+// 由于没有提供更多的接口，我只能单独翻译这个函数。如果还有其他的接口或者上下文需要翻译，请提供更多信息。
+// [结束]
+DefaultId()
 }
 
 // ```go
@@ -40,23 +40,22 @@ type DefaultFieldHook interface {
 // ```
 // md5:542fb0f78cfb4fad
 // [提示]
-//
-//	type 默认字段 struct {
-//	    ID       primitive.ObjectID `bson:"_id"`
-//	    创建时间 time.Time          `bson:"createAt"`
-//	    更新时间 time.Time          `bson:"updateAt"`
-//	}
-//
+//type 默认字段 struct {
+//     ID       primitive.ObjectID `bson:"_id"`
+//     创建时间 time.Time          `bson:"createAt"`
+//     更新时间 time.Time          `bson:"updateAt"`
+// }
 // [结束]
-type DefaultField struct { //hm:默认字段名称 cz:type DefaultField
+type DefaultField struct {//hm:默认字段名称  cz:type DefaultField  
 	Id       primitive.ObjectID `bson:"_id"`
-	CreateAt time.Time          `bson:"createAt"` //qm:创建时间 cz:CreateAt time.Time          `bson:"createAt"`
-	UpdateAt time.Time          `bson:"updateAt"` //qm:更新时间 cz:UpdateAt time.Time          `bson:"updateAt"`
+	CreateAt time.Time          `bson:"createAt"`//qm:创建时间  cz:CreateAt time.Time `bson:"createAt"`  
+	UpdateAt time.Time          `bson:"updateAt"`//qm:更新时间  cz:UpdateAt time.Time `bson:"updateAt"`  
 }
 
 // DefaultUpdateAt 更改默认的更新时间字段 md5:2aac31da652c649b
 // [提示:] func (df *DefaultField) 默认UpdateTime() {}
 // ff:默认更新时间
+// df:
 func (df *DefaultField) DefaultUpdateAt() {
 	df.UpdateAt = time.Now().Local()
 }
@@ -64,6 +63,7 @@ func (df *DefaultField) DefaultUpdateAt() {
 // DefaultCreateAt 更改默认的创建时间字段 md5:1438b66e329ae785
 // [提示:] func (df *DefaultField) 默认CreatedAt() {}
 // ff:默认创建时间
+// df:
 func (df *DefaultField) DefaultCreateAt() {
 	if df.CreateAt.IsZero() {
 		df.CreateAt = time.Now().Local()
@@ -73,6 +73,7 @@ func (df *DefaultField) DefaultCreateAt() {
 // DefaultId 修改默认的 _id 字段 md5:32bb6b194f03905a
 // [提示:] func (df *DefaultField) 默认Id() {}
 // ff:默认ID
+// df:
 func (df *DefaultField) DefaultId() {
 	if df.Id.IsZero() {
 		df.Id = primitive.NewObjectID()

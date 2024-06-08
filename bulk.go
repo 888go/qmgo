@@ -52,21 +52,18 @@ type BulkResult struct {//hm:批量操作结果  cz:type BulkResult
 	UpsertedIDs map[int64]interface{}//qm:更新插入IDs  cz:UpsertedIDs map[int64]interface{}  
 }
 
-// Bulk is context for batching operations to be sent to database in a single
-// bulk write.
+// Bulk 是用于批量操作的上下文，这些操作将一次性发送到数据库进行批量写入。
 //
-// Bulk is not safe for concurrent use.
+// Bulk 不适用于并发使用。
 //
+// 注意：
 //
-// Individual operations inside a bulk do not trigger middlewares or hooks
-// at present.
+// 在批量操作中的单个操作目前不会触发中间件或钩子。
 //
-// Different from original mgo, the qmgo implementation of Bulk does not emulate
-// bulk operations individually on old versions of MongoDB servers that do not
-// natively support bulk operations.
+// 与原版 mgo 不同，qmgo 实现的 Bulk 并不会在不支持原生批量操作的老版本 MongoDB 服务器上模拟逐个执行批量操作。
 //
-// Only operations supported by the official driver are exposed, that is why
-// InsertMany is missing from the methods.
+// 只有官方驱动支持的操作被暴露出来，因此方法中缺少 InsertMany。
+// md5:97e7f3c645b8ba7f
 // [提示]
 //type 批量操作 struct {
 //     集合 *集合
@@ -84,6 +81,7 @@ type Bulk struct {//hm:批量操作  cz:type Bulk
 // Bulk返回一个新的上下文，用于准备批量执行操作。 md5:e39897d617450e92
 // [提示:] func (c *集合) 批量操作() *批量处理 {}
 // ff:创建批量执行
+// c:
 func (c *Collection) Bulk() *Bulk {
 	return &Bulk{
 		coll:    c,
@@ -98,6 +96,7 @@ func (c *Collection) Bulk() *Bulk {
 // md5:caf2eac3fe50a750
 // [提示:] func (b *批量操作) 设置有序(ordered bool) *批量操作 {}
 // ff:设置有序执行
+// b:
 // ordered:开启有序
 func (b *Bulk) SetOrdered(ordered bool) *Bulk {
 	b.ordered = &ordered
@@ -113,6 +112,7 @@ func (b *Bulk) SetOrdered(ordered bool) *Bulk {
 // 这里的`doc`参数可以理解为“文档数据”，通常是一个映射（map）或结构体，代表要插入集合的文档内容。返回值是`error`，表示操作是否成功，无错误则为`nil`。
 // [结束]
 // ff:插入
+// b:
 // doc:待插入文档
 func (b *Bulk) InsertOne(doc interface{}) *Bulk {
 	wm := mongo.NewInsertOneModel().SetDocument(doc)
@@ -123,6 +123,7 @@ func (b *Bulk) InsertOne(doc interface{}) *Bulk {
 // Remove 队列一个删除操作，用于批量执行。 md5:a9c84e1a291eea0f
 // [提示:] func (b *批量操作) 删除(filter interface{})
 // ff:删除一条
+// b:
 // filter:删除条件
 func (b *Bulk) Remove(filter interface{}) *Bulk {
 	wm := mongo.NewDeleteOneModel().SetFilter(filter)
@@ -133,6 +134,7 @@ func (b *Bulk) Remove(filter interface{}) *Bulk {
 // RemoveId 队列一个 RemoveId 操作以进行批量执行。 md5:f3fbfef26bde41fc
 // [提示:] func (b *Bulk) 删除ById(id interface{})
 // ff:删除并按ID
+// b:
 // id:删除ID
 func (b *Bulk) RemoveId(id interface{}) *Bulk {
 	b.Remove(bson.M{"_id": id})
@@ -142,6 +144,7 @@ func (b *Bulk) RemoveId(id interface{}) *Bulk {
 // RemoveAll 会将一个 RemoveAll 操作加入到批量执行的队列中。 md5:df548d516b324574
 // [提示:] func (b *Bulk) 全部删除(filter interface{})
 // ff:删除
+// b:
 // filter:删除条件
 func (b *Bulk) RemoveAll(filter interface{}) *Bulk {
 	wm := mongo.NewDeleteManyModel().SetFilter(filter)
@@ -153,6 +156,7 @@ func (b *Bulk) RemoveAll(filter interface{}) *Bulk {
 // md5:1115932f50b88737
 // [提示:] func (b *批量操作) 更新或插入(filter interface{})
 // ff:更新插入
+// b:
 // filter:更新条件
 // replacement:更新内容
 func (b *Bulk) Upsert(filter interface{}, replacement interface{}) *Bulk {
@@ -193,8 +197,9 @@ func (b *Bulk) Upsert(filter interface{}, replacement interface{}) *Bulk {
 // func (c *Collection) UpdateMany(filter 过滤条件, update 更新操作, options *UpdateOptions) (updateResult 更新结果, err 错误)
 // 
 // func (c *Collection) UpdateOne(filter 过滤条件, update 更新操作, options *UpdateOptions) (updateResult 更新结果, err 错误)
-// [结束]
+// [结束]一条
 // ff:更新插入一条
+// b:
 // filter:更新条件
 // update:更新内容
 func (b *Bulk) UpsertOne(filter interface{}, update interface{}) *Bulk {
@@ -206,8 +211,9 @@ func (b *Bulk) UpsertOne(filter interface{}, update interface{}) *Bulk {
 // UpsertId 用于批量执行的UpsertId操作进行排队。
 // 替换的文档应该不包含操作符。
 // md5:c5d9cc678823f8e5并按ID
-// [提示:] func (b *Bulk) 更新或插入Id(id interface{}
+// [提示:] func (b *Bulk) 更新或插入Id(id interface{}并按ID
 // ff:更新插入并按ID
+// b:
 // id:更新ID
 // replacement:更新内容
 func (b *Bulk) UpsertId(id interface{}, replacement interface{}) *Bulk {
@@ -219,6 +225,7 @@ func (b *Bulk) UpsertId(id interface{}, replacement interface{}) *Bulk {
 // md5:0e587045b560687a
 // [提示:] func (b *批量操作) 更新一条记录(filter 过滤条件) (result 更新结果, err 错误)
 // ff:更新一条
+// b:
 // filter:更新条件
 // update:更新内容
 func (b *Bulk) UpdateOne(filter interface{}, update interface{}) *Bulk {
@@ -231,6 +238,7 @@ func (b *Bulk) UpdateOne(filter interface{}, update interface{}) *Bulk {
 // md5:968d7d02f007ae39
 // [提示:] func (b *Bulk) 更新ById(id interface{})
 // ff:更新并按ID
+// b:
 // id:更新ID
 // update:更新内容
 func (b *Bulk) UpdateId(id interface{}, update interface{}) *Bulk {
@@ -243,6 +251,7 @@ func (b *Bulk) UpdateId(id interface{}, update interface{}) *Bulk {
 // md5:b1fdc26a48273948
 // [提示:] func (b *批量操作) 更新所有(filter 接口{}) (result 更新结果, err 错误)
 // ff:更新
+// b:
 // filter:更新条件
 // update:更新内容
 func (b *Bulk) UpdateAll(filter interface{}, update interface{}) *Bulk {
@@ -257,6 +266,7 @@ func (b *Bulk) UpdateAll(filter interface{}, update interface{}) *Bulk {
 // md5:c3ce14d8defe8da0
 // [提示:] func (b *批量操作) 执行(ctx 上下文.Context) (*批量结果, 错误) {}
 // ff:执行
+// b:
 // ctx:上下文
 func (b *Bulk) Run(ctx context.Context) (*BulkResult, error) {
 	opts := options.BulkWriteOptions{

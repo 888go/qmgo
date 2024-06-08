@@ -124,3 +124,37 @@ func Test_取文档数量(t *testing.T) {
 	文档数量, _ := cli.Find(ctx, bson.D{{"名称", bson.M{operator.Regex: "^b.*"}}}).Count()
 	fmt.Println(文档数量)
 }
+
+func Test_去重(t *testing.T) {
+	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/count/#std-label-golang-estimated-count
+	去重返回 := []string{}
+	cli.Find(ctx, bson.D{{"年龄", bson.M{"$gt": 6}}}).Distinct("姓名", &去重返回)
+	fmt.Println(去重返回)
+}
+func Test_排序(t *testing.T) {
+	// https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/sort/
+	//按照年龄升排序
+	返回 := []X记账{}
+	_ = cli.Find(ctx, bson.D{{"年龄", bson.M{"$gt": 6}}}).Sort("年龄").All(&返回)
+	fmt.Println(返回)
+	//按照年龄降排序
+	_ = cli.Find(ctx, bson.D{{"年龄", bson.M{"$gt": 6}}}).Sort("-年龄").All(&返回)
+	fmt.Println(返回)
+}
+
+func Test_分页(t *testing.T) {
+	// https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/sort/
+	//用qmgo自带的分页
+	第几页 := 2
+	每页 := 3
+	返回 := []X记账{}
+	_ = cli.Find(ctx, bson.D{{"年龄", bson.M{"$gt": 0}}}).Limit(int64(每页)).Skip(int64((每页 * (第几页 - 1)))).All(&返回)
+	fmt.Println(返回)
+
+	//用额外追加的分页功能操作
+	_ = cli.Find(ctx, bson.D{{"年龄", bson.M{"$gt": 0}}}).X分页(第几页, 每页).All(&返回)
+	fmt.Println(返回)
+
+	//用额外追加的分页功能取分页数
+	fmt.Println("总分页数:", cli.Find(ctx, bson.D{{"年龄", bson.M{"$gt": 0}}}).X取分页数(3))
+}

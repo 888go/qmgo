@@ -13,7 +13,9 @@
 
 package operator
 
-// Aggregation Pipeline Operators
+// 聚合管道运算符
+// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation/
+// md5:b743948494162fab
 // [提示]
 //const (
 // 	绝对值      = "$abs"

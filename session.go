@@ -24,13 +24,11 @@ import (
 
 // Session 是一个结构体，表示 MongoDB 的逻辑会话 md5:a17367bc3a251e77
 // [提示]
-//
-//	type 会话 struct {
-//	    会话接口 mongo.会话
-//	}
-//
+//type 会话 struct {
+//     会话接口 mongo.会话
+// }
 // [结束]
-type Session struct { //hm:Session事务 cz:type Session
+type Session struct {//hm:Session事务  cz:type Session  
 	session mongo.Session
 }
 
@@ -49,10 +47,11 @@ type Session struct { //hm:Session事务 cz:type Session
 //
 // md5:7a854b4c45212490
 // [提示]
-// // 开始事务
-// func (s *Session) 开始事务(ctx 上下文.Context, cb func(会话上下文 context.Context) (结果 interface{}))
+//// 开始事务
+// func (s *Session) 开始事务(ctx 上下文.Context, cb func(会话上下文 context.Context) (结果 interface{})) 
 // [结束]
 // ff:开始事务
+// s:
 // ctx:上下文
 // cb:回调函数
 // sessCtx:事务上下文
@@ -72,6 +71,7 @@ func (s *Session) StartTransaction(ctx context.Context, cb func(sessCtx context.
 // EndSession 会终止任何现有的事务并关闭会话。 md5:2ee8849531868b7e
 // [提示:] func (s *Session) 结束会话(ctx 上下文Context) {}
 // ff:结束Session
+// s:
 // ctx:上下文
 func (s *Session) EndSession(ctx context.Context) {
 	s.session.EndSession(ctx)
@@ -81,6 +81,7 @@ func (s *Session) EndSession(ctx context.Context) {
 // md5:ca9bc056086304f0
 // [提示:] func (s *Session) 中止事务(ctx 上下文 контекст) 错误 {}
 // ff:中止事务
+// s:
 // ctx:上下文
 func (s *Session) AbortTransaction(ctx context.Context) error {
 	return s.session.AbortTransaction(ctx)

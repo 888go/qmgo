@@ -13,7 +13,9 @@
 
 package operator //bm:常量
 
-// define the aggregation pipeline stages
+// 定义聚合管道阶段
+// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+// md5:40bdaebb510f842e
 // [提示]
 // const (
 //
@@ -55,16 +57,16 @@ const (
 	Bucket         = "$bucket"
 	BucketAuto     = "$bucketAuto"
 	CollStats      = "$collStats"
-	Count          = "$count" //qm:聚合计数 cz:Count          = "$count"
+	Count          = "$count" //qm:聚合计数  cz:Count = "$count"
 	Facet          = "$facet"
 	GeoNear        = "$geoNear"
 	GraphLookup    = "$graphLookup"
-	Group          = "$group" //qm:聚合分组 cz:Group          = "$group"
+	Group          = "$group" //qm:聚合分组  cz:Group = "$group"
 	IndexStats     = "$indexStats"
-	Limit          = "$limit"
+	Limit          = "$limit" //qm:聚合限制  Limit          = "$limit"
 	ListSessions   = "$listSessions"
 	Lookup         = "$lookup"
-	Match          = "$match" //qm:聚合条件 cz:Match          = "$match"
+	Match          = "$match" //qm:聚合条件  cz:Match = "$match"
 	Merge          = "$merge"
 	Out            = "$out"
 	PlanCacheStats = "$planCacheStats"

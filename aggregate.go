@@ -44,6 +44,7 @@ type Aggregate struct {
 // All 遍历聚合的游标，并将每个文档解码为结果。 md5:22b8eb7acebfa36a
 // [提示:] func (a *聚合操作) 全部结果(results interface{})
 // ff:取全部
+// a:
 // results:结果指针
 func (a *Aggregate) All(results interface{}) error {
 	opts := options.Aggregate()
@@ -60,6 +61,7 @@ func (a *Aggregate) All(results interface{}) error {
 // One 从聚合结果中遍历游标，并将当前文档解码到结果中。 md5:95d05e20ff85babc
 // [提示:] func (a *聚合操作) 单个结果(result interface{})
 // ff:取一条
+// a:
 // result:结果指针
 func (a *Aggregate) One(result interface{}) error {
 	opts := options.Aggregate()
@@ -90,6 +92,7 @@ func (a *Aggregate) One(result interface{}) error {
 // md5:722184e644380849
 // [提示:] func (a *聚合操作) 迭代器() 游标接口 {}
 // ff:Iter弃用
+// a:
 func (a *Aggregate) Iter() CursorI {
 	return a.Cursor()
 }
@@ -97,6 +100,7 @@ func (a *Aggregate) Iter() CursorI {
 // Cursor返回聚合后的游标 md5:eac4fdc1facaf217
 // [提示:] func (a *聚合操作) 获取游标() 游标接口 {}
 // ff:取结果集
+// a:
 func (a *Aggregate) Cursor() CursorI {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {

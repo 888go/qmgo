@@ -17,19 +17,6 @@ import "go.mongodb.org/mongo-driver/mongo/options"
 
 // CollectionI
 // 集合操作接口
-//type CollectionI interface {
-//	Find(filter interface{}) QueryI
-//	InsertOne(doc interface{}) (*mongo.InsertOneResult, error)
-//	InsertMany(docs ...interface{}) (*mongo.InsertManyResult, error)
-//	Upsert(filter interface{}, replacement interface{}) (*mongo.UpdateResult, error)
-//	UpdateOne(filter interface{}, update interface{}) error
-//	UpdateAll(filter interface{}, update interface{}) (*mongo.UpdateResult, error)
-//	DeleteOne(filter interface{}) error
-//	RemoveAll(selector interface{}) (*mongo.DeleteResult, error)
-//	EnsureIndex(indexes []string, isUnique bool)
-//	EnsureIndexes(uniques []string, indexes []string)
-//}
-
 // Change 包含了通过 Query.Apply 方法运行 findAndModify 命令时所需字段。 md5:39a15027acb265c1
 // [提示]
 //
@@ -43,11 +30,11 @@ import "go.mongodb.org/mongo-driver/mongo/options"
 //
 // [结束]
 type Change struct {
-	Update    interface{} //qm:更新替换  cz:Update interface{}  // 更新/替换文档 md5:f186fdee95ec3578
-	Replace   bool        //qm:是否替换  cz:Replace bool  // 是否替换文档而不是更新 md5:876d0fb0ea394e91
-	Remove    bool        //qm:是否删除  cz:Remove bool  // 是否在找到文档后删除它，而不是更新 md5:af3a9b450dfa43f8
-	Upsert    bool        //qm:是否未找到时插入  cz:Upsert bool  // 如果找不到文档，是否插入，当Remove为false时生效
-	ReturnNew bool        //qm:是否返回新文档  cz:ReturnNew bool  // 当Remove为false时，是否返回修改后的文档而不是旧的文档 md5:52269f57ce5c8033
+	Update    interface{} //qm:更新替换  cz:Update interface{}   // 更新/替换文档 md5:f186fdee95ec3578
+	Replace   bool        //qm:是否替换  cz:Replace bool          // 是否替换文档而不是更新 md5:876d0fb0ea394e91
+	Remove    bool        //qm:是否删除  cz:Remove bool          // 是否在找到文档后删除它，而不是更新 md5:af3a9b450dfa43f8
+	Upsert    bool        //qm:是否未找到时插入  cz:Upsert bool          // Whether to insert in case the document isn't found, take effect when Remove is false
+	ReturnNew bool        //qm:是否返回新文档  cz:ReturnNew bool          // 当Remove为false时，是否返回修改后的文档而不是旧的文档 md5:52269f57ce5c8033
 }
 
 // CursorI：Cursor 接口 md5:8a6fa5bfcb19cd93
@@ -74,50 +61,6 @@ type CursorI interface {
 	Err() error //qm:取错误  cz:Err() error
 	// [提示]
 	//所有(result 接口类型) 错误
-	//
-	// Find(filter interface{}, results interface{}) error
-	//
-	// FindOne(filter interface{}, result interface{}) error
-	//
-	// CountDocuments(filter interface{}, count *int64) error
-	//
-	// DeleteOne(filter interface{}) error
-	//
-	// DeleteMany(filter interface{}, deletedCount *int64) error
-	//
-	// UpdateOne(filter interface{}, update interface{}, upsert bool) error
-	//
-	// UpdateMany(filter interface{}, update interface{}, upsert bool, matchedCount *int64, modifiedCount *int64) error
-	//
-	// ReplaceOne(filter interface{}, replacement interface{}, upsert bool, matchedCount *int64, modifiedCount *int64) error
-	//
-	// InsertOne(document interface{}, insertedID *string) error
-	//
-	// InsertMany(documents interface{}, insertedIDs **string) error
-	// [结束]
-	// [提示]
-	//所有(result 接口类型) 错误
-	//
-	// Find(filter interface{}, results interface{}) error
-	//
-	// FindOne(filter interface{}, result interface{}) error
-	//
-	// CountDocuments(filter interface{}, count *int64) error
-	//
-	// DeleteOne(filter interface{}) error
-	//
-	// DeleteMany(filter interface{}, deletedCount *int64) error
-	//
-	// UpdateOne(filter interface{}, update interface{}, upsert bool) error
-	//
-	// UpdateMany(filter interface{}, update interface{}, upsert bool, matchedCount *int64, modifiedCount *int64) error
-	//
-	// ReplaceOne(filter interface{}, replacement interface{}, upsert bool, matchedCount *int64, modifiedCount *int64) error
-	//
-	// InsertOne(document interface{}, insertedID *string) error
-	//
-	// InsertMany(documents interface{}, insertedIDs **string) error
-	// [结束]
 	All(results interface{}) error //qm:取全部  cz:All(results interface{}) error
 	//ID() int64
 }
@@ -125,121 +68,18 @@ type CursorI interface {
 // QueryI Query interface
 // [提示:] 类型 QueryI 接口{}
 type QueryI interface {
+	//zj:type QueryI interface {
+	X分页(页码 int, 页大小 int) QueryI
+	X取分页数(perPage int) int
+	//zj:
+
 	// [提示:] Collation(分片规则 *options.Collation) 查询接口I
 	Collation(collation *options.Collation) QueryI //qm:设置排序规则  cz:Collation(collation *options.Collation) QueryI
 	// [提示:] Set数组过滤器(*options.ArrayFilters) 查询接口
 	SetArrayFilters(*options.ArrayFilters) QueryI //qm:设置切片过滤  cz:SetArrayFilters(*options.ArrayFilters) QueryI
 	// [提示]
 	//升序排序(字段... string) 查询接口I
-	//
-	// SetSortFields(fields ...string) QueryI
-	//
-	// 设置排序字段(字段... string) 查询接口I
-	//
-	// Limit(n int) QueryI
-	//
-	// 限制结果数量(n int) 查询接口I
-	//
-	// Skip(n int) QueryI
-	//
-	// 跳过结果数量(n int) 查询接口I
-	//
-	// Where(condition interface{}) QueryI
-	//
-	// 条件查询(condition interface{}) 查询接口I
-	//
-	// Select(fields ...string) QueryI
-	//
-	// 选择字段(fields ...string) 查询接口I
-	//
-	// Distinct(field string) (*DistinctResult, error)
-	//
-	// 获取唯一值(field string) (*DistinctResult, 错误)
-	//
-	// Group(groups ...string) QueryI
-	//
-	// 分组(groups ...string) 查询接口I
-	//
-	// Having(condition interface{}) QueryI
-	//
-	// 分组后过滤(condition interface{}) 查询接口I
-	//
-	// Count() (int64, error)
-	//
-	// 统计数量() (int64, 错误)
-	//
-	// All(result interface{}) error
-	//
-	// 获取所有结果(result interface{}) 错误
-	//
-	// One(result interface{}) error
-	//
-	// 获取单个结果(result interface{}) 错误
-	//
-	// Iter() (*Iter, error)
-	//
-	// 迭代器() (*Iter, 错误)
-	//
-	// Close() error
-	//
-	// 关闭() 错误
-	//
-	// Scan(result interface{}) error
-	//
-	// 扫描并填充结果(result interface{}) 错误
-	//
-	// NewInsertBulk() *InsertBulk
-	//
-	// 新建插入批量操作对象() *InsertBulk
-	//
-	// Insert(doc ...interface{}) error
-	//
-	// 插入文档(doc ...interface{}) 错误
-	//
-	// InsertOne(doc interface{}) error
-	//
-	// 插入一个文档(doc interface{}) 错误
-	//
-	// InsertMany(docs []interface{}) error
-	//
-	// 插入多个文档(docs []interface{}) 错误
-	//
-	// Update(filter, update interface{}, upsert ...bool) (info *UpdateInfo, err error)
-	//
-	// 更新(filter interface{}, 更新 interface{}, 是否插入... bool) (*UpdateInfo, 错误)
-	//
-	// UpdateOne(filter, update interface{}) (info *UpdateInfo, err error)
-	//
-	// 更新一个(filter interface{}, 更新 interface{}) (*UpdateInfo, 错误)
-	//
-	// UpdateMany(filter, update interface{}) (info *UpdateInfo, err error)
-	//
-	// 更新多个(filter interface{}, 更新 interface{}) (*UpdateInfo, 错误)
-	//
-	// Remove(filter ...interface{}) (info *RemoveInfo, err error)
-	//
-	// 删除(filter ...interface{}) (*RemoveInfo, 错误)
-	//
-	// RemoveOne(filter interface{}) (info *RemoveInfo, err error)
-	//
-	// 删除一个(filter interface{}) (*RemoveInfo, 错误)
-	//
-	// RemoveMany(filter interface{}) (info *RemoveInfo, err error)
-	//
-	// 删除多个(filter interface{}) (*RemoveInfo, 错误)
-	//
-	// FindOne(filter interface{}, result interface{}) error
-	//
-	// 查找一个(filter interface{}, 结果 interface{}) 错误
-	//
-	// FindOneAndDelete(filter interface{}, result interface{}) error
-	//
-	// 查找并删除一个(filter interface{}, 结果 interface{}) 错误
-	//
-	// FindOneAndUpdate(filter interface{}, update interface{}, result interface{}) error
-	//
-	// 查找并更新一个(filter interface{}, 更新 interface{}, 结果 interface{}) 错误
-	// [结束]
+
 	Sort(fields ...string) QueryI //qm:排序  cz:Sort(fields ...string) QueryI
 	// [提示:] 选择查询(选择器 interface{}) 查询接口I
 	Select(selector interface{}) QueryI //qm:字段  cz:Select(selector interface{}) QueryI
@@ -390,7 +230,7 @@ type AggregateI interface {
 	//`Iter()` -> `迭代器()`
 	// `CursorI` -> `游标接口`
 	// [结束]
-	Iter() CursorI //qm:Iter弃用  cz:Iter() CursorI  // 被弃用，请使用Cursor替代 md5:56d9bc403e9aa9a9
+	Iter() CursorI //qm:Iter弃用  cz:Iter() CursorI   // 被弃用，请使用Cursor替代 md5:56d9bc403e9aa9a9
 	// [提示]
 	//Cursor() -> 获取游标接口
 	//

@@ -80,9 +80,7 @@ func Do(ctx context.Context, hook interface{}, opType operator.OpType, opts ...i
 
 // sliceHandle 处理切片钩子 md5:c688842b5e68c3d2
 func sliceHandle(ctx context.Context, hook interface{}, opType operator.OpType) error {
-	// []interface{}{UserType{}...} 的中文翻译为：
-// []interface{}{UserType{}...} 的中文翻译为：
-// []interface{}{UserType实例...} md5:bda81608072dd1ad
+	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := hook.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(ctx, v, opType); err != nil {

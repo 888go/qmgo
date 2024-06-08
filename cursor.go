@@ -37,6 +37,7 @@ type Cursor struct {
 // md5:29446221269baaee
 // [提示:] func (c *游标) 下一个(result interface{}
 // ff:下一个
+// c:
 // result:
 func (c *Cursor) Next(result interface{}) bool {
 	if c.err != nil {
@@ -58,6 +59,7 @@ func (c *Cursor) Next(result interface{}) bool {
 // md5:283225edc771266b
 // [提示:] func (c *游标) 全部结果(results interface{})
 // ff:取全部
+// c:
 // results:
 func (c *Cursor) All(results interface{}) error {
 	if c.err != nil {
@@ -78,6 +80,7 @@ func (c *Cursor) All(results interface{}) error {
 // md5:7c67b9468038ed61
 // [提示:] func (c *Cursor) 关闭() error {}
 // ff:关闭
+// c:
 func (c *Cursor) Close() error {
 	if c.err != nil {
 		return c.err
@@ -88,6 +91,7 @@ func (c *Cursor) Close() error {
 // Err 返回Cursor的最后一个错误，如果没有发生错误，则返回nil md5:2ebbf5e5b4796f72
 // [提示:] func (c *Cursor) 错误() error {}
 // ff:取错误
+// c:
 func (c *Cursor) Err() error {
 	if c.err != nil {
 		return c.err

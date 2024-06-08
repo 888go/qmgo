@@ -13,43 +13,43 @@
 
 package operator
 
-// 定义更新运算符
+// 定义更新操作符
+// 参考: https://docs.mongodb.com/manual/reference/operator/update/
+// md5:166a573087a3fb27
 // [提示]
-// const (
-//
-//	当前日期 = "$currentDate"
-//	增加     = "$inc"
-//	最小值   = "$min"
-//	最大值   = "$max"
-//	乘以     = "$mul"
-//	重命名   = "$rename"
-//	设置     = "$set"
-//	插入时设置 = "$setOnInsert"
-//	取消设置 = "$unset"
-//
-//	添加到集合 = "$addToSet"
-//	弹出       = "$pop"
-//	拉取       = "$pull"
-//	推入       = "$push"
-//	拉取全部   = "$pullAll"
-//
-//	每个     = "$each"
-//	位置     = "$position"
-//	排序     = "$sort"
-//
-//	位操作 = "$bit"
-//
+//const (
+// 	当前日期 = "$currentDate"
+// 	增加     = "$inc"
+// 	最小值   = "$min"
+// 	最大值   = "$max"
+// 	乘以     = "$mul"
+// 	重命名   = "$rename"
+// 	设置     = "$set"
+// 	插入时设置 = "$setOnInsert"
+// 	取消设置 = "$unset"
+// 
+// 	添加到集合 = "$addToSet"
+// 	弹出       = "$pop"
+// 	拉取       = "$pull"
+// 	推入       = "$push"
+// 	拉取全部   = "$pullAll"
+// 
+// 	每个     = "$each"
+// 	位置     = "$position"
+// 	排序     = "$sort"
+// 
+// 	位操作 = "$bit"
 // )
 // [结束]
 const (
 	// Fields
 	CurrentDate = "$currentDate"
 	Inc         = "$inc"
-	Min         = "$min" //qm:最小值  cz:Min = "$min"
-	Max         = "$max" //qm:最大值  cz:Max = "$max"
+	Min         = "$min"//qm:最小值  cz:Min = "$min"  
+	Max         = "$max"//qm:最大值  cz:Max = "$max"  
 	Mul         = "$mul"
 	Rename      = "$rename"
-	Set         = "$set" //qm:设置值  cz:Set = "$set"
+	Set         = "$set"//qm:设置值  cz:Set = "$set"  
 	SetOnInsert = "$setOnInsert"
 	Unset       = "$unset"
 
