@@ -7,6 +7,13 @@ import (
 	"testing"
 )
 
+func Test_测试(t *testing.T) {
+	one := X记账{}
+	err := cli.Find(ctx, bson.M{"名称": "d4"}).One(&one)
+	fmt.Println(one)
+	fmt.Println(err)
+
+}
 func Test_查找一个文档(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#literal-values
 	var userInfo = X记账{

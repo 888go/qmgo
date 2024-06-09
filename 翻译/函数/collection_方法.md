@@ -66,21 +66,21 @@ docs=待插入文档
 ctx=上下文
 
 [func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {]
-ff=更新插入
+ff=替换插入
 err=错误
-result=更新结果
+result=结果
 opts=可选选项
-replacement=更新内容
-filter=更新条件
+replacement=替换内容
+filter=替换条件
 ctx=上下文
 
 [func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {]
-ff=更新插入并按ID
+ff=替换插入并按ID
 err=错误
-result=更新结果
+result=结果
 opts=可选选项
-replacement=更新内容
-id=更新ID
+replacement=替换内容
+id=替换ID
 ctx=上下文
 
 [func (c *Collection) UpdateOne(ctx context.Context, filter interface{}, update interface{}, opts ...opts.UpdateOptions) (err error) {]

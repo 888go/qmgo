@@ -45,28 +45,28 @@ package operator
 // [结束]
 const (
 	// Fields
-	CurrentDate = "$currentDate" //qm:更新为当前时间 cz:CurrentDate = "$currentDate"
-	Inc         = "$inc"         //qm:更新数值递增 cz:Inc         = "$inc"
+	CurrentDate = "$currentDate" //qm:更新为当前时间  cz:CurrentDate = "$currentDate"
+	Inc         = "$inc"         //qm:更新数值递增  cz:Inc = "$inc"
 	Min         = "$min"         //qm:更新最小  cz:Min = "$min"
-	Max         = "$max"         //qm:最更新大  cz:Max = "$max"
-	Mul         = "$mul"
-	Rename      = "$rename" //qm:更新字段名 cz:Rename      = "$rename"
-	Set         = "$set"    //qm:更新值  cz:Set = "$set"
-	SetOnInsert = "$setOnInsert"
-	Unset       = "$unset" //qm:删除字段  cz:Unset       = "$unset"
+	Max         = "$max"         //qm:更新最大  cz:Max = "$max"
+	Mul         = "$mul"         //qm:更新相乘 cz:Mul         = "$mul"
+	Rename      = "$rename"      //qm:更新字段名  cz:Rename = "$rename"
+	Set         = "$set"         //qm:更新值  cz:Set = "$set"
+	SetOnInsert = "$setOnInsert" //qm:更新插入时  cz:SetOnInsert = "$setOnInsert"
+	Unset       = "$unset"       //qm:删除字段  cz:Unset = "$unset"
 
-	// 数组运算符
+	// Array Operators
 	AddToSet = "$addToSet"
 	Pop      = "$pop"
 	Pull     = "$pull"
 	Push     = "$push"
 	PullAll  = "$pullAll"
 
-	// 阵列修改器
+	// Array modifiers
 	Each     = "$each"
 	Position = "$position"
 	Sort     = "$sort"
 
-	// 按位排列
+	// Array bitwise
 	Bit = "$bit"
 )

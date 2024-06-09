@@ -328,7 +328,7 @@ func newReadPref(pref ReadPref) (*readpref.ReadPref, error) {
 }
 
 // Close 关闭到此客户端引用的拓扑结构相关的套接字。 md5:a2c78aacda5cd470
-// [提示:] func (c *客户端) 关闭(ctx 上下文.Context) 错误 {}
+// [提示:] func (c *客户端) 关闭(ctx 上下文.Context) 错误 {} 
 // ff:关闭连接
 // c:
 // ctx:上下文

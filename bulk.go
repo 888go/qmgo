@@ -23,33 +23,35 @@ import (
 
 // BulkResult 是由Bulk.Run操作返回的结果类型。 md5:3a422d6b1b20649c
 // [提示]
-//type 批量操作结果 struct {
-//     插入数量 int64
-//     匹配数量 int64
-//     修改数量 int64
-//     删除数量 int64
-//     更新插入数量 int64
-//     更新插入ID map[int64]interface{}
-// }
+//
+//	type 批量操作结果 struct {
+//	    插入数量 int64
+//	    匹配数量 int64
+//	    修改数量 int64
+//	    删除数量 int64
+//	    更新插入数量 int64
+//	    更新插入ID map[int64]interface{}
+//	}
+//
 // [结束]
-type BulkResult struct {//hm:批量操作结果  cz:type BulkResult  
+type BulkResult struct { //hm:批量操作结果  cz:type BulkResult
 	// 插入的文档数量。 md5:f44082352897f08b
-	InsertedCount int64//qm:插入数  cz:InsertedCount int64  
+	InsertedCount int64 //qm:插入数  cz:InsertedCount int64
 
 	// 更新和替换操作中，被过滤器匹配的文档数量。 md5:90fab681d83f2e97
-	MatchedCount int64//qm:匹配数  cz:MatchedCount int64  
+	MatchedCount int64 //qm:匹配数  cz:MatchedCount int64
 
 	// 被更新和替换操作修改的文档数量。 md5:1e4886e32c8092e3
-	ModifiedCount int64//qm:修改数  cz:ModifiedCount int64  
+	ModifiedCount int64 //qm:修改数  cz:ModifiedCount int64
 
 	// 删除的文档数量。 md5:8872e8629ebbcf3c
-	DeletedCount int64//qm:删除数  cz:DeletedCount int64  
+	DeletedCount int64 //qm:删除数  cz:DeletedCount int64
 
 	// 通过update和replace操作插入的文档数量。 md5:3074b4c76263ae0c
-	UpsertedCount int64//qm:更新插入数  cz:UpsertedCount int64  
+	UpsertedCount int64 //qm:替换插入数  cz:UpsertedCount int64
 
 	// 一个操作索引到每个插入文档的_id的映射。 md5:b4c301dceb41d860
-	UpsertedIDs map[int64]interface{}//qm:更新插入IDs  cz:UpsertedIDs map[int64]interface{}  
+	UpsertedIDs map[int64]interface{} //qm:替换插入IDs  cz:UpsertedIDs map[int64]interface{}
 }
 
 // Bulk 是用于批量操作的上下文，这些操作将一次性发送到数据库进行批量写入。
@@ -65,13 +67,15 @@ type BulkResult struct {//hm:批量操作结果  cz:type BulkResult
 // 只有官方驱动支持的操作被暴露出来，因此方法中缺少 InsertMany。
 // md5:97e7f3c645b8ba7f
 // [提示]
-//type 批量操作 struct {
-//     集合 *集合
-//     队列   []mongo.写模型
-//     有序  *bool
-// }
+//
+//	type 批量操作 struct {
+//	    集合 *集合
+//	    队列   []mongo.写模型
+//	    有序  *bool
+//	}
+//
 // [结束]
-type Bulk struct {//hm:批量操作  cz:type Bulk  
+type Bulk struct { //hm:批量操作  cz:type Bulk
 	coll *Collection
 
 	queue   []mongo.WriteModel
@@ -105,10 +109,11 @@ func (b *Bulk) SetOrdered(ordered bool) *Bulk {
 
 // InsertOne 将一个 InsertOne 操作加入到批量执行队列中。 md5:65abbf989aa97556
 // [提示]
-//func (b *批量操作) 插入单条文档(doc interface{}) error {
-//     // ...
-// } 
-// 
+//
+//	func (b *批量操作) 插入单条文档(doc interface{}) error {
+//	    // ...
+//	}
+//
 // 这里的`doc`参数可以理解为“文档数据”，通常是一个映射（map）或结构体，代表要插入集合的文档内容。返回值是`error`，表示操作是否成功，无错误则为`nil`。
 // [结束]
 // ff:插入
@@ -155,10 +160,10 @@ func (b *Bulk) RemoveAll(filter interface{}) *Bulk {
 // Upsert将Upsert操作排队进行批量执行。替换应该是没有操作符的文档
 // md5:1115932f50b88737
 // [提示:] func (b *批量操作) 更新或插入(filter interface{})
-// ff:更新插入
+// ff:替换插入
 // b:
-// filter:更新条件
-// replacement:更新内容
+// filter:替换条件
+// replacement:替换内容
 func (b *Bulk) Upsert(filter interface{}, replacement interface{}) *Bulk {
 	wm := mongo.NewReplaceOneModel().SetFilter(filter).SetReplacement(replacement).SetUpsert(true)
 	b.queue = append(b.queue, wm)
@@ -168,40 +173,40 @@ func (b *Bulk) Upsert(filter interface{}, replacement interface{}) *Bulk {
 // UpsertOne 为批量执行队列一个 UpsertOne 操作。更新操作应该包含运算符
 // md5:7052a86d53229aab一条
 // [提示]
-//func (b *Bulk) 更新一条记录(filter 过滤条件) (result 更新结果, err 错误)
-// 
+// func (b *Bulk) 更新一条记录(filter 过滤条件) (result 更新结果, err 错误)
+//
 // func (c *Collection) Aggregateパイプライン管道(aggregate 管道数组) (*Cursor, 错误)
-// 
+//
 // func (c *Collection) CountDocuments(filter 过滤条件, options *CountOptions) (计数 int64, err 错误)
-// 
+//
 // func (c *Collection) CreateIndex(index 定义, options *CreateIndexOptions) (indexInfo IndexModel, err 错误)
-// 
+//
 // func (c *Collection) DeleteMany(filter 过滤条件, options *DeleteOptions) (deleteResult 删除结果, err 错误)
-// 
+//
 // func (c *Collection) DeleteOne(filter 过滤条件, options *DeleteOptions) (deleteResult 删除结果, err 错误)
-// 
+//
 // func (c *Collection) Distinct(field 字段名, filter 过滤条件, options *DistinctOptions) ([]interface{}, 错误)
-// 
+//
 // func (c *Collection) FindOneAndDelete(filter 过滤条件, options *FindOneAndDeleteOptions) (*SingleResult, 错误)
-// 
+//
 // func (c *Collection) FindOneAndReplace(filter 过滤条件, replacement 替换文档, options *FindOneAndReplaceOptions) (*SingleResult, 错误)
-// 
+//
 // func (c *Collection) FindOneAndUpdate(filter 过滤条件, update 更新操作, options *FindOneAndUpdateOptions) (*SingleResult, 错误)
-// 
+//
 // func (c *Collection) InsertMany(documents 文档数组, options *InsertManyOptions) (insertedIds 插入ID数组, err 错误)
-// 
+//
 // func (c *Collection) InsertOne(document 文档, options *InsertOneOptions) (insertedId 插入ID, err 错误)
-// 
+//
 // func (c *Collection) ReplaceOne(filter 过滤条件, replacement 替换文档, options *ReplaceOptions) (updateResult 更新结果, err 错误)
-// 
+//
 // func (c *Collection) UpdateMany(filter 过滤条件, update 更新操作, options *UpdateOptions) (updateResult 更新结果, err 错误)
-// 
+//
 // func (c *Collection) UpdateOne(filter 过滤条件, update 更新操作, options *UpdateOptions) (updateResult 更新结果, err 错误)
-// [结束]一条
-// ff:更新插入一条
+// [结束]
+// ff:替换插入一条
 // b:
-// filter:更新条件
-// update:更新内容
+// filter:替换条件
+// update:替换内容
 func (b *Bulk) UpsertOne(filter interface{}, update interface{}) *Bulk {
 	wm := mongo.NewUpdateOneModel().SetFilter(filter).SetUpdate(update).SetUpsert(true)
 	b.queue = append(b.queue, wm)
@@ -211,11 +216,11 @@ func (b *Bulk) UpsertOne(filter interface{}, update interface{}) *Bulk {
 // UpsertId 用于批量执行的UpsertId操作进行排队。
 // 替换的文档应该不包含操作符。
 // md5:c5d9cc678823f8e5并按ID
-// [提示:] func (b *Bulk) 更新或插入Id(id interface{}并按ID
-// ff:更新插入并按ID
+// [提示:] func (b *Bulk) 更新或插入Id(id interface{}
+// ff:替换插入并按ID
 // b:
-// id:更新ID
-// replacement:更新内容
+// id:替换ID
+// replacement:替换内容
 func (b *Bulk) UpsertId(id interface{}, replacement interface{}) *Bulk {
 	b.Upsert(bson.M{"_id": id}, replacement)
 	return b

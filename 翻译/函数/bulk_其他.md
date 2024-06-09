@@ -56,11 +56,11 @@ qm=删除数
 cz=DeletedCount int64
 
 [UpsertedCount int64]
-qm=更新插入数
+qm=替换插入数
 cz=UpsertedCount int64
 
 [UpsertedIDs map#左中括号#int64#右中括号#interface{}]
-qm=更新插入IDs
+qm=替换插入IDs
 cz=UpsertedIDs map[int64]interface{}
 
 [type Bulk struct {]

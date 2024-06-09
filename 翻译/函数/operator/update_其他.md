@@ -56,8 +56,12 @@ qm=更新最小
 cz=Min #等号# "$min"
 
 [Max = "$max"]
-qm=最更新大
+qm=更新最大
 cz=Max #等号# "$max"
+
+[Mul = "$mul"]
+qm=更新相乘
+cz=Mul #等号# "$mul"
 
 [Rename = "$rename"]
 qm=更新字段名
@@ -66,6 +70,10 @@ cz=Rename #等号# "$rename"
 [Set = "$set"]
 qm=更新值
 cz=Set #等号# "$set"
+
+[SetOnInsert = "$setOnInsert"]
+qm=更新插入时
+cz=SetOnInsert #等号# "$setOnInsert"
 
 [Unset = "$unset"]
 qm=删除字段

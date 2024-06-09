@@ -51,6 +51,7 @@ type Collection struct { //hm:文档集合  cz:type Collection
 // filter:查询条件
 // opts:可选选项
 func (c *Collection) Find(ctx context.Context, filter interface{}, opts ...opts.FindOptions) QueryI {
+
 	return &Query{
 		ctx:        ctx,
 		collection: c.collection,
@@ -108,7 +109,7 @@ func (c *Collection) InsertOne(ctx context.Context, doc interface{}, opts ...opt
 // }
 //
 // // 注意：这里仅做简单翻译，具体方法名和参数名在实际编程中应保持英文，以符合Go语言的编程规范和社区习惯。
-// [结束]多个
+// [结束]
 // ff:插入多个
 // c:
 // ctx:上下文
@@ -174,13 +175,13 @@ func interfaceToSliceInterface(docs interface{}) []interface{} {
 //
 // }
 // [结束]
-// ff:更新插入
+// ff:替换插入
 // c:
 // ctx:上下文
-// filter:更新条件
-// replacement:更新内容
+// filter:替换条件
+// replacement:替换内容
 // opts:可选选项
-// result:更新结果
+// result:结果
 // err:错误
 func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {
 	h := replacement
@@ -218,14 +219,14 @@ func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement
 // 替换参数必须是一个将用于替换所选文档的文档。它不能为空，并且不能包含任何更新操作符。
 // 参考：https://docs.mongodb.com/manual/reference/operator/update/
 // md5:2a704aa664092959
-// [提示:] func (c *集合) 更新或插入Id(ctx 上下文, id 接口{}并按ID
-// ff:更新插入并按ID
+// [提示:] func (c *集合) 更新或插入Id(ctx 上下文, id 接口{}
+// ff:替换插入并按ID
 // c:
 // ctx:上下文
-// id:更新ID
-// replacement:更新内容
+// id:替换ID
+// replacement:替换内容
 // opts:可选选项
-// result:更新结果
+// result:结果
 // err:错误
 func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {
 	h := replacement
@@ -654,10 +655,8 @@ func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel)
 // indexes:
 // err:
 func (c *Collection) EnsureIndexes(ctx context.Context, uniques []string, indexes []string) (err error) {
-
 	var uniqueModel []opts.IndexModel
 	var indexesModel []opts.IndexModel
-
 	for _, v := range uniques {
 		vv := strings.Split(v, ",")
 		indexOpts := options.Index()
@@ -684,7 +683,7 @@ func (c *Collection) EnsureIndexes(ctx context.Context, uniques []string, indexe
 // 如果opts.IndexModel中的Key为[]string{"name"}，表示创建索引：name
 // 如果opts.IndexModel中的Key为[]string{"name", "-age"}，表示创建复合索引：name和-age
 // md5:822a787892c2186f索引s
-// [提示:] func (c *Collection) 创建索引(ctx context.Context, 索引模型 []opts.IndexModel) (错误 error) {}索引s
+// [提示:] func (c *Collection) 创建索引(ctx context.Context, 索引模型 []opts.IndexModel) (错误 error) {}
 // ff:创建多条索引
 // c:
 // ctx:上下文
@@ -712,7 +711,7 @@ func (c *Collection) CreateOneIndex(ctx context.Context, index opts.IndexModel) 
 // DropAllIndexes 会删除集合上除了_id字段索引之外的所有索引
 // 如果集合上只有_id字段的索引，该函数调用将报告错误
 // md5:e7655b40436f93df全部索引
-// [提示:] func (c *集合) 删除所有索引(ctx 上下文环境) (错误 error) {}全部索引
+// [提示:] func (c *集合) 删除所有索引(ctx 上下文环境) (错误 error) {}
 // ff:删除全部索引
 // c:
 // ctx:上下文
@@ -726,7 +725,7 @@ func (c *Collection) DropAllIndexes(ctx context.Context) (err error) {
 // 索引是 []string{"name"} 表示删除名为 "name" 的单个索引
 // 索引是 []string{"name", "-age"} 表示删除复合索引：name 和排除年龄 (-age) 的部分索引
 // md5:4ad77e88557061c7索引索引s
-// [提示:] func (c *集合) 删除索引(ctx 上下文, 索引列表 []string) error {}索引索引s
+// [提示:] func (c *集合) 删除索引(ctx 上下文, 索引列表 []string) error {}
 // ff:删除索引
 // c:
 // ctx:上下文
@@ -757,7 +756,7 @@ func generateDroppedIndex(index []string) string {
 // DropIndexDropIndex 会删除索引
 // 即使索引不存在，这个操作也是安全的
 // md5:e7b65cd93b1de7f7集合
-// [提示:] func (c *集合) 删除集合(ctx 上下文.Context) 错误 {}集合
+// [提示:] func (c *集合) 删除集合(ctx 上下文.Context) 错误 {}
 // ff:删除集合
 // c:
 // ctx:上下文

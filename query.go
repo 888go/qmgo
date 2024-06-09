@@ -29,25 +29,23 @@ import (
 
 // 定义查询结构体 md5:56541bbc29d4ce15
 // [提示]
-//
-//	type 查询 struct {
-//	    筛选条件 interface{}
-//	    排序方式 interface{}
-//	    选择字段 interface{}
-//	    索引指引 interface{}
-//	    数组筛选器 *options.数组筛选选项
-//	    限制数量 *int64
-//	    跳过数量 *int64
-//	    批次大小 *int64
-//	    不超时 *bool
-//	    文档集合 *mongo.Collection
-//	    查询选项 []qOpts.查询选项
-//	    编码注册器 *bsoncodec.Registry
-//	    上下文 context.Context
-//	}
-//
+//type 查询 struct {
+//     筛选条件 interface{}
+//     排序方式 interface{}
+//     选择字段 interface{}
+//     索引指引 interface{}
+//     数组筛选器 *options.数组筛选选项
+//     限制数量 *int64
+//     跳过数量 *int64
+//     批次大小 *int64
+//     不超时 *bool
+//     文档集合 *mongo.Collection
+//     查询选项 []qOpts.查询选项
+//     编码注册器 *bsoncodec.Registry
+//     上下文 context.Context
+// }
 // [结束]
-type Query struct { //hm:查询  cz:type Query
+type Query struct {//hm:查询  cz:type Query  
 	filter          interface{}
 	sort            interface{}
 	project         interface{}
@@ -109,8 +107,8 @@ func (q *Query) BatchSize(n int64) QueryI {
 // fields:排序字段
 func (q *Query) Sort(fields ...string) QueryI {
 	if len(fields) == 0 {
-		// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
-		// md5:c94b59dcb408353d
+// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
+// md5:c94b59dcb408353d
 		return q
 	}
 
@@ -159,7 +157,42 @@ func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 // 如果不显示_id并且设置为0，它将被返回并显示
 // md5:3beb3c9bd51ad3fe
 // [提示]
-// func (q *Query) 选择(projection interface{})
+//func (q *Query) 选择(projection interface{}) 
+// 
+// // 下面的方法未给出完整信息，我将提供一般性的翻译，但可能需要根据实际代码上下文进行调整
+// 
+// func (c *Collection) InsertOne(doc interface{}) (insertedIDprimitive, error) {
+//     // 翻译：在集合中插入一个文档，返回插入的ID和可能的错误
+// }
+// 
+// func (c *Collection) Find(filter interface{}, opts ...*FindOptions) *Query {
+//     // 翻译：根据过滤器找到文档，返回一个查询对象，可选的查找选项
+// }
+// 
+// func (q *Query) Limit(n int) *Query {
+//     // 翻译：限制查询结果的数量，返回更新后的查询对象
+// }
+// 
+// func (q *Query) Skip(n int) *Query {
+//     // 翻译：跳过查询结果的前n个文档，返回更新后的查询对象
+// }
+// 
+// func (q *Query) Sort(fields ...string) *Query {
+//     // 翻译：按指定字段排序查询结果，返回更新后的查询对象
+// }
+// 
+// func (q *Query) All(result interface{}) error {
+//     // 翻译：将所有查询结果填充到结果接口中，返回可能出现的错误
+// }
+// 
+// func (q *Query) One(result interface{}) error {
+//     // 翻译：获取查询结果中的第一条文档并填充到结果接口中，返回可能出现的错误
+// }
+// 
+// func (q *Query) Count() (int64, error) {
+//     // 翻译：计算查询结果的文档数量，返回总数和可能的错误
+// }
+// [结束]
 // ff:字段
 // q:
 // projection:字段Map
@@ -432,13 +465,13 @@ func (q *Query) Cursor() CursorI {
 }
 
 // Apply 执行 findAndModify 命令，该命令允许根据查询更新、替换或删除文档，并原子性地返回旧版本（默认）或新版本的文档（当 ReturnNew 为 true 时）。
-//
+// 
 // Sort 和 Select 查询方法会影响 Apply 的结果。如果有多个文档匹配查询，Sort 可以通过排序来决定操作哪个文档。Select 则可以仅获取新或旧文档中选定字段的内容。
-//
+// 
 // 当 Change.Replace 为 true 时，意味着在集合中最多替换一个文档，且 update 参数必须是一个文档，不能包含任何更新运算符；如果没有找到对象并且 Change.Upsert 为 false，则会返回 ErrNoDocuments 错误。当 Change.Remove 为 true 时，意味着最多删除集合中的一个文档，并返回删除前的文档状态；如果没有找到对象，同样返回 ErrNoDocuments。
-//
+// 
 // 如果 Change.Replace 和 Change.Remove 都为 false，则表示最多更新集合中的一个文档，update 参数必须是一个包含更新运算符的文档；如果没有找到对象并且 Change.Upsert 为 false，则返回 ErrNoDocuments。
-//
+// 
 // 参考：https://docs.mongodb.com/manual/reference/command/findAndModify/
 // md5:e14e8d7ceac827ac
 // [提示:] func (q *Query) 应用变更(change 变更, result 结果接口{}
@@ -461,8 +494,8 @@ func (q *Query) Apply(change Change, result interface{}) error {
 }
 
 // findOneAndDelete
-// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/
-//
+// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/ 
+// 
 // 这段 Go 代码的注释表示这是一个名为 "findOneAndDelete" 的函数或方法，它用于从 MongoDB 集合中查找并删除第一个匹配的文档。参考链接指向 MongoDB 官方文档，提供了关于该方法的详细说明。
 // md5:23b36fd4f1711d7b
 func (q *Query) findOneAndDelete(change Change, result interface{}) error {
@@ -504,8 +537,8 @@ func (q *Query) findOneAndReplace(change Change, result interface{}) error {
 }
 
 // findOneAndUpdate
-// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/
-//
+// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/ 
+// 
 // 这段Go代码中的注释表示这是一个名为`findOneAndUpdate`的方法，它引用了MongoDB文档中关于`db.collection.findOneAndUpdate`方法的手册参考。这个方法在MongoDB数据库操作中用于根据指定的条件查找并更新第一个匹配的文档。
 // md5:fe84856a45a0b0f1
 func (q *Query) findOneAndUpdate(change Change, result interface{}) error {

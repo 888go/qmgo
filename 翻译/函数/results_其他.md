@@ -64,11 +64,11 @@ qm=修改数
 cz=ModifiedCount int64
 
 [UpsertedCount int64]
-qm=更新插入数
+qm=替换插入数
 cz=UpsertedCount int64
 
 [UpsertedID interface{}]
-qm=更新插入ID
+qm=替换插入ID
 cz=UpsertedID interface{}
 
 [type DeleteResult struct {]

@@ -76,11 +76,11 @@ qm=常量_钩子_删除后
 cz=AfterRemove OpType #等号# "afterRemove"
 
 [BeforeUpsert OpType = "beforeUpsert"]
-qm=常量_钩子_更新插入前
+qm=常量_钩子_替换插入前
 cz=BeforeUpsert OpType #等号# "beforeUpsert"
 
 [AfterUpsert OpType = "afterUpsert"]
-qm=常量_钩子_更新插入后
+qm=常量_钩子_替换插入后
 cz=AfterUpsert OpType #等号# "afterUpsert"
 
 [BeforeReplace OpType = "beforeReplace"]
