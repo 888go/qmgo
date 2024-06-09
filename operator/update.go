@@ -53,7 +53,7 @@ const (
 	Rename      = "$rename"      //qm:更新字段名  cz:Rename = "$rename"
 	Set         = "$set"         //qm:更新值  cz:Set = "$set"
 	SetOnInsert = "$setOnInsert" //qm:更新插入时  cz:SetOnInsert = "$setOnInsert"
-	Unset       = "$unset"       //qm:删除字段  cz:Unset = "$unset"
+	Unset       = "$unset"       //qm:聚合删除字段  cz:Unset = "$unset"
 
 	//	添加到集合 = "$addToSet"
 	//	弹出       = "$pop"
@@ -76,7 +76,7 @@ const (
 	// Array modifiers
 	Each     = "$each"
 	Position = "$position"
-	Sort     = "$sort"
+	Sort     = "$sort" //qm:聚合排序 cz:Sort = "$sort"
 
 	// Array bitwise
 	Bit = "$bit"

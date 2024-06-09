@@ -76,7 +76,7 @@ qm=更新插入时
 cz=SetOnInsert #等号# "$setOnInsert"
 
 [Unset = "$unset"]
-qm=删除字段
+qm=聚合删除字段
 cz=Unset #等号# "$unset"
 
 [AddToSet = "$addToSet"]
@@ -98,3 +98,7 @@ cz=Push #等号# "$push"
 [PullAll = "$pullAll"]
 qm=数组删除全部
 cz=PullAll #等号# "$pullAll"
+
+[Sort = "$sort"]
+qm=聚合排序
+cz=Sort #等号# "$sort"

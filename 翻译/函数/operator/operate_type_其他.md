@@ -44,49 +44,49 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
  但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
 [BeforeInsert OpType = "beforeInsert"]
-qm=常量_钩子_插入前
+qm=钩子_插入前
 cz=BeforeInsert OpType #等号# "beforeInsert"
 
 [AfterInsert OpType = "afterInsert"]
-qm=常量_钩子_插入后
+qm=钩子_插入后
 cz=AfterInsert OpType #等号# "afterInsert"
 
 [BeforeUpdate OpType = "beforeUpdate"]
-qm=常量_钩子_更新前
+qm=钩子_更新前
 cz=BeforeUpdate OpType #等号# "beforeUpdate"
 
 [AfterUpdate OpType = "afterUpdate"]
-qm=常量_钩子_更新后
+qm=钩子_更新后
 cz=AfterUpdate OpType #等号# "afterUpdate"
 
 [BeforeQuery OpType = "beforeQuery"]
-qm=常量_钩子_查询前
+qm=钩子_查询前
 cz=BeforeQuery OpType #等号# "beforeQuery"
 
 [AfterQuery OpType = "afterQuery"]
-qm=常量_钩子_查询后
+qm=钩子_查询后
 cz=AfterQuery OpType #等号# "afterQuery"
 
 [BeforeRemove OpType = "beforeRemove"]
-qm=常量_钩子_删除前
+qm=钩子_删除前
 cz=BeforeRemove OpType #等号# "beforeRemove"
 
 [AfterRemove OpType = "afterRemove"]
-qm=常量_钩子_删除后
+qm=钩子_删除后
 cz=AfterRemove OpType #等号# "afterRemove"
 
 [BeforeUpsert OpType = "beforeUpsert"]
-qm=常量_钩子_替换插入前
+qm=钩子_替换插入前
 cz=BeforeUpsert OpType #等号# "beforeUpsert"
 
 [AfterUpsert OpType = "afterUpsert"]
-qm=常量_钩子_替换插入后
+qm=钩子_替换插入后
 cz=AfterUpsert OpType #等号# "afterUpsert"
 
 [BeforeReplace OpType = "beforeReplace"]
-qm=常量_钩子_替换前
+qm=钩子_替换前
 cz=BeforeReplace OpType #等号# "beforeReplace"
 
 [AfterReplace OpType = "afterReplace"]
-qm=常量_钩子_替换后
+qm=钩子_替换后
 cz=AfterReplace OpType #等号# "afterReplace"

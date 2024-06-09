@@ -22,3 +22,7 @@ func Test_删除索引(t *testing.T) {
 	err := cli.DropIndex(ctx, []string{"名称"}) //删除字段"名称" 索引
 	fmt.Println(err)
 }
+
+/*
+备注, qmgo没有实现索引列出,以及全文索引创建. 需要自己实现
+*/

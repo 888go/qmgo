@@ -17,14 +17,21 @@ type X记账 struct {
 	X名称   string             `bson:"名称"`
 	X年龄   int                `bson:"年龄"`
 	X重量   int                `bson:"重量"`
-	X够买产品 []string           `bson:"够买产品"`
-	X够买时间 time.Time          `bson:"够买时间"`
+	X购买产品 []string           `bson:"购买产品"`
+	X购买时间 time.Time          `bson:"购买时间"`
 	X支付方式 X支付方式              `bson:"支付方式"`
 }
 type X支付方式 struct {
 	X支付方式   string   `bson:"支付方式"`
 	X联系方式   string   `bson:"联系方式"`
 	X可选支付方式 []string `bson:"可选支付方式"`
+}
+
+type X产品价格 struct {
+	//注意, _id是十六进制格式
+	Id    primitive.ObjectID `bson:"_id,omitempty"` // 注意使用omitempty标签，使得在插入时如果未指定ID则MongoDB会自动生成
+	X产品名称 string             `bson:"产品名称"`
+	X产品价格 int                `bson:"产品价格"`
 }
 
 func init() {

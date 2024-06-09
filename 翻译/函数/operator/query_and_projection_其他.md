@@ -44,59 +44,63 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
  但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
 [Eq = "$eq"]
-qm=等于
+qm=条件等于
 cz=Eq #等号# "$eq"
 
 [Gt = "$gt"]
-qm=大于
+qm=条件大于
 cz=Gt #等号# "$gt"
 
 [Gte = "$gte"]
-qm=大于等于
+qm=条件大于等于
 cz=Gte #等号# "$gte"
 
 [In = "$in"]
-qm=包含
+qm=条件包含
 cz=In #等号# "$in"
 
 [Lt = "$lt"]
-qm=小于
+qm=条件小于
 cz=Lt #等号# "$lt"
 
 [Lte = "$lte"]
-qm=小于等于
+qm=条件小于等于
 cz=Lte #等号# "$lte"
 
 [Ne = "$ne"]
-qm=不等于
+qm=条件不等于
 cz=Ne #等号# "$ne"
 
 [Nin = "$nin"]
-qm=不包含
+qm=条件不包含
 cz=Nin #等号# "$nin"
 
 [And = "$and"]
-qm=且
+qm=条件且
 cz=And #等号# "$and"
 
 [Not = "$not"]
-qm=非
+qm=条件非
 cz=Not #等号# "$not"
 
 [Nor = "$nor"]
-qm=或非
+qm=条件或非
 cz=Nor #等号# "$nor"
 
 [Or = "$or"]
-qm=或
+qm=条件或
 cz=Or #等号# "$or"
 
 [Exists = "$exists"]
-qm=存在字段
+qm=条件字段存在
 cz=Exists #等号# "$exists"
 
+[Type = "$type"]
+qm=条件类型
+cz=Type #等号# "$type"
+
 [Expr = "$expr"]
-qm=表达式
+qm=条件表达式
 cz=Expr #等号# "$expr"
 
 [JsonSchema = "$jsonSchema"]
@@ -108,19 +112,19 @@ qm=取模
 cz=Mod #等号# "$mod"
 
 [Regex = "$regex"]
-qm=正则表达式
+qm=条件正则
 cz=Regex #等号# "$regex"
 
 [Text = "$text"]
-qm=全文搜索
+qm=条件全文搜索
 cz=Text #等号# "$text"
 
 [Where = "$where"]
-qm=Js条件
+qm=条件Js
 cz=Where #等号# "$where"
 
 [All = "$all"]
-qm=全部数组
+qm=数组全部
 cz=All #等号# "$all"
 
 [ElemMatch = "$elemMatch"]

@@ -44,13 +44,25 @@ qm=聚合分组
 cz=Group #等号# "$group"
 
 [Limit = "$limit"]
-qm=聚合限制 Limit #等号# "$limit"
+qm=聚合限制数量 Limit #等号# "$limit"
 cz=Limit #等号# "$limit"
+
+[Lookup = "$lookup"]
+qm=聚合关联集合
+cz=Lookup #等号# "$lookup"
 
 [Match = "$match"]
 qm=聚合条件
 cz=Match #等号# "$match"
 
+[Merge = "$merge"]
+qm=聚合合并
+cz=Merge #等号# "$merge"
+
 [Project = "$project"]
 qm=聚合字段
 cz=Project #等号# "$project"
+
+[Skip = "$skip"]
+qm=聚合跳过
+cz=Skip #等号# "$skip"

@@ -62,7 +62,8 @@
           tooltipTitle="" icon="" textColor="" backgroundColor=""/>
     <tree path="/operator/aggregation_pipeline_stages.go" title="聚合常量"/>
     <tree path="/operator/operate_type.go" title="钩子常量"/>
-    <tree path="/operator/query_and_projection.go" title="运算符常量"/>
+    <tree path="/operator/query_and_projection.go" title="条件常量" extension="" presentableText="" tooltipTitle=""
+          icon="" textColor="" backgroundColor=""/>
     <tree path="/operator/update.go" title="更新运算符常量"/>
     <tree path="/operator/query_modifiers.go" title="查询修饰符常量"/>
     <tree path="/options" title="内部结构"/>
