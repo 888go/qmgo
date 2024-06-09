@@ -55,12 +55,23 @@ const (
 	SetOnInsert = "$setOnInsert" //qm:更新插入时  cz:SetOnInsert = "$setOnInsert"
 	Unset       = "$unset"       //qm:删除字段  cz:Unset = "$unset"
 
+	//	添加到集合 = "$addToSet"
+	//	弹出       = "$pop"
+	//	拉取       = "$pull"
+	//	推入       = "$push"
+	//	拉取全部   = "$pullAll"
+	//
+	//	每个     = "$each"
+	//	位置     = "$position"
+	//	排序     = "$sort"
+	//
+	//	位操作 = "$bit"
 	// Array Operators
-	AddToSet = "$addToSet"
-	Pop      = "$pop"
-	Pull     = "$pull"
-	Push     = "$push"
-	PullAll  = "$pullAll"
+	AddToSet = "$addToSet" //qm:数组不存在追加 cz:AddToSet = "$addToSet"
+	Pop      = "$pop"      //qm:数组删首尾 cz:Pop      = "$pop"
+	Pull     = "$pull"     //qm:数组删除 cz:Pull     = "$pull"
+	Push     = "$push"     //qm:数组追加 cz:Push     = "$push"
+	PullAll  = "$pullAll"  //qm:数组删除全部 cz:PullAll  = "$pullAll"
 
 	// Array modifiers
 	Each     = "$each"

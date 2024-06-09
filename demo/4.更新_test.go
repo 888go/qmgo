@@ -36,6 +36,21 @@ func Test_更新子文档(t *testing.T) {
 	fmt.Println(err)
 }
 
+func Test_更新文档数组(t *testing.T) {
+	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/write-operations/embedded-arrays/#first-array-element
+	//更新要特别注意同原类型, 否则会导致后期读取失败.
+
+	//".$[]" 代表数组每一个成员
+	//把数组"够买产品" 每个成员都改成"精品西瓜",
+	err := cli.UpdateOne(ctx, bson.M{"名称": "d4"}, bson.M{"$set": bson.M{"够买产品.$[]": "精品西瓜1"}})
+	fmt.Println(err)
+
+	//".$" 代表数组第一个成员, 注意!!!,必须将数组字段包含在 查询 条件中
+	//把数组"够买产品"第一个成员改成"精品西瓜",
+	err = cli.UpdateOne(ctx, bson.M{"够买产品": bson.M{"$eq": "西瓜"}}, bson.M{"$set": bson.M{"够买产品.$": "精品西瓜2"}})
+	fmt.Println(err)
+}
+
 func Test_更新子文档数组(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/write-operations/modify/
 	//更新要特别注意同原类型, 否则会导致后期读取失败.
@@ -98,8 +113,3 @@ func Test_替换一条(t *testing.T) {
 	err := cli.ReplaceOne(ctx, bson.M{"年龄": 8}, userInfo)
 	fmt.Println(err)
 }
-
-///替换文档不能包含以'$'开头的键
-//替换文档不能包含以'$'开头的键
-//_, err = 集合.Upsert(ctx, bson.M{"名称": "菜鸟教程2"}, bson.M{"name": "菜鸟教程", "网址": "http://www.runoob.com"})
-//_, err := 集合.UpdateAll(ctx, bson.M{"名称": "菜鸟教程22"}, bson.M{"$set": bson.M{"by": "菜鸟教程1111", "网址": "http://www.runoob.com"}})

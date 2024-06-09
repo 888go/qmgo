@@ -78,3 +78,23 @@ cz=SetOnInsert #等号# "$setOnInsert"
 [Unset = "$unset"]
 qm=删除字段
 cz=Unset #等号# "$unset"
+
+[AddToSet = "$addToSet"]
+qm=数组不存在追加
+cz=AddToSet #等号# "$addToSet"
+
+[Pop = "$pop"]
+qm=数组删首尾
+cz=Pop #等号# "$pop"
+
+[Pull = "$pull"]
+qm=数组删除
+cz=Pull #等号# "$pull"
+
+[Push = "$push"]
+qm=数组追加
+cz=Push #等号# "$push"
+
+[PullAll = "$pullAll"]
+qm=数组删除全部
+cz=PullAll #等号# "$pullAll"
