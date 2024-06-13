@@ -39,7 +39,7 @@ func TestDatabase(t *testing.T) {
 		X数据库名:         dbName,
 		X集合名:             collName,
 		X连接超时毫秒: &cTimeout,
-		X身份凭证:  &sTimeout,
+		X套接字超时毫秒:  &sTimeout,
 		X最大连接池大小:      &maxPoolSize,
 		X最小连接池大小:      &minPoolSize,
 	}

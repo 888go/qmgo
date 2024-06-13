@@ -17,11 +17,11 @@ import (
 
 func Test_聚合分组(t *testing.T) {
 	分组 := bson.D{
-		{操作符.X聚合分组,
+		{mgo常量.X聚合分组,
 			bson.D{
 				{"_id", "$姓名"}, //分组, 以"姓名"分组, 其中"_id", 是固定表达式, 表示分组的键, 不可更改.
-				{"重量合计", bson.D{{操作符.X求和, "$重量"}}}, //并加一个列表示"重量合计"
-				{"年龄平均", bson.D{{操作符.X平均值, "$年龄"}}}, //并加一个列表示"平均年龄"
+				{"重量合计", bson.D{{mgo常量.X求和, "$重量"}}}, //并加一个列表示"重量合计"
+				{"年龄平均", bson.D{{mgo常量.X平均值, "$年龄"}}}, //并加一个列表示"平均年龄"
 			},
 		},
 	}
@@ -33,16 +33,16 @@ func Test_聚合分组(t *testing.T) {
 func Test_聚合过滤条件(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/retrieve/#aggregation
 	//条件,过滤条件,"姓名"字段="张三"
-	过滤条件 := bson.D{{操作符.X聚合条件, []bson.E{{"姓名", bson.D{{操作符.X条件等于, "张三"}}}}}}
+	过滤条件 := bson.D{{mgo常量.X聚合条件, []bson.E{{"姓名", bson.D{{mgo常量.X条件等于, "张三"}}}}}}
 
 	//分组, 以"姓名"分组, 并加一个列表示"重量合计"
 	//其中"_id", 是固定表达式, 表示分组的键, 不可更改.
 	分组 := bson.D{
-		{操作符.X聚合分组,
+		{mgo常量.X聚合分组,
 			bson.D{
 				{"_id", "$姓名"},
-				{"重量合计", bson.D{{操作符.X求和, "$重量"}}}, //如果不是求和, 只是要统计文档数量, 可以传入参数1, {operator.Sum, 1}
-				{"年龄平均", bson.D{{操作符.X平均值, "$年龄"}}},
+				{"重量合计", bson.D{{mgo常量.X求和, "$重量"}}}, //如果不是求和, 只是要统计文档数量, 可以传入参数1, {operator.Sum, 1}
+				{"年龄平均", bson.D{{mgo常量.X平均值, "$年龄"}}},
 			},
 		},
 	}
@@ -54,16 +54,16 @@ func Test_聚合过滤条件(t *testing.T) {
 func Test_聚合文档数量(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/retrieve/#aggregation
 	//条件,过滤条件,"姓名"字段="张三"
-	过滤条件 := bson.D{{操作符.X聚合条件, []bson.E{{"姓名", bson.D{{操作符.X条件等于, "张三"}}}}}}
+	过滤条件 := bson.D{{mgo常量.X聚合条件, []bson.E{{"姓名", bson.D{{mgo常量.X条件等于, "张三"}}}}}}
 
 	//分组, 以"姓名"分组, 并加一个列表示"重量合计"
 	//其中"_id", 是固定表达式, 表示分组的键, 不可更改.
 	分组 := bson.D{
-		{操作符.X聚合分组,
+		{mgo常量.X聚合分组,
 			bson.D{
 				{"_id", "$姓名"},
-				{"文档数量", bson.D{{操作符.X求和, 1}}}, //如果不是求和, 只是要统计文档数量, 可以传入参数1, {operator.Sum, 1}
-				{"年龄平均", bson.D{{操作符.X平均值, "$年龄"}}},
+				{"文档数量", bson.D{{mgo常量.X求和, 1}}}, //如果不是求和, 只是要统计文档数量, 可以传入参数1, {operator.Sum, 1}
+				{"年龄平均", bson.D{{mgo常量.X平均值, "$年龄"}}},
 			},
 		},
 	}
@@ -75,7 +75,7 @@ func Test_聚合文档数量(t *testing.T) {
 func Test_聚合排序(t *testing.T) {
 	// https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/sort/
 	排序 := bson.D{
-		{操作符.X聚合排序,
+		{mgo常量.X聚合排序,
 			bson.D{
 				{"年龄", 1},  //按年龄升序
 				{"重量", -1}, //按重量降序

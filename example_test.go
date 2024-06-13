@@ -106,8 +106,8 @@ func TestQmgo(t *testing.T) {
 	ast.Equal(int64(4), count)
 
 	// aggregate
-	matchStage := bson.D{{操作符.X聚合条件, []bson.E{{"weight", bson.D{{操作符.X条件大于, 30}}}}}}
-	groupStage := bson.D{{操作符.X聚合分组, bson.D{{"_id", "$name"}, {"total", bson.D{{操作符.X求和, "$age"}}}}}}
+	matchStage := bson.D{{mgo常量.X聚合条件, []bson.E{{"weight", bson.D{{mgo常量.X条件大于, 30}}}}}}
+	groupStage := bson.D{{mgo常量.X聚合分组, bson.D{{"_id", "$name"}, {"total", bson.D{{mgo常量.X求和, "$age"}}}}}}
 	var showsWithInfo []bson.M
 	err = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).X取全部(&showsWithInfo)
 	ast.Equal(3, len(showsWithInfo))

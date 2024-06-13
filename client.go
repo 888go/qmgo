@@ -50,12 +50,12 @@ type X配置 struct {
 	// X套接字超时毫秒 specifies how long the driver will wait for a socket read or write to return before returning a
 	// network error. If this is 0 meaning no timeout is used and socket operations can block indefinitely.
 	// The default is 300,000 ms.
-	X身份凭证 *int64 `json:"socketTimeoutMS"`
-	// ReadPreference determines which servers are considered suitable for read operations.
+	X套接字超时毫秒 *int64 `json:"socketTimeoutMS"`
+	// X读取偏好 determines which servers are considered suitable for read operations.
 	// default is PrimaryMode
-	ReadPreference *X读取偏好 `json:"readPreference"`
+	X读取偏好 *X读取偏好 `json:"readPreference"`
 	// can be used to provide authentication options when configuring a Client.
-	Auth *X身份凭证 `json:"auth"`
+	X身份凭证 *X身份凭证 `json:"auth"`
 }
 
 // X身份凭证 can be used to provide authentication options when configuring a Client.
@@ -183,8 +183,8 @@ func newConnectOpts(conf *X配置, o ...options.ClientOptions) (*officialOpts.Cl
 		option.SetConnectTimeout(timeoutDur)
 
 	}
-	if conf.X身份凭证 != nil {
-		timeoutDur := time.Duration(*conf.X身份凭证) * time.Millisecond
+	if conf.X套接字超时毫秒 != nil {
+		timeoutDur := time.Duration(*conf.X套接字超时毫秒) * time.Millisecond
 		option.SetSocketTimeout(timeoutDur)
 	} else {
 		option.SetSocketTimeout(300 * time.Second)
@@ -195,15 +195,15 @@ func newConnectOpts(conf *X配置, o ...options.ClientOptions) (*officialOpts.Cl
 	if conf.X最小连接池大小 != nil {
 		option.SetMinPoolSize(*conf.X最小连接池大小)
 	}
-	if conf.ReadPreference != nil {
-		readPreference, err := newReadPref(*conf.ReadPreference)
+	if conf.X读取偏好 != nil {
+		readPreference, err := newReadPref(*conf.X读取偏好)
 		if err != nil {
 			return nil, err
 		}
 		option.SetReadPreference(readPreference)
 	}
-	if conf.Auth != nil {
-		auth, err := newAuth(*conf.Auth)
+	if conf.X身份凭证 != nil {
+		auth, err := newAuth(*conf.X身份凭证)
 		if err != nil {
 			return nil, err
 		}

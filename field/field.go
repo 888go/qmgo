@@ -24,11 +24,11 @@ import (
 var nilTime time.Time
 
 // filedHandler defines the relations between field type and handler
-var fieldHandler = map[操作符.OpType]func(doc interface{}) error{
-	操作符.X钩子_插入前:  beforeInsert,
-	操作符.X钩子_更新前:  beforeUpdate,
-	操作符.X钩子_替换前: beforeUpdate,
-	操作符.X钩子_替换插入前:  beforeUpsert,
+var fieldHandler = map[mgo常量.OpType]func(doc interface{}) error{
+	mgo常量.X钩子_插入前:  beforeInsert,
+	mgo常量.X钩子_更新前:  beforeUpdate,
+	mgo常量.X钩子_替换前: beforeUpdate,
+	mgo常量.X钩子_替换插入前:  beforeUpsert,
 }
 
 //func init() {
@@ -37,7 +37,7 @@ var fieldHandler = map[操作符.OpType]func(doc interface{}) error{
 
 // Do call the specific method to handle field based on fType
 // Don't use opts here
-func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error {
+func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
 		return nil
@@ -59,7 +59,7 @@ func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...i
 }
 
 // sliceHandle handles the slice docs
-func sliceHandle(docs interface{}, opType 操作符.OpType) error {
+func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
 	// []interface{}{UserType{}...}
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
@@ -130,7 +130,7 @@ func beforeUpsert(doc interface{}) error {
 }
 
 // do check if opType is supported and call fieldHandler
-func do(doc interface{}, opType 操作符.OpType) error {
+func do(doc interface{}, opType mgo常量.OpType) error {
 	if f, ok := fieldHandler[opType]; !ok {
 		return nil
 	} else {

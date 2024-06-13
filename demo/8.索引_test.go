@@ -14,7 +14,7 @@ func Test_创建复合索引(t *testing.T) {
 }
 
 func Test_删除所有索引(t *testing.T) {
-	err := cli.DropAllIndexes(ctx)
+	err := cli.X删除全部索引(ctx)
 	fmt.Println(err)
 }
 

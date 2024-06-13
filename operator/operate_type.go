@@ -1,4 +1,4 @@
-package 操作符
+package mgo常量
 
 type OpType string
 

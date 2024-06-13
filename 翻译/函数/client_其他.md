@@ -69,11 +69,11 @@ cz=SocketTimeoutMS *int64 `json:"socketTimeoutMS"`
 
 [ReadPreference *ReadPref `json:"readPreference"`]
 qm=读取偏好
-zz=ReadPreference \*[a-zA-Z0-9_\u4e00-\u9fa5 ]+`json:"readPreference"`
+zz=ReadPreference \*.*`json:"readPreference"`
 
 [Auth *Credential `json:"auth"`]
 qm=身份凭证
-zz=Auth \*[a-zA-Z0-9_\u4e00-\u9fa5 ]+ `json:"auth"`
+zz=Auth \*.+ `json:"auth"`
 
 [type Credential struct {]
 hm=身份凭证

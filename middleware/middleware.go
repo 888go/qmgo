@@ -9,7 +9,7 @@ import (
 )
 
 // callback define the callback function type
-type callback func(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error
+type callback func(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error
 
 // middlewareCallback the register callback slice
 // some callbacks initial here without Register() for order
@@ -26,7 +26,7 @@ func Register(回调函数 callback) {
 
 // Do call every registers
 // The doc is always the document to operate
-func Do(ctx context.Context, content interface{}, opType 操作符.OpType, opts ...interface{}) error {
+func Do(ctx context.Context, content interface{}, opType mgo常量.OpType, opts ...interface{}) error {
 	for _, cb := range middlewareCallback {
 		if err := cb(ctx, content, opType, opts...); err != nil {
 			return err

@@ -18,9 +18,9 @@ func SetValidate(v *validator.Validate) {
 }
 
 // validatorNeeded checks if the validator is needed to opType
-func validatorNeeded(opType 操作符.OpType) bool {
+func validatorNeeded(opType mgo常量.OpType) bool {
 	switch opType {
-	case 操作符.X钩子_插入前, 操作符.X钩子_替换插入前, 操作符.X钩子_替换前:
+	case mgo常量.X钩子_插入前, mgo常量.X钩子_替换插入前, mgo常量.X钩子_替换前:
 		return true
 	}
 	return false
@@ -28,7 +28,7 @@ func validatorNeeded(opType 操作符.OpType) bool {
 
 // Do calls validator check
 // Don't use opts here
-func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error {
+func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil
 	}
@@ -53,7 +53,7 @@ func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...i
 }
 
 // sliceHandle handles the slice docs
-func sliceHandle(docs interface{}, opType 操作符.OpType) error {
+func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
 	// []interface{}{UserType{}...}
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {

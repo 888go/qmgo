@@ -44,4 +44,4 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
  但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
 [package operator]
-bm=操作符
+bm=mgo常量

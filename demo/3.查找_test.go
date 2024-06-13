@@ -71,7 +71,7 @@ func Test_对比查询操作符(t *testing.T) {
 
 	//用qmgo包装后的常量,年龄大于6且小于8
 	batch = []X记账{}
-	cli.X查询(ctx, bson.D{{"年龄", bson.M{操作符.X条件大于: 6, 操作符.X条件小于: 8}}}).X取全部(&batch)
+	cli.X查询(ctx, bson.D{{"年龄", bson.M{mgo常量.X条件大于: 6, mgo常量.X条件小于: 8}}}).X取全部(&batch)
 	fmt.Println("用qmgo包装后的常量,年龄大于6且小于8-->", batch)
 }
 
@@ -117,7 +117,7 @@ func Test_求值(t *testing.T) {
 	//www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/query-document/#evaluation
 	//$regex操作符, 支持正则表达式, 匹配"名称"以b2开头的.
 	batch := []X记账{}
-	cli.X查询(ctx, bson.D{{"名称", bson.M{操作符.X条件正则: "^b2.*"}}}).X取全部(&batch)
+	cli.X查询(ctx, bson.D{{"名称", bson.M{mgo常量.X条件正则: "^b2.*"}}}).X取全部(&batch)
 	fmt.Println("$regex操作符-->", batch)
 
 	//$expr操作符, 支持把查询字段作为变量来比较.
@@ -134,7 +134,7 @@ func Test_求值(t *testing.T) {
 
 func Test_取文档数量(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/read-operations/count/#std-label-golang-estimated-count
-	文档数量, _ := cli.X查询(ctx, bson.D{{"名称", bson.M{操作符.X条件正则: "^b.*"}}}).X取数量()
+	文档数量, _ := cli.X查询(ctx, bson.D{{"名称", bson.M{mgo常量.X条件正则: "^b.*"}}}).X取数量()
 	fmt.Println(文档数量)
 }
 

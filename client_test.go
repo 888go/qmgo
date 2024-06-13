@@ -36,10 +36,10 @@ func initClient(col string) *XMongo客户端 {
 	var maxPoolSize uint64 = 30000
 	var minPoolSize uint64 = 0
 	cfg.X连接超时毫秒 = &cTimeout
-	cfg.X身份凭证 = &sTimeout
+	cfg.X套接字超时毫秒 = &sTimeout
 	cfg.X最大连接池大小 = &maxPoolSize
 	cfg.X最小连接池大小 = &minPoolSize
-	cfg.ReadPreference = &X读取偏好{Mode: readpref.PrimaryMode}
+	cfg.X读取偏好 = &X读取偏好{Mode: readpref.PrimaryMode}
 	qClient, err := X连接(context.Background(), &cfg)
 	if err != nil {
 		fmt.Println(err)
@@ -73,7 +73,7 @@ func TestQmgoClient(t *testing.T) {
 		X连接超时毫秒: &timeout,
 		X最大连接池大小:      &maxPoolSize,
 		X最小连接池大小:      &minPoolSize,
-		ReadPreference:   &X读取偏好{Mode: readpref.SecondaryMode, X最大延迟毫秒: 500},
+		X读取偏好:   &X读取偏好{Mode: readpref.SecondaryMode, X最大延迟毫秒: 500},
 	}
 
 	cli, err := X连接(context.Background(), &cfg)
@@ -105,7 +105,7 @@ func TestQmgoClient(t *testing.T) {
 		X集合名:             "testopen",
 		X连接超时毫秒: &timeout,
 		X最大连接池大小:      &maxPoolSize,
-		ReadPreference:   &X读取偏好{Mode: readpref.PrimaryMode, X最大延迟毫秒: 500},
+		X读取偏好:   &X读取偏好{Mode: readpref.PrimaryMode, X最大延迟毫秒: 500},
 	}
 
 	cli, err = X连接(context.Background(), &cfg)

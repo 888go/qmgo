@@ -42,7 +42,7 @@ func TestBeforeInsert(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, 操作符.X钩子_插入前)
+	err := Do(ctx, u, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 	// default fields
 	ast.NotEqual(time.Time{}, u.X创建时间)
@@ -55,7 +55,7 @@ func TestBeforeInsert(t *testing.T) {
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alice", Age: 8}
 	us := []*User{u1, u2}
-	err = Do(ctx, us, 操作符.X钩子_插入前)
+	err = Do(ctx, us, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 
 	for _, v := range us {
@@ -65,7 +65,7 @@ func TestBeforeInsert(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, 操作符.X钩子_插入前)
+	err = Do(ctx, u3, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 
 	// insert with valid value
@@ -79,7 +79,7 @@ func TestBeforeInsert(t *testing.T) {
 	u.CreateTimeAt = tBefore3s
 	u.UpdateTimeAt = tBefore3s.Unix()
 
-	err = Do(ctx, u, 操作符.X钩子_替换插入前)
+	err = Do(ctx, u, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	ast.Equal(tBefore3s, u.X创建时间)
@@ -96,7 +96,7 @@ func TestBeforeUpdate(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, 操作符.X钩子_更新前)
+	err := Do(ctx, u, mgo常量.X钩子_更新前)
 	ast.NoError(err)
 	// default field
 	ast.NotEqual(time.Time{}, u.X更新时间)
@@ -106,7 +106,7 @@ func TestBeforeUpdate(t *testing.T) {
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alice", Age: 8}
 	us := []*User{u1, u2}
-	err = Do(ctx, us, 操作符.X钩子_更新前)
+	err = Do(ctx, us, mgo常量.X钩子_更新前)
 	ast.NoError(err)
 	for _, v := range us {
 		// default field
@@ -117,7 +117,7 @@ func TestBeforeUpdate(t *testing.T) {
 	}
 
 	us1 := []interface{}{u1, u2}
-	err = Do(ctx, us1, 操作符.X钩子_更新前)
+	err = Do(ctx, us1, mgo常量.X钩子_更新前)
 	ast.NoError(err)
 	for _, v := range us {
 		// default field
@@ -149,7 +149,7 @@ func TestBeforeUpsert(t *testing.T) {
 
 	// with empty fields
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, 操作符.X钩子_替换插入前)
+	err := Do(ctx, u, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 	// default fields
 	ast.NotEqual(time.Time{}, u.X创建时间)
@@ -162,7 +162,7 @@ func TestBeforeUpsert(t *testing.T) {
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alice", Age: 8}
 	us := []*User{u1, u2}
-	err = Do(ctx, us, 操作符.X钩子_替换插入前)
+	err = Do(ctx, us, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	for _, v := range us {
@@ -174,7 +174,7 @@ func TestBeforeUpsert(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, 操作符.X钩子_替换插入前)
+	err = Do(ctx, u3, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	// upsert with valid value
@@ -188,7 +188,7 @@ func TestBeforeUpsert(t *testing.T) {
 	u.CreateTimeAt = tBefore3s
 	u.UpdateTimeAt = tBefore3s.Unix()
 
-	err = Do(ctx, u, 操作符.X钩子_替换插入前)
+	err = Do(ctx, u, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	ast.Equal(tBefore3s, u.X创建时间)
@@ -208,7 +208,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 
 	// with empty fileds
 	u := &UserField{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, 操作符.X钩子_替换插入前)
+	err := Do(ctx, u, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 	// default fields
 	ast.NotEqual(time.Time{}, u.X创建时间)
@@ -221,7 +221,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 
 	u1, u2 := &UserField{Name: "Lucas", Age: 7}, &UserField{Name: "Alice", Age: 8}
 	us := []*UserField{u1, u2}
-	err = Do(ctx, us, 操作符.X钩子_替换插入前)
+	err = Do(ctx, us, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	for _, v := range us {
@@ -233,7 +233,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, 操作符.X钩子_替换插入前)
+	err = Do(ctx, u3, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	// upsert with valid value
@@ -247,7 +247,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 	u.CreateTimeAt = tBefore3s.Unix()
 	u.UpdateTimeAt = tBefore3s
 
-	err = Do(ctx, u, 操作符.X钩子_替换插入前)
+	err = Do(ctx, u, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 	ast.Equal(tBefore3s, u.X创建时间)
@@ -264,7 +264,7 @@ func TestNilError(t *testing.T) {
 	ast := require.New(t)
 	ctx := context.Background()
 
-	err := Do(ctx, nil, 操作符.X钩子_替换插入前)
+	err := Do(ctx, nil, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 }

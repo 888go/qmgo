@@ -37,10 +37,10 @@ func initTransactionClient(coll string) *XMongo客户端 {
 	var maxPoolSize uint64 = 30000
 	var minPoolSize uint64 = 0
 	cfg.X连接超时毫秒 = &cTimeout
-	cfg.X身份凭证 = &sTimeout
+	cfg.X套接字超时毫秒 = &sTimeout
 	cfg.X最大连接池大小 = &maxPoolSize
 	cfg.X最小连接池大小 = &minPoolSize
-	cfg.ReadPreference = &X读取偏好{Mode: readpref.PrimaryMode}
+	cfg.X读取偏好 = &X读取偏好{Mode: readpref.PrimaryMode}
 	qClient, err := X连接(context.Background(), &cfg)
 	if err != nil {
 		fmt.Println(err)

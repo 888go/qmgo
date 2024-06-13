@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package 操作符
+package mgo常量
 
 //Query Modifiers
 // refer:https://docs.mongodb.com/manual/reference/operator/query-modifier/

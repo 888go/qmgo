@@ -170,14 +170,14 @@ func TestUpdateHook(t *testing.T) {
 	res, err := cli.X插入(context.Background(), u)
 	ast.NoError(err)
 
-	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: uh,
 	})
 	ast.NoError(err)
 	ast.Equal(1, uh.beforeUpdateCount)
 	ast.Equal(1, uh.afterUpdateCount)
 
-	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: uh,
 	})
 	ast.NoError(err)
@@ -196,7 +196,7 @@ func TestUpdateHook(t *testing.T) {
 	ast.Equal(2, u.beforeCount)
 	ast.Equal(2, u.afterCount)
 
-	cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: uh,
 	})
 	ast.NoError(err)
@@ -422,14 +422,14 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myHook1.afterICount)
 	ast.Equal(0, myHook2.afterICount)
 
-	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myHook.beforeUCount)
 	ast.Equal(0, myHook.afterUCount)
 
-	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myHook,
 	})
 	ast.Error(err)
@@ -437,13 +437,13 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myHook.afterUCount)
 
 	myUpdateHook := &MyErrorHook{}
-	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myUpdateHook.beforeUCount)
 	ast.Equal(0, myUpdateHook.afterUCount)
-	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateHook,
 	})
 	ast.Error(err)
@@ -451,14 +451,14 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myUpdateHook.afterUCount)
 
 	myUpdateAllHook := &MyErrorHook{}
-	_, err = cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	_, err = cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateAllHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myUpdateAllHook.beforeUCount)
 	ast.Equal(0, myUpdateAllHook.afterUCount)
 
-	_, err = cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{操作符.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	_, err = cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateAllHook,
 	})
 	ast.Error(err)

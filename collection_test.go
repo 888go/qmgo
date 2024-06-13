@@ -118,14 +118,14 @@ func TestCollection_DropAllIndexes(t *testing.T) {
 	defer cli.X删除集合(context.Background())
 
 	var err error
-	err = cli.DropAllIndexes(context.Background())
+	err = cli.X删除全部索引(context.Background())
 	ast.Error(err)
 
 	unique := []string{"id1"}
 	common := []string{"id2,id3", "id4,-id5"}
 	cli.EnsureIndexes弃用(context.Background(), unique, common)
 
-	err = cli.DropAllIndexes(context.Background())
+	err = cli.X删除全部索引(context.Background())
 	ast.NoError(err)
 }
 
@@ -413,7 +413,7 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Alice",
 	}
 	update1 := bson.M{
-		操作符.X更新值: bson.M{
+		mgo常量.X更新值: bson.M{
 			"name": "Alice1",
 			"age":  18,
 		},
@@ -428,7 +428,7 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Lily",
 	}
 	update2 := bson.M{
-		操作符.X更新值: bson.M{
+		mgo常量.X更新值: bson.M{
 			"name": "Lily",
 			"age":  20,
 		},
@@ -481,7 +481,7 @@ func TestCollection_UpdateId(t *testing.T) {
 	var err error
 	// update already exist record
 	update1 := bson.M{
-		操作符.X更新值: bson.M{
+		mgo常量.X更新值: bson.M{
 			"name": "Alice1",
 			"age":  18,
 		},
@@ -532,7 +532,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 		"name": "Alice",
 	}
 	update1 := bson.M{
-		操作符.X更新值: bson.M{
+		mgo常量.X更新值: bson.M{
 			"age": 33,
 		},
 	}
@@ -551,7 +551,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 		"name": "Lily",
 	}
 	update2 := bson.M{
-		操作符.X更新值: bson.M{
+		mgo常量.X更新值: bson.M{
 			"age": 22,
 		},
 	}

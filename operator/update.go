@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package 操作符
+package mgo常量
 
 // define the update operators
 // refer: https://docs.mongodb.com/manual/reference/operator/update/

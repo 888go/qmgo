@@ -85,7 +85,7 @@ func Test_更新数值相乘(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/manual/reference/operator/update/mul/#examples
 	//更新要特别注意同原类型, 否则会导致后期读取失败.
 	//把姓名为张三的,年龄乘以100后更新
-	result, err := cli.X更新(ctx, bson.M{"姓名": "张三"}, bson.M{操作符.X更新相乘: bson.M{"年龄": 100}})
+	result, err := cli.X更新(ctx, bson.M{"姓名": "张三"}, bson.M{mgo常量.X更新相乘: bson.M{"年龄": 100}})
 	fmt.Println(result.X匹配数, err)
 }
 

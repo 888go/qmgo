@@ -61,7 +61,7 @@ func (c *X文档集合) X插入(上下文 context.Context, 待插入文档 inter
 			h = 可选选项[0].InsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X钩子_插入前, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, mgo常量.X钩子_插入前, h); 错误 != nil {
 		return
 	}
 	res, 错误 := c.collection.InsertOne(上下文, 待插入文档, insertOneOpts)
@@ -71,7 +71,7 @@ func (c *X文档集合) X插入(上下文 context.Context, 待插入文档 inter
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X钩子_插入后, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, mgo常量.X钩子_插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -91,7 +91,7 @@ func (c *X文档集合) X插入多个(上下文 context.Context, 待插入文档
 			h = 可选选项[0].InsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X钩子_插入前, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, mgo常量.X钩子_插入前, h); 错误 != nil {
 		return
 	}
 	sDocs := interfaceToSliceInterface(待插入文档)
@@ -106,7 +106,7 @@ func (c *X文档集合) X插入多个(上下文 context.Context, 待插入文档
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 待插入文档, 操作符.X钩子_插入后, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 待插入文档, mgo常量.X钩子_插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -147,7 +147,7 @@ func (c *X文档集合) X替换插入(上下文 context.Context, 替换条件 in
 			h = 可选选项[0].UpsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X钩子_替换插入前, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, mgo常量.X钩子_替换插入前, h); 错误 != nil {
 		return
 	}
 
@@ -159,7 +159,7 @@ func (c *X文档集合) X替换插入(上下文 context.Context, 替换条件 in
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X钩子_替换插入后, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, mgo常量.X钩子_替换插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -182,7 +182,7 @@ func (c *X文档集合) X替换插入并按ID(上下文 context.Context, 替换I
 			h = 可选选项[0].UpsertHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X钩子_替换插入前, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, mgo常量.X钩子_替换插入前, h); 错误 != nil {
 		return
 	}
 	res, 错误 := c.collection.ReplaceOne(上下文, bson.M{"_id": 替换ID}, 替换内容, officialOpts)
@@ -192,7 +192,7 @@ func (c *X文档集合) X替换插入并按ID(上下文 context.Context, 替换I
 	if 错误 != nil {
 		return
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X钩子_替换插入后, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, mgo常量.X钩子_替换插入后, h); 错误 != nil {
 		return
 	}
 	return
@@ -208,7 +208,7 @@ func (c *X文档集合) X更新一条(上下文 context.Context, 更新条件 in
 			updateOpts = 可选选项[0].UpdateOptions
 		}
 		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X钩子_更新前); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, mgo常量.X钩子_更新前); 错误 != nil {
 				return
 			}
 		}
@@ -225,7 +225,7 @@ func (c *X文档集合) X更新一条(上下文 context.Context, 更新条件 in
 		return 错误
 	}
 	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X钩子_更新后); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, mgo常量.X钩子_更新后); 错误 != nil {
 			return
 		}
 	}
@@ -242,7 +242,7 @@ func (c *X文档集合) X更新并按ID(上下文 context.Context, 更新ID inte
 			updateOpts = 可选选项[0].UpdateOptions
 		}
 		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X钩子_更新前); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, mgo常量.X钩子_更新前); 错误 != nil {
 				return
 			}
 		}
@@ -256,7 +256,7 @@ func (c *X文档集合) X更新并按ID(上下文 context.Context, 更新ID inte
 		return 错误
 	}
 	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X钩子_更新后); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, mgo常量.X钩子_更新后); 错误 != nil {
 			return
 		}
 	}
@@ -273,7 +273,7 @@ func (c *X文档集合) X更新(上下文 context.Context, 更新条件 interfac
 			updateOpts = 可选选项[0].UpdateOptions
 		}
 		if 可选选项[0].UpdateHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X钩子_更新前); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, mgo常量.X钩子_更新前); 错误 != nil {
 				return
 			}
 		}
@@ -286,7 +286,7 @@ func (c *X文档集合) X更新(上下文 context.Context, 更新条件 interfac
 		return
 	}
 	if len(可选选项) > 0 && 可选选项[0].UpdateHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, 操作符.X钩子_更新后); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].UpdateHook, mgo常量.X钩子_更新后); 错误 != nil {
 			return
 		}
 	}
@@ -309,7 +309,7 @@ func (c *X文档集合) X替换一条(上下文 context.Context, 替换条件 in
 			h = 可选选项[0].UpdateHook
 		}
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X钩子_替换前, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, mgo常量.X钩子_替换前, h); 错误 != nil {
 		return
 	}
 	res, 错误 := c.collection.ReplaceOne(上下文, 替换条件, 替换内容, replaceOpts)
@@ -319,7 +319,7 @@ func (c *X文档集合) X替换一条(上下文 context.Context, 替换条件 in
 	if 错误 != nil {
 		return 错误
 	}
-	if 错误 = middleware.Do(上下文, 替换内容, 操作符.X钩子_替换后, h); 错误 != nil {
+	if 错误 = middleware.Do(上下文, 替换内容, mgo常量.X钩子_替换后, h); 错误 != nil {
 		return
 	}
 
@@ -336,7 +336,7 @@ func (c *X文档集合) X删除一条(上下文 context.Context, 删除条件 in
 			deleteOptions = 可选选项[0].DeleteOptions
 		}
 		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X钩子_删除前); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, mgo常量.X钩子_删除前); 错误 != nil {
 				return 错误
 			}
 		}
@@ -349,7 +349,7 @@ func (c *X文档集合) X删除一条(上下文 context.Context, 删除条件 in
 		return 错误
 	}
 	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X钩子_删除后); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, mgo常量.X钩子_删除后); 错误 != nil {
 			return 错误
 		}
 	}
@@ -364,7 +364,7 @@ func (c *X文档集合) X删除并按ID(上下文 context.Context, 删除ID inte
 			deleteOptions = 可选选项[0].DeleteOptions
 		}
 		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X钩子_删除前); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, mgo常量.X钩子_删除前); 错误 != nil {
 				return 错误
 			}
 		}
@@ -378,7 +378,7 @@ func (c *X文档集合) X删除并按ID(上下文 context.Context, 删除ID inte
 	}
 
 	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X钩子_删除后); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, mgo常量.X钩子_删除后); 错误 != nil {
 			return 错误
 		}
 	}
@@ -395,7 +395,7 @@ func (c *X文档集合) X删除(上下文 context.Context, 删除条件 interfac
 			deleteOptions = 可选选项[0].DeleteOptions
 		}
 		if 可选选项[0].RemoveHook != nil {
-			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X钩子_删除前); 错误 != nil {
+			if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, mgo常量.X钩子_删除前); 错误 != nil {
 				return
 			}
 		}
@@ -408,7 +408,7 @@ func (c *X文档集合) X删除(上下文 context.Context, 删除条件 interfac
 		return
 	}
 	if len(可选选项) > 0 && 可选选项[0].RemoveHook != nil {
-		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, 操作符.X钩子_删除后); 错误 != nil {
+		if 错误 = middleware.Do(上下文, 可选选项[0].RemoveHook, mgo常量.X钩子_删除后); 错误 != nil {
 			return
 		}
 	}
@@ -507,9 +507,9 @@ func (c *X文档集合) X创建索引(上下文 context.Context, 索引 opts.X�
 
 }
 
-// DropAllIndexes drop all indexes on the collection except the index on the _id field
+// X删除全部索引 drop all indexes on the collection except the index on the _id field
 // if there is only _id field index on the collection, the function call will report an error
-func (c *X文档集合) DropAllIndexes(上下文 context.Context) (错误 error) {
+func (c *X文档集合) X删除全部索引(上下文 context.Context) (错误 error) {
 	_, 错误 = c.collection.Indexes().DropAll(上下文)
 	return 错误
 }

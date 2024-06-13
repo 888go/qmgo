@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package 操作符
+package mgo常量
 
 // define the aggregation pipeline stages
 // refer: https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
@@ -27,7 +27,7 @@ const (
 	GraphLookup    = "$graphLookup"
 	X聚合分组          = "$group"
 	IndexStats     = "$indexStats"
-	Limit          = "$limit"
+	X聚合限制数量          = "$limit"
 	ListSessions   = "$listSessions"
 	X聚合关联集合         = "$lookup"
 	X聚合条件          = "$match"

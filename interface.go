@@ -32,7 +32,7 @@ import "go.mongodb.org/mongo-driver/mongo/options"
 
 // Change holds fields for running a findAndModify command via the Query.Apply method.
 type Change struct {
-	Update    interface{} // update/replace document
+	X更新替换    interface{} // update/replace document
 	X是否替换   bool        // Whether to replace the document rather than updating
 	X是否删除    bool        // Whether to remove the document found rather than updating
 	X是否未找到时插入    bool        // Whether to insert in case the document isn't found, take effect when Remove is false

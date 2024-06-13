@@ -703,8 +703,8 @@ func TestQuery_Apply(t *testing.T) {
 	err = cli.X查询(context.Background(), filter1).X执行命令(change1, &res1)
 	ast.EqualError(err, mongo.ErrNilDocument.Error())
 
-	change1.Update = bson.M{
-		操作符.X更新值: bson.M{
+	change1.X更新替换 = bson.M{
+		mgo常量.X更新值: bson.M{
 			"name": "Tom",
 			"age":  18,
 		},
@@ -723,8 +723,8 @@ func TestQuery_Apply(t *testing.T) {
 	ast.Equal("", res1.Name)
 	ast.Equal(0, res1.Age)
 
-	change1.Update = bson.M{
-		操作符.X更新值: bson.M{
+	change1.X更新替换 = bson.M{
+		mgo常量.X更新值: bson.M{
 			"name": "Tom",
 			"age":  19,
 		},
@@ -742,8 +742,8 @@ func TestQuery_Apply(t *testing.T) {
 	}
 	change2 := Change{
 		X是否返回新文档: true,
-		Update: bson.M{
-			操作符.X更新值: bson.M{
+		X更新替换: bson.M{
+			mgo常量.X更新值: bson.M{
 				"name": "Alice",
 				"age":  22,
 			},
@@ -785,8 +785,8 @@ func TestQuery_Apply(t *testing.T) {
 	}
 	change4 := Change{
 		X是否替换: true,
-		Update: bson.M{
-			操作符.X更新值: bson.M{
+		X更新替换: bson.M{
+			mgo常量.X更新值: bson.M{
 				"name": "Bob",
 				"age":  23,
 			},
@@ -795,7 +795,7 @@ func TestQuery_Apply(t *testing.T) {
 	err = cli.X查询(context.Background(), filter4).X执行命令(change4, &res4)
 	ast.EqualError(err, X错误_替换_文档含更新操作符.Error())
 
-	change4.Update = bson.M{"name": "Bob", "age": 23}
+	change4.X更新替换 = bson.M{"name": "Bob", "age": 23}
 	err = cli.X查询(context.Background(), filter4).X执行命令(change4, &res4)
 	ast.EqualError(err, mongo.ErrNoDocuments.Error())
 
@@ -812,7 +812,7 @@ func TestQuery_Apply(t *testing.T) {
 
 	change4 = Change{
 		X是否替换:   true,
-		Update:    bson.M{"name": "Bob", "age": 25},
+		X更新替换:    bson.M{"name": "Bob", "age": 25},
 		X是否未找到时插入:    true,
 		X是否返回新文档: false,
 	}
@@ -831,7 +831,7 @@ func TestQuery_Apply(t *testing.T) {
 	}
 	change4 = Change{
 		X是否替换:   true,
-		Update:    bson.M{"name": "James", "age": 26},
+		X更新替换:    bson.M{"name": "James", "age": 26},
 		X是否未找到时插入:    true,
 		X是否返回新文档: false,
 	}
@@ -843,7 +843,7 @@ func TestQuery_Apply(t *testing.T) {
 	var res5 = QueryTestItem{}
 	filter5 := bson.M{"name": "Lucas"}
 	change5 := Change{
-		Update:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
+		X更新替换:    bson.M{"$set": bson.M{"instock.$[elem].qty": 100}},
 		X是否返回新文档: true,
 	}
 	err = cli.X查询(context.Background(), filter5).X设置切片过滤(&options.ArrayFilters{Filters: []interface{}{

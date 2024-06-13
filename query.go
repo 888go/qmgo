@@ -146,7 +146,7 @@ func (q *X查询) X设置最大返回数(数量 int64) QueryI {
 // If the search fails, an error will be returned
 func (q *X查询) X取一条(结果指针 interface{}) error {
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X钩子_查询前); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询前); err != nil {
 			return err
 		}
 	}
@@ -174,7 +174,7 @@ func (q *X查询) X取一条(结果指针 interface{}) error {
 		return err
 	}
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X钩子_查询后); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询后); err != nil {
 			return err
 		}
 	}
@@ -185,7 +185,7 @@ func (q *X查询) X取一条(结果指针 interface{}) error {
 // The static type of result must be a slice pointer
 func (q *X查询) X取全部(结果指针 interface{}) error {
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X钩子_查询前); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询前); err != nil {
 			return err
 		}
 	}
@@ -230,7 +230,7 @@ func (q *X查询) X取全部(结果指针 interface{}) error {
 		return err
 	}
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, 操作符.X钩子_查询后); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询后); err != nil {
 			return err
 		}
 	}
@@ -397,7 +397,7 @@ func (q *X查询) findOneAndReplace(change Change, result interface{}) error {
 		opts.SetReturnDocument(options.After)
 	}
 
-	err := q.collection.FindOneAndReplace(q.ctx, q.filter, change.Update, opts).Decode(result)
+	err := q.collection.FindOneAndReplace(q.ctx, q.filter, change.X更新替换, opts).Decode(result)
 	if change.X是否未找到时插入 && !change.X是否返回新文档 && err == mongo.ErrNoDocuments {
 		return nil
 	}
@@ -426,7 +426,7 @@ func (q *X查询) findOneAndUpdate(change Change, result interface{}) error {
 		opts.SetArrayFilters(*q.arrayFilters)
 	}
 
-	err := q.collection.FindOneAndUpdate(q.ctx, q.filter, change.Update, opts).Decode(result)
+	err := q.collection.FindOneAndUpdate(q.ctx, q.filter, change.X更新替换, opts).Decode(result)
 	if change.X是否未找到时插入 && !change.X是否返回新文档 && err == mongo.ErrNoDocuments {
 		return nil
 	}
