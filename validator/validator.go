@@ -6,42 +6,29 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/qiniu/qmgo/operator"
+	"github.com/888go/qmgo/operator"
 )
 
-// 使用单例的Validate，它缓存结构体信息 md5:37316caf6446b052
+// use a single instance of Validate, it caches struct info
 var validate = validator.New()
 
-// SetValidate 允许使用自定义规则进行验证 md5:c45d0acce1bafd26
-// [提示:] func 设置验证器(验证器指针 *validator.Validate) {}
-// ff:
-// v:
+// SetValidate let validate can use custom rules
 func SetValidate(v *validator.Validate) {
 	validate = v
 }
 
-// validatorNeeded 检查操作类型（opType）是否需要验证器 md5:69c24cea9b0cf3e4
-func validatorNeeded(opType operator.OpType) bool {
+// validatorNeeded checks if the validator is needed to opType
+func validatorNeeded(opType 操作符.OpType) bool {
 	switch opType {
-	case operator.BeforeInsert, operator.BeforeUpsert, operator.BeforeReplace:
+	case 操作符.X钩子_插入前, 操作符.X钩子_替换插入前, 操作符.X钩子_替换前:
 		return true
 	}
 	return false
 }
 
-// Do 调用验证器检查
-// 不要在這裡使用 opts
-// md5:a3e02eb169c74704
-// [提示]
-//// 执行上下文，文档接口
-// func ExecuteInContext(操作上下文 context.Context, 文档 interface{}) 
-// [结束]
-// ff:
-// ctx:
-// doc:
-// opType:
-// opts:
-func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
+// Do calls validator check
+// Don't use opts here
+func Do(ctx context.Context, doc interface{}, opType 操作符.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil
 	}
@@ -65,9 +52,9 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 	}
 }
 
-// sliceHandle处理切片文档 md5:92800dd5899836ce
-func sliceHandle(docs interface{}, opType operator.OpType) error {
-	// []interface{}{UserType实例...} md5:bda81608072dd1ad
+// sliceHandle handles the slice docs
+func sliceHandle(docs interface{}, opType 操作符.OpType) error {
+	// []interface{}{UserType{}...}
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v); err != nil {
@@ -87,7 +74,7 @@ func sliceHandle(docs interface{}, opType operator.OpType) error {
 	return nil
 }
 
-// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
+// do check if opType is supported and call fieldHandler
 func do(doc interface{}) error {
 	if !validatorStruct(doc) {
 		return nil
@@ -95,9 +82,8 @@ func do(doc interface{}) error {
 	return validate.Struct(doc)
 }
 
-// validatorStruct 检查doc的类型是否为validator支持的结构体
-// 实现方式与validator相同
-// md5:566d3931e3bc9c80
+// validatorStruct check if kind of doc is validator supported struct
+// same implement as validator
 func validatorStruct(doc interface{}) bool {
 	val := reflect.ValueOf(doc)
 	if val.Kind() == reflect.Ptr && !val.IsNil() {

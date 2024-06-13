@@ -44,7 +44,7 @@ qm=聚合分组
 cz=Group #等号# "$group"
 
 [Limit = "$limit"]
-qm=聚合限制数量 Limit #等号# "$limit"
+qm=聚合限制数量
 cz=Limit #等号# "$limit"
 
 [Lookup = "$lookup"]

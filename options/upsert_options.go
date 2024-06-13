@@ -15,12 +15,6 @@ package options
 
 import "go.mongodb.org/mongo-driver/mongo/options"
 
-// [提示]
-//type 更新选项 struct {
-//     更新钩子 interface{}
-//     *替换选项
-// }
-// [结束]
 type UpsertOptions struct {
 	UpsertHook interface{}
 	*options.ReplaceOptions

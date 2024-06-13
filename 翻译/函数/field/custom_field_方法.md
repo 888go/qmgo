@@ -44,15 +44,12 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
  但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
 [func (c *CustomFields) SetUpdateAt(fieldName string) CustomFieldsBuilder {]
-ff=设置更新时间字段名
 fieldName=字段名称
 
 [func (c *CustomFields) SetCreateAt(fieldName string) CustomFieldsBuilder {]
-ff=设置创建时间字段名
 fieldName=字段名称
 
 [func (c *CustomFields) SetId(fieldName string) CustomFieldsBuilder {]
-ff=设置ID字段名
 fieldName=字段名称
 
 [func (c CustomFields) CustomCreateTime(doc interface{}) {]

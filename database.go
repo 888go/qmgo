@@ -11,105 +11,77 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
 
-	"github.com/qiniu/qmgo/options"
+	"github.com/888go/qmgo/options"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/mongo"
 	officialOpts "go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Database 是一个指向 MongoDB 数据库的句柄 md5:9217ae5bd9047e3a
-// [提示]
-//type 数据库 struct {
-//     数据库实例 *mongo.Database
-//     编码注册器 *bsoncodec.Registry
-// }
-// [结束]
-type Database struct {//hm:数据库  cz:type Database  
+// X数据库 is a handle to a MongoDB database
+type X数据库 struct {
 	database *mongo.Database
 
 	registry *bsoncodec.Registry
 }
 
-// Collection 从数据库中获取集合 md5:c5489f5523d5a33d
-// [提示:] func (d *数据库) Collection(名称 string, 选项 ...*options.集合选项) *集合 {}
-// ff:取集合
-// d:
-// name:名称
-// opts:可选选项
-func (d *Database) Collection(name string, opts ...*options.CollectionOptions) *Collection {
+// X取集合 gets collection from database
+func (d *X数据库) X取集合(名称 string, 可选选项 ...*options.CollectionOptions) *X文档集合 {
 	var cp *mongo.Collection
-	var opt = make([]*officialOpts.CollectionOptions, 0, len(opts))
-	for _, o := range opts {
+	var opt = make([]*officialOpts.CollectionOptions, 0, len(可选选项))
+	for _, o := range 可选选项 {
 		opt = append(opt, o.CollectionOptions)
 	}
 	collOpt := officialOpts.MergeCollectionOptions(opt...)
-	cp = d.database.Collection(name, collOpt)
+	cp = d.database.Collection(名称, collOpt)
 
-	return &Collection{
+	return &X文档集合{
 		collection: cp,
 		registry:   d.registry,
 	}
 }
 
-// GetDatabaseName 返回数据库的名称 md5:716064a488e6db8b
-// [提示:] func (d *数据库) 获取数据库名称() 字符串 {}
-// ff:取数据库名称
-// d:
-func (d *Database) GetDatabaseName() string {
+// X取数据库名称 returns the name of database
+func (d *X数据库) X取数据库名称() string {
 	return d.database.Name()
 }
 
-// DropDatabase 删除数据库 md5:aeac2378daa25d5f
-// [提示:] func (d *数据库) 删除数据库(ctx 上下文.Context) 错误 {}
-// ff:删除数据库
-// d:
-// ctx:上下文
-func (d *Database) DropDatabase(ctx context.Context) error {
-	return d.database.Drop(ctx)
+// X删除数据库 drops database
+func (d *X数据库) X删除数据库(上下文 context.Context) error {
+	return d.database.Drop(上下文)
 }
 
-// RunCommand 在数据库上执行给定的命令。
+// X执行命令 executes the given command against the database.
 //
-// runCommand 参数必须是将要执行的命令文档。它不能为 nil。这必须是一个保持顺序的类型，如 bson.D。像 bson.M 这样的映射类型是无效的。
-// 如果命令文档包含会话 ID 或任何事务特定字段，其行为是未定义的。
+// The runCommand parameter must be a document for the command to be executed. It cannot be nil.
+// This must be an order-preserving type such as bson.D. Map types such as bson.M are not valid.
+// If the command document contains a session ID or any transaction-specific fields, the behavior is undefined.
 //
-// 可以使用 opts 参数来指定此操作的选项（参阅 options.RunCmdOptions 的文档）。
-// md5:eb93f7217a15650c
-// [提示:] func (d *数据库) 执行命令(ctx 上下文 контекст, runCommand 命令结构体)
-// ff:执行命令
-// d:
-// ctx:上下文
-// runCommand:
-// opts:可选选项
-func (d *Database) RunCommand(ctx context.Context, runCommand interface{}, opts ...options.RunCommandOptions) *mongo.SingleResult {
+// The opts parameter can be used to specify options for this operation (see the options.RunCmdOptions documentation).
+func (d *X数据库) X执行命令(上下文 context.Context, runCommand interface{}, 可选选项 ...options.RunCommandOptions) *mongo.SingleResult {
 	option := officialOpts.RunCmd()
-	if len(opts) > 0 && opts[0].RunCmdOptions != nil {
-		option = opts[0].RunCmdOptions
+	if len(可选选项) > 0 && 可选选项[0].RunCmdOptions != nil {
+		option = 可选选项[0].RunCmdOptions
 	}
-	return d.database.RunCommand(ctx, runCommand, option)
+	return d.database.RunCommand(上下文, runCommand, option)
 }
 
-// CreateCollection 执行一个创建命令，明确在服务器上使用指定名称创建一个新的集合。如果正在创建的集合已经存在，此方法将返回一个 mongo.CommandError。此方法需要驱动程序版本 1.4.0 或更高版本。
-// 
-// 参数 opts 可用于指定操作选项（请参阅 options.CreateCollectionOptions 的文档）。
-// md5:7bd165db4ed05d28
-// [提示:] func (db *数据库) 创建集合(ctx 上下文, 名称 string, 选项 ...options.创建集合选项) error {}
-// ff:创建集合
-// db:
-// ctx:上下文
-// name:集合名称
-// opts:可选选项
-func (db *Database) CreateCollection(ctx context.Context, name string, opts ...options.CreateCollectionOptions) error {
-	var option = make([]*officialOpts.CreateCollectionOptions, 0, len(opts))
-	for _, opt := range opts {
+// X创建集合 executes a create command to explicitly create a new collection with the specified name on the
+// server. If the collection being created already exists, this method will return a mongo.CommandError. This method
+// requires driver version 1.4.0 or higher.
+//
+// The opts parameter can be used to specify options for the operation (see the options.CreateCollectionOptions
+// documentation).
+func (db *X数据库) X创建集合(上下文 context.Context, 集合名称 string, 可选选项 ...options.CreateCollectionOptions) error {
+	var option = make([]*officialOpts.CreateCollectionOptions, 0, len(可选选项))
+	for _, opt := range 可选选项 {
 		if opt.CreateCollectionOptions != nil {
 			option = append(option, opt.CreateCollectionOptions)
 		}
 	}
-	return db.database.CreateCollection(ctx, name, option...)
+	return db.database.CreateCollection(上下文, 集合名称, option...)
 }

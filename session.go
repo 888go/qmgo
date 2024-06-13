@@ -11,87 +11,62 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
 
-	opts "github.com/qiniu/qmgo/options"
+	opts "github.com/888go/qmgo/options"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/x/mongo/driver"
 )
 
-// Session 是一个结构体，表示 MongoDB 的逻辑会话 md5:a17367bc3a251e77
-// [提示]
-//type 会话 struct {
-//     会话接口 mongo.会话
-// }
-// [结束]
-type Session struct {//hm:Session事务  cz:type Session  
+// XSession事务 is an struct that represents a MongoDB logical session
+type XSession事务 struct {
 	session mongo.Session
 }
 
-// StartTransaction 开始一个事务
-// 预条件：
-// - MongoDB服务器版本大于等于v4.0
-// - MongoDB服务器的拓扑结构不是单节点
-// 同时需要注意：
-//   - 确保回调中的所有操作将sessCtx作为上下文参数
-//   - 如果不再使用session，别忘了调用EndSession
-//   - 如果回调中的操作耗时超过（包括等于）120秒，这些操作将不会生效
-//   - 如果回调中的操作返回qmgo.ErrTransactionRetry错误，
-//     整个事务将会重试，因此这个事务必须是幂等的
-//   - 如果回调中的操作返回qmgo.ErrTransactionNotSupported错误，
-//   - 如果ctx参数中已经附加了一个Session，它将被此session替换。
-//
-// md5:7a854b4c45212490
-// [提示]
-//// 开始事务
-// func (s *Session) 开始事务(ctx 上下文.Context, cb func(会话上下文 context.Context) (结果 interface{})) 
-// [结束]
-// ff:开始事务
-// s:
-// ctx:上下文
-// cb:回调函数
-// sessCtx:事务上下文
-// opts:可选选项
-func (s *Session) StartTransaction(ctx context.Context, cb func(sessCtx context.Context) (interface{}, error), opts ...*opts.TransactionOptions) (interface{}, error) {
+// X开始事务 starts transaction
+//precondition：
+//- version of mongoDB server >= v4.0
+//- Topology of mongoDB server is not Single
+//At the same time, please pay attention to the following
+//- make sure all operations in callback use the sessCtx as context parameter
+//- Dont forget to call EndSession if session is not used anymore
+//- if operations in callback takes more than(include equal) 120s, the operations will not take effect,
+//- if operation in callback return qmgo.ErrTransactionRetry,
+//  the whole transaction will retry, so this transaction must be idempotent
+//- if operations in callback return qmgo.ErrTransactionNotSupported,
+//- If the ctx parameter already has a Session attached to it, it will be replaced by this session.
+func (s *XSession事务) X开始事务(上下文 context.Context, 回调函数 func(事务上下文 context.Context) (interface{}, error), 可选选项 ...*opts.TransactionOptions) (interface{}, error) {
 	transactionOpts := options.Transaction()
-	if len(opts) > 0 && opts[0].TransactionOptions != nil {
-		transactionOpts = opts[0].TransactionOptions
+	if len(可选选项) > 0 && 可选选项[0].TransactionOptions != nil {
+		transactionOpts = 可选选项[0].TransactionOptions
 	}
-	result, err := s.session.WithTransaction(ctx, wrapperCustomCb(cb), transactionOpts)
+	result, err := s.session.WithTransaction(上下文, wrapperCustomCb(回调函数), transactionOpts)
 	if err != nil {
 		return nil, err
 	}
 	return result, nil
 }
 
-// EndSession 会终止任何现有的事务并关闭会话。 md5:2ee8849531868b7e
-// [提示:] func (s *Session) 结束会话(ctx 上下文Context) {}
-// ff:结束Session
-// s:
-// ctx:上下文
-func (s *Session) EndSession(ctx context.Context) {
-	s.session.EndSession(ctx)
+// X结束Session will abort any existing transactions and close the session.
+func (s *XSession事务) X结束Session(上下文 context.Context) {
+	s.session.EndSession(上下文)
 }
 
-// AbortTransaction 会取消此会话中的活动事务。如果此会话没有活动事务，或者事务已经提交或中止，此方法将返回错误。
-// md5:ca9bc056086304f0
-// [提示:] func (s *Session) 中止事务(ctx 上下文 контекст) 错误 {}
-// ff:中止事务
-// s:
-// ctx:上下文
-func (s *Session) AbortTransaction(ctx context.Context) error {
-	return s.session.AbortTransaction(ctx)
+// X中止事务 aborts the active transaction for this session. This method will return an error if there is no
+// active transaction for this session or the transaction has been committed or aborted.
+func (s *XSession事务) X中止事务(上下文 context.Context) error {
+	return s.session.AbortTransaction(上下文)
 }
 
-// wrapperCustomF 将调用者的回调函数包装成mongo驱动所需的函数 md5:8df643188861ec8b
+// wrapperCustomF wrapper caller's callback function to mongo dirver's
 func wrapperCustomCb(cb func(ctx context.Context) (interface{}, error)) func(sessCtx mongo.SessionContext) (interface{}, error) {
 	return func(sessCtx mongo.SessionContext) (interface{}, error) {
 		result, err := cb(sessCtx)
-		if err == ErrTransactionRetry {
+		if err == X错误_事务_重试 {
 			return nil, mongo.CommandError{Labels: []string{driver.TransientTransactionError}}
 		}
 		return result, err

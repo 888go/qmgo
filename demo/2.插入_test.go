@@ -11,8 +11,8 @@ func Test_插入一条数据(t *testing.T) {
 		X姓名: "张三", X名称: "a1", X年龄: 99, X重量: 20, X购买产品: []string{"西瓜", "香蕉", "老虎钳"}, X购买时间: time.Now(), X支付方式: X支付方式{
 			X支付方式: "支付宝", X联系方式: "177777777", X可选支付方式: []string{"支付宝", "微信", "银行卡"},
 		}}
-	result, _ := cli.InsertOne(ctx, userInfo)
-	fmt.Println(result.InsertedID)
+	result, _ := cli.X插入(ctx, userInfo)
+	fmt.Println(result.X插入ID)
 }
 
 func Test_插入多条数据(t *testing.T) {
@@ -63,7 +63,7 @@ func Test_插入多条数据(t *testing.T) {
 			X支付方式: "支付宝", X联系方式: "188888888", X可选支付方式: []string{"支付宝", "微信", "银行卡"},
 		}},
 	}
-	result, err := cli.Collection.InsertMany(ctx, userInfos)
-	fmt.Println(result.InsertedIDs)
+	result, err := cli.X文档集合.X插入多个(ctx, userInfos)
+	fmt.Println(result.X插入IDs)
 	fmt.Println(err)
 }

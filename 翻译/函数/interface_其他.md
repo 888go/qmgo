@@ -45,7 +45,7 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [Update interface{}]
 qm=更新替换
-cz=Update interface{}
+zz=Update +interface{} +/*
 
 [Replace bool]
 qm=是否替换

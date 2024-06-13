@@ -24,11 +24,11 @@ import (
 func TestDefaultField(t *testing.T) {
 	ast := require.New(t)
 
-	df := &DefaultField{}
-	df.DefaultCreateAt()
-	df.DefaultUpdateAt()
-	df.DefaultId()
-	ast.NotEqual(time.Time{}, df.UpdateAt)
-	ast.NotEqual(time.Time{}, df.CreateAt)
+	df := &X默认字段名称{}
+	df.X默认创建时间()
+	df.X默认更新时间()
+	df.X默认ID()
+	ast.NotEqual(time.Time{}, df.X更新时间)
+	ast.NotEqual(time.Time{}, df.X创建时间)
 	ast.NotEqual(primitive.NilObjectID, df.Id)
 }

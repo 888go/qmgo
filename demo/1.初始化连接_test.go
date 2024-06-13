@@ -2,12 +2,12 @@ package main
 
 import (
 	"context"
-	"github.com/qiniu/qmgo"
+	"github.com/888go/qmgo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"time"
 )
 
-var cli *qmgo.QmgoClient
+var cli *mgo类.XMongo客户端
 var ctx context.Context
 
 type X记账 struct {
@@ -37,5 +37,5 @@ type X产品价格 struct {
 func init() {
 	ctx = context.Background()
 	//注意要替换连接 mongodb://账号:密码@ip:端口
-	cli, _ = qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "数据库_demo", Coll: "记账"})
+	cli, _ = mgo类.X连接(ctx, &mgo类.X配置{X连接URI: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", X数据库名: "数据库_demo", X集合名: "记账"})
 }
