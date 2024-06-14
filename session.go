@@ -22,23 +22,25 @@ import (
 	"go.mongodb.org/mongo-driver/x/mongo/driver"
 )
 
-// XSession事务 is an struct that represents a MongoDB logical session
+// XSession事务 是一个结构体，表示 MongoDB 的逻辑会话 md5:a17367bc3a251e77
 type XSession事务 struct {
 	session mongo.Session
 }
 
-// X开始事务 starts transaction
-//precondition：
-//- version of mongoDB server >= v4.0
-//- Topology of mongoDB server is not Single
-//At the same time, please pay attention to the following
-//- make sure all operations in callback use the sessCtx as context parameter
-//- Dont forget to call EndSession if session is not used anymore
-//- if operations in callback takes more than(include equal) 120s, the operations will not take effect,
-//- if operation in callback return qmgo.ErrTransactionRetry,
-//  the whole transaction will retry, so this transaction must be idempotent
-//- if operations in callback return qmgo.ErrTransactionNotSupported,
-//- If the ctx parameter already has a Session attached to it, it will be replaced by this session.
+// X开始事务 开始一个事务
+// 预条件：
+// - MongoDB服务器版本大于等于v4.0
+// - MongoDB服务器的拓扑结构不是单节点
+// 同时需要注意：
+//   - 确保回调中的所有操作将sessCtx作为上下文参数
+//   - 如果不再使用session，别忘了调用EndSession
+//   - 如果回调中的操作耗时超过（包括等于）120秒，这些操作将不会生效
+//   - 如果回调中的操作返回qmgo.ErrTransactionRetry错误，
+//     整个事务将会重试，因此这个事务必须是幂等的
+//   - 如果回调中的操作返回qmgo.ErrTransactionNotSupported错误，
+//   - 如果ctx参数中已经附加了一个Session，它将被此session替换。
+//
+// md5:7a854b4c45212490
 func (s *XSession事务) X开始事务(上下文 context.Context, 回调函数 func(事务上下文 context.Context) (interface{}, error), 可选选项 ...*opts.TransactionOptions) (interface{}, error) {
 	transactionOpts := options.Transaction()
 	if len(可选选项) > 0 && 可选选项[0].TransactionOptions != nil {
@@ -51,18 +53,18 @@ func (s *XSession事务) X开始事务(上下文 context.Context, 回调函数 f
 	return result, nil
 }
 
-// X结束Session will abort any existing transactions and close the session.
+// X结束Session 会终止任何现有的事务并关闭会话。 md5:2ee8849531868b7e
 func (s *XSession事务) X结束Session(上下文 context.Context) {
 	s.session.EndSession(上下文)
 }
 
-// X中止事务 aborts the active transaction for this session. This method will return an error if there is no
-// active transaction for this session or the transaction has been committed or aborted.
+// X中止事务 会取消此会话中的活动事务。如果此会话没有活动事务，或者事务已经提交或中止，此方法将返回错误。
+// md5:ca9bc056086304f0
 func (s *XSession事务) X中止事务(上下文 context.Context) error {
 	return s.session.AbortTransaction(上下文)
 }
 
-// wrapperCustomF wrapper caller's callback function to mongo dirver's
+// wrapperCustomF 将调用者的回调函数包装成mongo驱动所需的函数 md5:8df643188861ec8b
 func wrapperCustomCb(cb func(ctx context.Context) (interface{}, error)) func(sessCtx mongo.SessionContext) (interface{}, error) {
 	return func(sessCtx mongo.SessionContext) (interface{}, error) {
 		result, err := cb(sessCtx)

@@ -22,10 +22,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Pipeline define the pipeline for aggregate
+// Pipeline 定义聚合操作的管道 md5:39821c5115607719
 type Pipeline []bson.D
 
-// Aggregate is a handle to a aggregate
+// Aggregate是一个聚合的句柄 md5:e06636d2fc45e004
 type Aggregate struct {
 	ctx        context.Context
 	pipeline   interface{}
@@ -33,7 +33,7 @@ type Aggregate struct {
 	options    []opts.AggregateOptions
 }
 
-// X取全部 iterates the cursor from aggregate and decodes each document into results.
+// X取全部 遍历聚合的游标，并将每个文档解码为结果。 md5:22b8eb7acebfa36a
 func (a *Aggregate) X取全部(结果指针 interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
@@ -46,7 +46,7 @@ func (a *Aggregate) X取全部(结果指针 interface{}) error {
 	return c.All(a.ctx, 结果指针)
 }
 
-// X取一条 iterates the cursor from aggregate and decodes current document into result.
+// X取一条 从聚合结果中遍历游标，并将当前文档解码到结果中。 md5:95d05e20ff85babc
 func (a *Aggregate) X取一条(结果指针 interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
@@ -71,13 +71,14 @@ func (a *Aggregate) X取一条(结果指针 interface{}) error {
 	return err
 }
 
-// Iter弃用 return the cursor after aggregate
-// Deprecated, please use Cursor
+// Iter弃用 返回聚合后的游标
+// 已弃用，请使用Cursor
+// md5:722184e644380849
 func (a *Aggregate) Iter弃用() CursorI {
 	return a.X取结果集()
 }
 
-// X取结果集 return the cursor after aggregate
+// X取结果集返回聚合后的游标 md5:eac4fdc1facaf217
 func (a *Aggregate) X取结果集() CursorI {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {

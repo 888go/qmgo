@@ -44,7 +44,7 @@ func TestCursor(t *testing.T) {
 
 	var res QueryTestItem
 
-	// if query has 1 record，cursor can run Next one time， Next time return false
+	// 如果查询有一条记录，游标可以运行一次Next，下次返回false md5:ede21f9451dd1feb
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -71,7 +71,7 @@ func TestCursor(t *testing.T) {
 	var results []QueryTestItem
 	cursor.X取全部(&results)
 	ast.Equal(2, len(results))
-	// can't match record, cursor run Next and return false
+	// 无法匹配记录，游标运行Next方法并返回false md5:765217e0cad2c295
 	filter2 := bson.M{
 		"name": "Lily",
 	}
@@ -87,7 +87,7 @@ func TestCursor(t *testing.T) {
 
 	cursor.X关闭()
 
-	//  1 record，after cursor close，Next return false
+	// 1条记录，当游标关闭后，Next 函数返回 false md5:a3f791b1b606935e
 	cursor = cli.X查询(context.Background(), filter1).X字段(projection1).X排序("age").X设置最大返回数(2).X跳过(1).X取结果集()
 	ast.NoError(cursor.X取错误())
 	ast.NotNil(cursor)
@@ -97,10 +97,10 @@ func TestCursor(t *testing.T) {
 	ast.Equal(false, cursor.X下一个(&res))
 	ast.NoError(cursor.X取错误())
 
-	// generate Cursor with err
+	// 使用错误生成Cursor md5:aa941bfed7793fe7
 	cursor = cli.X查询(context.Background(), 1).X字段(projection1).X排序("age").X设置最大返回数(2).X跳过(1).X取结果集()
 	ast.Error(cursor.X取错误())
-	//ast.Equal(int64(0), cursor.ID())
+	// ast.Equal 认为 int64(0) 等于 cursor.ID() 的结果 md5:9676af4589eca183
 	ast.Error(cursor.X取全部(&res))
 	ast.Error(cursor.X关闭())
 	ast.Equal(false, cursor.X下一个(&res))

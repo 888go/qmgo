@@ -107,8 +107,8 @@ func TestSession_AbortTransaction(t *testing.T) {
 	r := bson.M{}
 	err = cli.X查询(ctx, bson.M{"abc": 1}).X取一条(&r)
 	ast.Error(err)
-	// abort the already worked operation, can't abort the later operation
-	// it seems a mongodb-go-driver bug
+// 中止已经进行的操作，无法中止后续操作 // 这似乎是一个mongodb-go-driver的bug
+// md5:62f4455c1ed84e55
 	err = cli.X查询(ctx, bson.M{"xyz": 999}).X取一条(&r)
 	ast.Error(err)
 }

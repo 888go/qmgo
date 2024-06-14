@@ -98,7 +98,7 @@ func TestQmgoClient(t *testing.T) {
 	err = cli.X是否存活(5)
 	ast.Error(err)
 
-	// primary mode with max stalenessMS, error
+	// 主要模式，带有最大 stalenessMS，可能出现错误 md5:d85c933c21a84fc2
 	cfg = X配置{
 		X连接URI:              "mongodb://localhost:27017",
 		X数据库名:         "qmgotest",

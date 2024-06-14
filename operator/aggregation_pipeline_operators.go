@@ -13,10 +13,11 @@
 
 package mgo常量
 
-// Aggregation Pipeline Operators
-// refer: https://docs.mongodb.com/manual/reference/operator/aggregation/
+// 聚合管道运算符
+// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation/
+// md5:b743948494162fab
 const (
-	// Arithmetic Expression Operators
+	// 算术运算符 md5:862d53c43dccda12
 	X聚合绝对值      = "$abs"
 	Add      = "$add"
 	Ceil     = "$ceil"
@@ -33,7 +34,7 @@ const (
 	Subtract = "$subtract"
 	Trunc    = "$trunc"
 
-	// Array Expression Operators
+	// 数组表达式运算符 md5:ec78a0b8bc2385f3
 	ArrayElemAt   = "$arrayElemAt"
 	ArrayToObject = "$arrayToObject"
 	ConcatArrays  = "$concatArrays"
@@ -47,15 +48,15 @@ const (
 	ReverseArray  = "$reverseArray"
 	Zip           = "$zip"
 
-	// Comparison Expression Operators
+	// 比较表达式运算符 md5:c44b496f05f62dec
 	Cmp = "$cmp"
 
-	// Conditional Expression Operators
+	// 条件表达式运算符 md5:5dd78ba4ae108ba1
 	Cond   = "$cond"
 	IfNull = "$ifNull"
 	Switch = "$switch"
 
-	// Custom Aggregation Expression Operators
+	// 自定义聚合表达式运算符 md5:c2e3d7a49a64bbbf
 	Accumulator = "$accumulator"
 	Function    = "$function"
 
@@ -63,7 +64,7 @@ const (
 	BinarySize = "$binarySize"
 	BsonSize   = "$bsonSize"
 
-	// Date Expression Operators
+	// 日期表达式运算符 md5:9109a9260ffcf4b1
 	DateFromParts  = "$dateFromParts"
 	DateFromString = "$dateFromString"
 	DateToParts    = "$dateToParts"
@@ -83,13 +84,13 @@ const (
 	X周           = "$week"
 	X年           = "$year"
 
-	// Literal Expression Operator
+	// 字面量表达式操作符 md5:8501f5c82ee2c883
 	Literal = "$literal"
 
-	// Object Expression Operators
+	// 对象表达式运算符 md5:b6f2383d804984d9
 	MergeObjects = "$mergeObjects"
 
-	// Set Expression Operators
+	// 设置表达式运算符 md5:e745772d17491d89
 	AllElementsTrue = "$allElementsTrue"
 	AnyElementTrue  = "$anyElementTrue"
 	SetDifference   = "$setDifference"
@@ -98,7 +99,7 @@ const (
 	SetIsSubset     = "$setIsSubset"
 	SetUnion        = "$setUnion"
 
-	// String Expression Operators
+	// 字符串表达式操作符 md5:eb3461a712d14fac
 	Concat       = "$concat"
 	IndexOfBytes = "$indexOfBytes"
 	IndexOfCP    = "$indexOfCP"
@@ -121,7 +122,7 @@ const (
 	ReplaceOne   = "$replaceOne"
 	ReplaceAll   = "$replaceAll"
 
-	// Trigonometry Expression Operators
+	// 三角函数表达式运算符 md5:c83fcb6cf067b355
 	Sin              = "$sin"
 	Cos              = "$cos"
 	Tan              = "$tan"
@@ -135,7 +136,7 @@ const (
 	DegreesToRadians = "$degreesToRadians"
 	RadiansToDegrees = "$radiansToDegrees"
 
-	// Type Expression Operators
+	// 类型表达式运算符 md5:021bcd14e2b085e1
 	Convert    = "$convert"
 	ToBool     = "$toBool"
 	ToDecimal  = "$toDecimal"
@@ -154,6 +155,6 @@ const (
 	StdDevSamp = "$stdDevSamp"
 	X求和        = "$sum"
 
-	// Variable Expression Operators
+	// 变量表达式操作符 md5:b84290815043dc99
 	Let = "$let"
 )

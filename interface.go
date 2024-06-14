@@ -30,16 +30,16 @@ import "go.mongodb.org/mongo-driver/mongo/options"
 //	EnsureIndexes(uniques []string, indexes []string)
 //}
 
-// Change holds fields for running a findAndModify command via the Query.Apply method.
+// Change 包含了通过 Query.Apply 方法运行 findAndModify 命令时所需字段。 md5:39a15027acb265c1
 type Change struct {
-	X更新替换    interface{} // update/replace document
-	X是否替换   bool        // Whether to replace the document rather than updating
-	X是否删除    bool        // Whether to remove the document found rather than updating
+	X更新替换    interface{} // 更新/替换文档 md5:f186fdee95ec3578
+	X是否替换   bool        // 是否替换文档而不是更新 md5:876d0fb0ea394e91
+	X是否删除    bool        // 是否在找到文档后删除它，而不是更新 md5:af3a9b450dfa43f8
 	X是否未找到时插入    bool        // Whether to insert in case the document isn't found, take effect when Remove is false
-	X是否返回新文档 bool        // Should the modified document be returned rather than the old one, take effect when Remove is false
+	X是否返回新文档 bool        // 当Remove为false时，是否返回修改后的文档而不是旧的文档 md5:52269f57ce5c8033
 }
 
-// CursorI Cursor interface
+// CursorI：Cursor 接口 md5:8a6fa5bfcb19cd93
 type CursorI interface {
 	X下一个(result interface{}) bool
 	X关闭() error
@@ -72,10 +72,10 @@ type QueryI interface {
 	X指定索引字段(hint interface{}) QueryI
 }
 
-// AggregateI define the interface of aggregate
+// AggregateI 定义聚合接口 md5:e67c5263d98eafa6
 type AggregateI interface {
 	X取全部(results interface{}) error
 	X取一条(result interface{}) error
-	Iter弃用() CursorI // Deprecated, please use Cursor instead
+	Iter弃用() CursorI // 被弃用，请使用Cursor替代 md5:56d9bc403e9aa9a9
 	X取结果集() CursorI
 }

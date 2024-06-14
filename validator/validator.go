@@ -9,15 +9,15 @@ import (
 	"github.com/888go/qmgo/operator"
 )
 
-// use a single instance of Validate, it caches struct info
+// 使用单例的Validate，它缓存结构体信息 md5:37316caf6446b052
 var validate = validator.New()
 
-// SetValidate let validate can use custom rules
+// SetValidate 允许使用自定义规则进行验证 md5:c45d0acce1bafd26
 func SetValidate(v *validator.Validate) {
 	validate = v
 }
 
-// validatorNeeded checks if the validator is needed to opType
+// validatorNeeded 检查操作类型（opType）是否需要验证器 md5:69c24cea9b0cf3e4
 func validatorNeeded(opType mgo常量.OpType) bool {
 	switch opType {
 	case mgo常量.X钩子_插入前, mgo常量.X钩子_替换插入前, mgo常量.X钩子_替换前:
@@ -26,8 +26,9 @@ func validatorNeeded(opType mgo常量.OpType) bool {
 	return false
 }
 
-// Do calls validator check
-// Don't use opts here
+// Do 调用验证器检查
+// 不要在這裡使用 opts
+// md5:a3e02eb169c74704
 func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil
@@ -52,9 +53,9 @@ func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...i
 	}
 }
 
-// sliceHandle handles the slice docs
+// sliceHandle处理切片文档 md5:92800dd5899836ce
 func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
-	// []interface{}{UserType{}...}
+	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v); err != nil {
@@ -74,7 +75,7 @@ func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
 	return nil
 }
 
-// do check if opType is supported and call fieldHandler
+// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
 func do(doc interface{}) error {
 	if !validatorStruct(doc) {
 		return nil
@@ -82,8 +83,9 @@ func do(doc interface{}) error {
 	return validate.Struct(doc)
 }
 
-// validatorStruct check if kind of doc is validator supported struct
-// same implement as validator
+// validatorStruct 检查doc的类型是否为validator支持的结构体
+// 实现方式与validator相同
+// md5:566d3931e3bc9c80
 func validatorStruct(doc interface{}) bool {
 	val := reflect.ValueOf(doc)
 	if val.Kind() == reflect.Ptr && !val.IsNil() {

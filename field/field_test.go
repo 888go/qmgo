@@ -68,7 +68,7 @@ func TestBeforeInsert(t *testing.T) {
 	err = Do(ctx, u3, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 
-	// insert with valid value
+	// 使用有效值插入 md5:c68783e3102ab2a6
 	tBefore3s := time.Now().Add(-3 * time.Second)
 	id := primitive.NewObjectID()
 	u = &User{Name: "Lucas", Age: 7}
@@ -177,7 +177,7 @@ func TestBeforeUpsert(t *testing.T) {
 	err = Do(ctx, u3, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
-	// upsert with valid value
+	// 使用有效值进行更新插入操作 md5:6dcc17bfca098279
 	tBefore3s := time.Now().Add(-3 * time.Second)
 	id := primitive.NewObjectID()
 	u = &User{Name: "Lucas", Age: 7}
@@ -201,7 +201,7 @@ func TestBeforeUpsert(t *testing.T) {
 
 }
 
-// same as TestBeforeUpsert, just switch type of CreateTimeAt and UpdateTimeAt
+// 与 TestBeforeUpsert 相同，只是将 CreateTimeAt 和 UpdateTimeAt 的类型进行了切换 md5:90f4c0b23d59b403
 func TestBeforeUpsertUserFiled(t *testing.T) {
 	ast := require.New(t)
 	ctx := context.Background()
@@ -236,7 +236,7 @@ func TestBeforeUpsertUserFiled(t *testing.T) {
 	err = Do(ctx, u3, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
-	// upsert with valid value
+	// 使用有效值进行更新插入操作 md5:6dcc17bfca098279
 	tBefore3s := time.Now().Add(-3 * time.Second)
 	id := primitive.NewObjectID()
 	u = &UserField{Name: "Lucas", Age: 7}

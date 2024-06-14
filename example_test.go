@@ -96,7 +96,7 @@ func TestQmgo(t *testing.T) {
 	_, err = cli.X文档集合.X插入多个(ctx, userInfos)
 	ast.Nil(err)
 
-	// find all 、sort and limit
+	// 找到所有、排序并限制 md5:63d2a93384ca2556
 	batch := []UserInfo{}
 	cli.X查询(ctx, bson.M{"age": 6}).X排序("weight").X设置最大返回数(7).X取全部(&batch)
 	ast.Equal(4, len(batch))

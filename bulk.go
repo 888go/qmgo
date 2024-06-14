@@ -21,43 +21,39 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// X批量操作结果 is the result type returned by Bulk.Run operation.
+// X批量操作结果 是由Bulk.Run操作返回的结果类型。 md5:3a422d6b1b20649c
 type X批量操作结果 struct {
-	// The number of documents inserted.
+	// 插入的文档数量。 md5:f44082352897f08b
 	X插入数 int64
 
-	// The number of documents matched by filters in update and replace operations.
+	// 更新和替换操作中，被过滤器匹配的文档数量。 md5:90fab681d83f2e97
 	X匹配数 int64
 
-	// The number of documents modified by update and replace operations.
+	// 被更新和替换操作修改的文档数量。 md5:1e4886e32c8092e3
 	X修改数 int64
 
-	// The number of documents deleted.
+	// 删除的文档数量。 md5:8872e8629ebbcf3c
 	X删除数 int64
 
-	// The number of documents upserted by update and replace operations.
+	// 通过update和replace操作插入的文档数量。 md5:3074b4c76263ae0c
 	X替换插入数 int64
 
-	// A map of operation index to the _id of each upserted document.
+	// 一个操作索引到每个插入文档的_id的映射。 md5:b4c301dceb41d860
 	X替换插入IDs map[int64]interface{}
 }
 
-// X批量操作 is context for batching operations to be sent to database in a single
-// bulk write.
+// X批量操作 是用于批量操作的上下文，这些操作将一次性发送到数据库进行批量写入。
 //
-// X批量操作 is not safe for concurrent use.
+// X批量操作 不适用于并发使用。
 //
-// Notes:
+// 注意：
 //
-// Individual operations inside a bulk do not trigger middlewares or hooks
-// at present.
+// 在批量操作中的单个操作目前不会触发中间件或钩子。
 //
-// Different from original mgo, the qmgo implementation of X批量操作 does not emulate
-// bulk operations individually on old versions of MongoDB servers that do not
-// natively support bulk operations.
+// 与原版 mgo 不同，qmgo 实现的 X批量操作 并不会在不支持原生批量操作的老版本 MongoDB 服务器上模拟逐个执行批量操作。
 //
-// Only operations supported by the official driver are exposed, that is why
-// InsertMany is missing from the methods.
+// 只有官方驱动支持的操作被暴露出来，因此方法中缺少 InsertMany。
+// md5:97e7f3c645b8ba7f
 type X批量操作 struct {
 	coll *X文档集合
 
@@ -65,7 +61,7 @@ type X批量操作 struct {
 	ordered *bool
 }
 
-// X创建批量执行 returns a new context for preparing bulk execution of operations.
+// X创建批量执行返回一个新的上下文，用于准备批量执行操作。 md5:e39897d617450e92
 func (c *X文档集合) X创建批量执行() *X批量操作 {
 	return &X批量操作{
 		coll:    c,
@@ -74,104 +70,105 @@ func (c *X文档集合) X创建批量执行() *X批量操作 {
 	}
 }
 
-// X设置有序执行 marks the bulk as ordered or unordered.
+// X设置有序执行 将批量设置为有序或无序。
 //
-// If ordered, writes does not continue after one individual write fails.
-// Default is ordered.
+// 如果设置为有序，写操作在单个写操作失败后不会继续。默认为有序。
+// md5:caf2eac3fe50a750
 func (b *X批量操作) X设置有序执行(开启有序 bool) *X批量操作 {
 	b.ordered = &开启有序
 	return b
 }
 
-// X插入 queues an X插入 operation for bulk execution.
+// X插入 将一个 X插入 操作加入到批量执行队列中。 md5:65abbf989aa97556
 func (b *X批量操作) X插入(待插入文档 interface{}) *X批量操作 {
 	wm := mongo.NewInsertOneModel().SetDocument(待插入文档)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X删除一条 queues a X删除一条 operation for bulk execution.
+// X删除一条 队列一个删除操作，用于批量执行。 md5:a9c84e1a291eea0f
 func (b *X批量操作) X删除一条(删除条件 interface{}) *X批量操作 {
 	wm := mongo.NewDeleteOneModel().SetFilter(删除条件)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X删除并按ID queues a X删除并按ID operation for bulk execution.
+// X删除并按ID 队列一个 X删除并按ID 操作以进行批量执行。 md5:f3fbfef26bde41fc
 func (b *X批量操作) X删除并按ID(删除ID interface{}) *X批量操作 {
 	b.X删除一条(bson.M{"_id": 删除ID})
 	return b
 }
 
-// X删除 queues a X删除 operation for bulk execution.
+// X删除 会将一个 X删除 操作加入到批量执行的队列中。 md5:df548d516b324574
 func (b *X批量操作) X删除(删除条件 interface{}) *X批量操作 {
 	wm := mongo.NewDeleteManyModel().SetFilter(删除条件)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X替换插入 queues an X替换插入 operation for bulk execution.
-// The replacement should be document without operator
+// X替换插入将X替换插入操作排队进行批量执行。替换应该是没有操作符的文档
+// md5:1115932f50b88737
 func (b *X批量操作) X替换插入(替换条件 interface{}, 替换内容 interface{}) *X批量操作 {
 	wm := mongo.NewReplaceOneModel().SetFilter(替换条件).SetReplacement(替换内容).SetUpsert(true)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X替换插入一条 queues an X替换插入一条 operation for bulk execution.
-// The update should contain operator
+// X替换插入一条 为批量执行队列一个 X替换插入一条 操作。更新操作应该包含运算符
+// md5:7052a86d53229aab一条
 func (b *X批量操作) X替换插入一条(替换条件 interface{}, 替换内容 interface{}) *X批量操作 {
 	wm := mongo.NewUpdateOneModel().SetFilter(替换条件).SetUpdate(替换内容).SetUpsert(true)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X替换插入并按ID queues an X替换插入并按ID operation for bulk execution.
-// The replacement should be document without operator
+// X替换插入并按ID 用于批量执行的X替换插入并按ID操作进行排队。
+// 替换的文档应该不包含操作符。
+// md5:c5d9cc678823f8e5并按ID
 func (b *X批量操作) X替换插入并按ID(替换ID interface{}, 替换内容 interface{}) *X批量操作 {
 	b.X替换插入(bson.M{"_id": 替换ID}, 替换内容)
 	return b
 }
 
-// X更新一条 queues an X更新一条 operation for bulk execution.
-// The update should contain operator
+// X更新一条 为批量执行队列一个 X更新一条 操作。更新操作应该包含操作符
+// md5:0e587045b560687a
 func (b *X批量操作) X更新一条(更新条件 interface{}, 更新内容 interface{}) *X批量操作 {
 	wm := mongo.NewUpdateOneModel().SetFilter(更新条件).SetUpdate(更新内容)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X更新并按ID queues an X更新并按ID operation for bulk execution.
-// The update should contain operator
+// X更新并按ID 为批量执行排队一个 X更新并按ID 操作。更新应该包含操作符
+// md5:968d7d02f007ae39
 func (b *X批量操作) X更新并按ID(更新ID interface{}, 更新内容 interface{}) *X批量操作 {
 	b.X更新一条(bson.M{"_id": 更新ID}, 更新内容)
 	return b
 }
 
-// X更新 queues an X更新 operation for bulk execution.
-// The update should contain operator
+// X更新 队列一个 X更新 操作，用于批量执行。
+// 更新应该包含操作符
+// md5:b1fdc26a48273948
 func (b *X批量操作) X更新(更新条件 interface{}, 更新内容 interface{}) *X批量操作 {
 	wm := mongo.NewUpdateManyModel().SetFilter(更新条件).SetUpdate(更新内容)
 	b.queue = append(b.queue, wm)
 	return b
 }
 
-// X执行 executes the collected operations in a single bulk operation.
+// X执行 执行收集到的单个批量操作。
 //
-// A successful call resets the Bulk. If an error is returned, the internal
-// queue of operations is unchanged, containing both successful and failed
-// operations.
+// 调用成功会重置 Bulk。如果返回错误，内部操作队列保持不变，包含成功和失败的操作。
+// md5:c3ce14d8defe8da0
 func (b *X批量操作) X执行(上下文 context.Context) (*X批量操作结果, error) {
 	opts := options.BulkWriteOptions{
 		Ordered: b.ordered,
 	}
 	result, err := b.coll.collection.BulkWrite(上下文, b.queue, &opts)
 	if err != nil {
-		// In original mgo, queue is not reset in case of error.
+		// 在原始的mgo中，如果发生错误，队列不会被重置。 md5:b7f801e955f364a8
 		return nil, err
 	}
 
-	// Empty the queue for possible reuse, as per mgo's behavior.
+	// 清空队列以备可能的重用，遵循mgo的行为。 md5:ac1070c096c485e8
 	b.queue = nil
 
 	return &X批量操作结果{

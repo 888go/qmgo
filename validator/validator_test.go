@@ -9,17 +9,17 @@ import (
 	"testing"
 )
 
-// User contains user information
+// User 包含用户信息 md5:0449710cca9a8191
 type User struct {
 	FirstName      string     `bson:"fname"`
 	LastName       string     `bson:"lname"`
 	Age            uint8      `bson:"age" validate:"gte=0,lte=130"`
 	Email          string     `bson:"e-mail" validate:"required,email"`
 	FavouriteColor string     `bson:"favouriteColor" validate:"hexcolor|rgb|rgba"`
-	Addresses      []*Address `bson:"addresses" validate:"required,dive,required"` // a person can have a home and cottage...
+	Addresses      []*Address `bson:"addresses" validate:"required,dive,required"` // 一个人可以有一个家和小屋... md5:2cff6f433cd4efd3
 }
 
-// Address houses a users address information
+// Address 存储用户的地址信息 md5:b3c428f7e60746dd
 type Address struct {
 	Street string `validate:"required"`
 	City   string `validate:"required"`
@@ -27,7 +27,7 @@ type Address struct {
 	Phone  string `validate:"required"`
 }
 
-// CustomRule use custom rule
+// CustomRule 使用自定义规则 md5:08186cbb838df2f3
 type CustomRule struct {
 	Name string `validate:"required,foo"`
 }
@@ -70,7 +70,7 @@ func TestValidator(t *testing.T) {
 	user.Email = "1234@gmail" // invalid email
 	ast.Error(Do(ctx, user, mgo常量.X钩子_插入前))
 	user.Email = "1234@gmail.com"
-	user.Addresses[0].City = "" // string tag use default value
+	user.Addresses[0].City = "" // 字符串标签使用默认值 md5:aa4a9770a393ec7e
 	ast.Error(Do(ctx, user, mgo常量.X钩子_插入前))
 
 	// input slice

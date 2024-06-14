@@ -13,8 +13,9 @@
 
 package mgo常量
 
-// define the update operators
-// refer: https://docs.mongodb.com/manual/reference/operator/update/
+// 定义更新操作符
+// 参考: https://docs.mongodb.com/manual/reference/operator/update/
+// md5:166a573087a3fb27
 const (
 	// Fields
 	X更新为当前时间 = "$currentDate"

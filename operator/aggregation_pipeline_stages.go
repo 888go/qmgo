@@ -13,10 +13,11 @@
 
 package mgo常量
 
-// define the aggregation pipeline stages
-// refer: https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+// 定义聚合管道阶段
+// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+// md5:40bdaebb510f842e
 const (
-	// Collection Aggregate Stages
+	// 集合聚合阶段 md5:37e4a0637949107b
 	AddFields      = "$addFields"
 	Bucket         = "$bucket"
 	BucketAuto     = "$bucketAuto"
@@ -44,7 +45,7 @@ const (
 	UnionWith      = "$unionWith"
 	Unwind         = "$unwind"
 
-	// Database Aggregate stages
+	// 数据库聚合阶段 md5:b35520d72e009304
 	CurrentOp         = "$currentOp"
 	ListLocalSessions = "$listLocalSessions"
 )
