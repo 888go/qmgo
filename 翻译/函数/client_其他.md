@@ -35,9 +35,7 @@
 # //zj:
 # 备注结束
 
-[type Config struct {]
-hm=配置
-cz=type Config
+
 
 [Uri string `json:"uri"`]
 qm=连接URI
@@ -75,9 +73,6 @@ zz=ReadPreference \*.*`json:"readPreference"`
 qm=身份凭证
 zz=Auth \*.+ `json:"auth"`
 
-[type Credential struct {]
-hm=身份凭证
-cz=type Credential
 
 [AuthMechanism string `json:"authMechanism"`]
 qm=认证机制
@@ -95,18 +90,8 @@ cz=Username string `json:"username"`
 qm=密码
 cz=Password string `json:"password"`
 
-[type ReadPref struct {]
-hm=读取偏好
-cz=type ReadPref
 
 [MaxStalenessMS int64 `json:"maxStalenessMS"`]
 qm=最大延迟毫秒
 cz=MaxStalenessMS int64 `json:"maxStalenessMS"`
 
-[type QmgoClient struct {]
-hm=Mongo客户端
-cz=type QmgoClient
-
-[type Client struct {]
-hm=客户端
-cz=type Client

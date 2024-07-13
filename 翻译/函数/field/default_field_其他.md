@@ -35,9 +35,7 @@
 # //zj:
 # 备注结束
 
-[type DefaultField struct {]
-hm=默认字段名称
-cz=type DefaultField
+
 
 [CreateAt time.Time `bson:"createAt"`]
 qm=创建时间

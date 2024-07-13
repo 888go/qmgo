@@ -35,6 +35,4 @@
 # //zj:
 # 备注结束
 
-[type Collection struct {]
-hm=文档集合
-cz=type Collection
+

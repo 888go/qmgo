@@ -35,6 +35,3 @@
 # //zj:
 # 备注结束
 
-[type Database struct {]
-hm=数据库
-cz=type Database

@@ -35,9 +35,6 @@
 # //zj:
 # 备注结束
 
-[type BulkResult struct {]
-hm=批量操作结果
-cz=type BulkResult
 
 [InsertedCount int64]
 qm=插入数
@@ -63,6 +60,3 @@ cz=UpsertedCount int64
 qm=替换插入IDs
 cz=UpsertedIDs map[int64]interface{}
 
-[type Bulk struct {]
-hm=批量操作
-cz=type Bulk

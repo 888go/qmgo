@@ -35,9 +35,7 @@
 # //zj:
 # 备注结束
 
-[type IndexModel struct {]
-hm=索引选项
-cz=type IndexModel
+
 
 [Key #左中括号##右中括号#string]
 qm=索引字段

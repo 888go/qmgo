@@ -35,25 +35,18 @@
 # //zj:
 # 备注结束
 
-[type InsertOneResult struct {]
-hm=插入结果
-cz=type InsertOneResult
+
 
 [InsertedID interface{}]
 qm=插入ID
 cz=InsertedID interface{}
 
-[type InsertManyResult struct {]
-hm=插入多条结果
-cz=type InsertManyResult
+
 
 [InsertedIDs #左中括号##右中括号#interface{}]
 qm=插入IDs
 cz=InsertedIDs []interface{}
 
-[type UpdateResult struct {]
-hm=更新结果
-cz=type UpdateResult
 
 [MatchedCount int64]
 qm=匹配数
@@ -71,9 +64,6 @@ cz=UpsertedCount int64
 qm=替换插入ID
 cz=UpsertedID interface{}
 
-[type DeleteResult struct {]
-hm=删除结果
-cz=type DeleteResult
 
 [DeletedCount int64]
 qm=删除数量

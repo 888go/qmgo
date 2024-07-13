@@ -35,6 +35,3 @@
 # //zj:
 # 备注结束
 
-[type Session struct {]
-hm=Session事务
-cz=type Session

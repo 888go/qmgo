@@ -35,6 +35,4 @@
 # //zj:
 # 备注结束
 
-[type Query struct {]
-hm=查询
-cz=type Query
+
