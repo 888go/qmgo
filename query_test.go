@@ -83,7 +83,7 @@ func TestQuery_One(t *testing.T) {
 	ast.Error(err)
 	ast.Empty(res)
 
-	// filter 是 bson.M 类型的空映射，表示匹配所有文档并返回一个结果。 md5:5a0dc74674539e4e
+	// filter is bson.M{}，match all and return one
 	res = QueryTestItem{}
 	filter3 := bson.M{}
 
@@ -97,7 +97,7 @@ func TestQuery_One(t *testing.T) {
 	ast.Error(err)
 	ast.Empty(res)
 
-	// res 为 nil 或者无法解析 md5:970a874db5a3d5c0
+	// res is nil or can't parse
 	err = cli.Find(context.Background(), filter1).One(nil)
 	ast.Error(err)
 
@@ -105,7 +105,7 @@ func TestQuery_One(t *testing.T) {
 	err = cli.Find(context.Background(), filter1).One(&tv)
 	ast.Error(err)
 
-	// res是一个解析的对象，但是bson标签与mongodb记录不一致，没有报告错误，res的数据结构处于初始化状态。 md5:60d100e8fd5c135d
+	// res is a parseable object, but the bson tag is inconsistent with the mongodb record, no error is reported, res is the initialization state of the data structure
 	var tt QueryTestItem2
 	err = cli.Find(context.Background(), filter1).One(&tt)
 	ast.NoError(err)
@@ -154,7 +154,7 @@ func TestQuery_All(t *testing.T) {
 	ast.NoError(err)
 	ast.Empty(res)
 
-	// filter 是 bson.M{}，这意味着匹配所有，会返回集合中的所有记录 md5:c0c66af96a433502
+	// filter is bson.M{}, which means to match all, will return all records in the collection
 	res = make([]QueryTestItem, 0)
 	filter3 := bson.M{}
 
@@ -173,10 +173,9 @@ func TestQuery_All(t *testing.T) {
 	var tv int
 	err = cli.Find(context.Background(), filter1).All(&tv)
 	ast.Error(err)
-	// res 是一个可解析的对象，但其 bson 标签与 mongodb 记录不一致，且不会报告错误
-	// 将根据 res 数据结构的 bson 标签映射相应的值，没有值的标签将使用对应类型的默认值
-	// res 的长度表示过滤条件筛选出的记录数
-	// md5:fa2c9312a213eab9
+	// res is a parseable object, but the bson tag is inconsistent with the mongodb record, and no error is reported
+	// The corresponding value will be mapped according to the bson tag of the res data structure, and the tag without the value will be the default value of the corresponding type
+	// The length of res is the number of records filtered by the filter condition
 	var tt []QueryTestItem2
 	err = cli.Find(context.Background(), filter1).All(&tt)
 	ast.NoError(err)
@@ -254,7 +253,7 @@ func TestQuery_Skip(t *testing.T) {
 	var err error
 	var res []QueryTestItem
 
-	// filter 可以匹配记录，跳过一条记录，并返回剩余的记录。 md5:b966e759fac20d97
+	// filter can match records, skip 1 record, and return the remaining records
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -263,7 +262,7 @@ func TestQuery_Skip(t *testing.T) {
 	ast.NoError(err)
 	ast.Equal(1, len(res))
 
-	// filter 可以匹配记录，跳过的数量大于现有记录的总数时，res 返回空 md5:d4411346be877b9e
+	// filter can match the records, the number of skips is greater than the total number of existing records, res returns empty
 	res = make([]QueryTestItem, 0)
 
 	err = cli.Find(context.Background(), filter1).Skip(3).All(&res)
@@ -343,7 +342,7 @@ func TestQuery_Sort(t *testing.T) {
 	var err error
 	var res []QueryTestItem
 
-	// 按升序对单个字段进行排序 md5:cb85098a3b639ea3
+	// Sort a single field in ascending order
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -354,14 +353,14 @@ func TestQuery_Sort(t *testing.T) {
 	ast.Equal(id1, res[0].Id)
 	ast.Equal(id2, res[1].Id)
 
-	// 以降序对单个字段进行排序 md5:e53fe948db01b8ef
+	// Sort a single field in descending order
 	err = cli.Find(context.Background(), filter1).Sort("-age").All(&res)
 	ast.NoError(err)
 	ast.Equal(2, len(res))
 	ast.Equal(id2, res[0].Id)
 	ast.Equal(id1, res[1].Id)
 
-	// 以降序对单个字段进行排序 md5:e53fe948db01b8ef
+	// Sort a single field in descending order, and sort the other field in ascending order
 	err = cli.Find(context.Background(), bson.M{}).Sort("-age", "+name").All(&res)
 	ast.NoError(err)
 	ast.Equal(4, len(res))
@@ -376,7 +375,7 @@ func TestQuery_Sort(t *testing.T) {
 		cli.Find(context.Background(), filter1).Sort("").All(&res)
 	})
 
-	// fields为空，不会引发恐慌或错误（#128） md5:65471cfbb3cddea4
+	// fields is empty, does not panic or error (#128)
 	err = cli.Find(context.Background(), bson.M{}).Sort().All(&res)
 	ast.NoError(err)
 	ast.Equal(4, len(res))
@@ -441,12 +440,11 @@ func TestQuery_Distinct(t *testing.T) {
 	err = cli.Find(context.Background(), filter2).Distinct("age", &res5)
 	ast.EqualError(err, ErrQueryResultTypeInconsistent.Error())
 
-	// 对于不同版本的mongod（如v4.4.0和v4.0.19），行为有所不同：v4.4.0会返回错误，而v4.0.19则可能返回nil
-	// 不使用res6
-	// _, err = cli.Find(context.Background(), filter2).Distinct("", &res6)
-	// 如果err非nil，则打印错误信息：(Location40352) FieldPath不能使用空字符串构建
-	// 验证res6的长度为0
-	// md5:db8b4089027d21a0
+	// different behavior with different version of mongod, v4.4.0 return err and v4.0.19 return nil
+	//var res6 []int32
+	//err = cli.Find(context.Background(), filter2).Distinct("", &res6)
+	//ast.Error(err) // (Location40352) FieldPath cannot be constructed with empty string
+	//ast.Equal(0, len(res6))
 
 	var res7 []int32
 	filter3 := 1

@@ -98,7 +98,7 @@ func TestQmgoClient(t *testing.T) {
 	err = cli.Ping(5)
 	ast.Error(err)
 
-	// 主要模式，带有最大 stalenessMS，可能出现错误 md5:d85c933c21a84fc2
+	// primary mode with max stalenessMS, error
 	cfg = Config{
 		Uri:              "mongodb://localhost:27017",
 		Database:         "qmgotest",

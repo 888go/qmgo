@@ -96,7 +96,7 @@ func TestQmgo(t *testing.T) {
 	_, err = cli.Collection.InsertMany(ctx, userInfos)
 	ast.Nil(err)
 
-	// 找到所有、排序并限制 md5:63d2a93384ca2556
+	// find all 、sort and limit
 	batch := []UserInfo{}
 	cli.Find(ctx, bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
 	ast.Equal(4, len(batch))

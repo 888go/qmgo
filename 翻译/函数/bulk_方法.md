@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [func (c *Collection) Bulk() *Bulk {]
 ff=创建批量执行
 

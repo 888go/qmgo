@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [func (c *Cursor) Next(result interface{}) bool {]
 ff=下一个
 

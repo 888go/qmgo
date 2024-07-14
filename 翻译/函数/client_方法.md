@@ -34,6 +34,7 @@
 # }
 # //zj:
 # 备注结束
+
  
 
 [func Open(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *QmgoClient, err error) {]

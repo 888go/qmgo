@@ -19,43 +19,34 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-// DefaultFieldHook 定义了一个接口，用于通过钩子修改默认字段 md5:1e0917183e9bb23c
+// DefaultFieldHook defines the interface to change default fields by hook
 type DefaultFieldHook interface {
 	DefaultUpdateAt()
 	DefaultCreateAt()
 	DefaultId()
 }
 
-// ```go
-// 默认字段定义了在操作发生时要处理的默认字段
-// 将DefaultField导入文档结构体使其生效
-// ```
-// md5:542fb0f78cfb4fad
+// DefaultField defines the default fields to handle when operation happens
+// import the DefaultField in document struct to make it working
 type DefaultField struct {
 	Id       primitive.ObjectID `bson:"_id"`
-	CreateAt time.Time          `bson:"createAt"` //qm:创建时间  cz:CreateAt time.Time `bson:"createAt"`
-	UpdateAt time.Time          `bson:"updateAt"` //qm:更新时间  cz:UpdateAt time.Time `bson:"updateAt"`
+	CreateAt time.Time          `bson:"createAt"`
+	UpdateAt time.Time          `bson:"updateAt"`
 }
 
-// DefaultUpdateAt 更改默认的更新时间字段 md5:2aac31da652c649b
-// ff:默认更新时间
-// df:
+// DefaultUpdateAt changes the default updateAt field
 func (df *DefaultField) DefaultUpdateAt() {
 	df.UpdateAt = time.Now().Local()
 }
 
-// DefaultCreateAt 更改默认的创建时间字段 md5:1438b66e329ae785
-// ff:默认创建时间
-// df:
+// DefaultCreateAt changes the default createAt field
 func (df *DefaultField) DefaultCreateAt() {
 	if df.CreateAt.IsZero() {
 		df.CreateAt = time.Now().Local()
 	}
 }
 
-// DefaultId 修改默认的 _id 字段 md5:32bb6b194f03905a
-// ff:默认ID
-// df:
+// DefaultId changes the default _id field
 func (df *DefaultField) DefaultId() {
 	if df.Id.IsZero() {
 		df.Id = primitive.NewObjectID()

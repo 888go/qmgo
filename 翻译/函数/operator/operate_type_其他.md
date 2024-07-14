@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [BeforeInsert OpType = "beforeInsert"]
 qm=钩子_插入前
 cz=BeforeInsert OpType #等号# "beforeInsert"

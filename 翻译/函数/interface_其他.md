@@ -35,11 +35,9 @@
 # //zj:
 # 备注结束
 
-
-
 [Update interface{}]
 qm=更新替换
-zz=Update +interface{} +/*
+zz=^[ \t]+Update +interface\{\}
 
 [Replace bool]
 qm=是否替换

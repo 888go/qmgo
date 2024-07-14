@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [func (d *Database) Collection(name string, opts ...*options.CollectionOptions) *Collection {]
 ff=取集合
 opts=可选选项

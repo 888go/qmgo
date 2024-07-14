@@ -28,19 +28,14 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// Collection 是一个MongoDB集合的句柄 md5:be1b94030609bdd1
+// Collection is a handle to a MongoDB collection
 type Collection struct {
 	collection *mongo.Collection
 
 	registry *bsoncodec.Registry
 }
 
-// Find 通过条件过滤并查找，返回QueryI md5:bda4cc0c85d800a1
-// ff:查询
-// c:
-// ctx:上下文
-// filter:查询条件
-// opts:可选选项
+// Find find by condition filter，return QueryI
 func (c *Collection) Find(ctx context.Context, filter interface{}, opts ...opts.FindOptions) QueryI {
 
 	return &Query{
@@ -54,13 +49,7 @@ func (c *Collection) Find(ctx context.Context, filter interface{}, opts ...opts.
 
 // InsertOne insert one document into the collection
 // If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook
-// ff:插入
-// c:
-// ctx:上下文
-// doc:待插入文档
-// opts:可选选项
-// result:插入结果
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/command/insert/
 func (c *Collection) InsertOne(ctx context.Context, doc interface{}, opts ...opts.InsertOneOptions) (result *InsertOneResult, err error) {
 	h := doc
 	insertOneOpts := options.InsertOne()
@@ -90,13 +79,7 @@ func (c *Collection) InsertOne(ctx context.Context, doc interface{}, opts ...opt
 
 // InsertMany executes an insert command to insert multiple documents into the collection.
 // If InsertHook in opts is set, hook works on it, otherwise hook try the doc as hook
-// ff:插入多个
-// c:
-// ctx:上下文
-// docs:待插入文档
-// opts:可选选项
-// result:插入结果
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/command/insert/
 func (c *Collection) InsertMany(ctx context.Context, docs interface{}, opts ...opts.InsertManyOptions) (result *InsertManyResult, err error) {
 	h := docs
 	insertManyOpts := options.InsertMany()
@@ -129,7 +112,7 @@ func (c *Collection) InsertMany(ctx context.Context, docs interface{}, opts ...o
 	return
 }
 
-// interfaceToSliceInterface 将接口类型转换为切片接口类型 md5:49f6ad81d7f669e3
+// interfaceToSliceInterface convert interface to slice interface
 func interfaceToSliceInterface(docs interface{}) []interface{} {
 	if reflect.Slice != reflect.TypeOf(docs).Kind() {
 		return nil
@@ -148,16 +131,9 @@ func interfaceToSliceInterface(docs interface{}) []interface{} {
 // Upsert updates one documents if filter match, inserts one document if filter is not match, Error when the filter is invalid
 // The replacement parameter must be a document that will be used to replace the selected document. It cannot be nil
 // and cannot contain any update operators
+// Reference: https://docs.mongodb.com/manual/reference/operator/update/
 // If replacement has "_id" field and the document is existed, please initial it with existing id(even with Qmgo default field feature).
 // Otherwise, "the (immutable) field '_id' altered" error happens.
-// ff:替换插入
-// c:
-// ctx:上下文
-// filter:替换条件
-// replacement:替换内容
-// opts:可选选项
-// result:结果
-// err:错误
 func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {
 	h := replacement
 	officialOpts := options.Replace().SetUpsert(true)
@@ -192,14 +168,7 @@ func (c *Collection) Upsert(ctx context.Context, filter interface{}, replacement
 // UpsertId updates one documents if id match, inserts one document if id is not match and the id will inject into the document
 // The replacement parameter must be a document that will be used to replace the selected document. It cannot be nil
 // and cannot contain any update operators
-// ff:替换插入并按ID
-// c:
-// ctx:上下文
-// id:替换ID
-// replacement:替换内容
-// opts:可选选项
-// result:结果
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/operator/update/
 func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement interface{}, opts ...opts.UpsertOptions) (result *UpdateResult, err error) {
 	h := replacement
 	officialOpts := options.Replace().SetUpsert(true)
@@ -230,13 +199,7 @@ func (c *Collection) UpsertId(ctx context.Context, id interface{}, replacement i
 }
 
 // UpdateOne executes an update command to update at most one document in the collection.
-// ff:更新一条
-// c:
-// ctx:上下文
-// filter:更新条件
-// update:更新内容
-// opts:可选选项
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/operator/update/
 func (c *Collection) UpdateOne(ctx context.Context, filter interface{}, update interface{}, opts ...opts.UpdateOptions) (err error) {
 	updateOpts := options.Update()
 
@@ -253,7 +216,7 @@ func (c *Collection) UpdateOne(ctx context.Context, filter interface{}, update i
 
 	res, err := c.collection.UpdateOne(ctx, filter, update, updateOpts)
 	if res != nil && res.MatchedCount == 0 {
-		// UpdateOne支持upsert功能 md5:aaec7189323f1660
+		// UpdateOne support upsert function
 		if updateOpts.Upsert == nil || !*updateOpts.Upsert {
 			err = ErrNoSuchDocuments
 		}
@@ -270,13 +233,7 @@ func (c *Collection) UpdateOne(ctx context.Context, filter interface{}, update i
 }
 
 // UpdateId executes an update command to update at most one document in the collection.
-// ff:更新并按ID
-// c:
-// ctx:上下文
-// id:更新ID
-// update:更新内容
-// opts:可选选项
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/operator/update/
 func (c *Collection) UpdateId(ctx context.Context, id interface{}, update interface{}, opts ...opts.UpdateOptions) (err error) {
 	updateOpts := options.Update()
 
@@ -308,14 +265,7 @@ func (c *Collection) UpdateId(ctx context.Context, id interface{}, update interf
 
 // UpdateAll executes an update command to update documents in the collection.
 // The matchedCount is 0 in UpdateResult if no document updated
-// ff:更新
-// c:
-// ctx:上下文
-// filter:更新条件
-// update:更新内容
-// opts:可选选项
-// result:更新结果
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/operator/update/
 func (c *Collection) UpdateAll(ctx context.Context, filter interface{}, update interface{}, opts ...opts.UpdateOptions) (result *UpdateResult, err error) {
 	updateOpts := options.Update()
 	if len(opts) > 0 {
@@ -343,15 +293,9 @@ func (c *Collection) UpdateAll(ctx context.Context, filter interface{}, update i
 	return
 }
 
-// ReplaceOne 执行更新命令，最多更新集合中的一个文档。如果 opts 中的 UpdateHook 被设置，那么 Hook 将在其上执行，否则 Hook 尝试将 doc 作为 Hook。预期 doc 的类型是用户定义的文档的定义。
-// md5:1d830477f8b32e37
-// ff:替换一条
-// c:
-// ctx:上下文
-// filter:替换条件
-// doc:替换内容
-// opts:可选选项
-// err:错误
+// ReplaceOne executes an update command to update at most one document in the collection.
+// If UpdateHook in opts is set, hook works on it, otherwise hook try the doc as hook
+// Expect type of the doc is the define of user's document
 func (c *Collection) ReplaceOne(ctx context.Context, filter interface{}, doc interface{}, opts ...opts.ReplaceOptions) (err error) {
 	h := doc
 	replaceOpts := options.Replace()
@@ -384,12 +328,7 @@ func (c *Collection) ReplaceOne(ctx context.Context, filter interface{}, doc int
 
 // Remove executes a delete command to delete at most one document from the collection.
 // if filter is bson.M{}，DeleteOne will delete one document in collection
-// ff:删除一条
-// c:
-// ctx:上下文
-// filter:删除条件
-// opts:可选选项
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/command/delete/
 func (c *Collection) Remove(ctx context.Context, filter interface{}, opts ...opts.RemoveOptions) (err error) {
 	deleteOptions := options.Delete()
 	if len(opts) > 0 {
@@ -417,13 +356,7 @@ func (c *Collection) Remove(ctx context.Context, filter interface{}, opts ...opt
 	return err
 }
 
-// RemoveId 执行删除命令，从集合中删除最多一个文档。 md5:6516d8a8963d018c
-// ff:删除并按ID
-// c:
-// ctx:上下文
-// id:删除ID
-// opts:可选选项
-// err:错误
+// RemoveId executes a delete command to delete at most one document from the collection.
 func (c *Collection) RemoveId(ctx context.Context, id interface{}, opts ...opts.RemoveOptions) (err error) {
 	deleteOptions := options.Delete()
 	if len(opts) > 0 {
@@ -454,13 +387,7 @@ func (c *Collection) RemoveId(ctx context.Context, id interface{}, opts ...opts.
 
 // RemoveAll executes a delete command to delete documents from the collection.
 // If filter is bson.M{}，all ducuments in Collection will be deleted
-// ff:删除
-// c:
-// ctx:上下文
-// filter:删除条件
-// opts:可选选项
-// result:删除结果
-// err:错误
+// Reference: https://docs.mongodb.com/manual/reference/command/delete/
 func (c *Collection) RemoveAll(ctx context.Context, filter interface{}, opts ...opts.RemoveOptions) (result *DeleteResult, err error) {
 	deleteOptions := options.Delete()
 	if len(opts) > 0 {
@@ -488,12 +415,7 @@ func (c *Collection) RemoveAll(ctx context.Context, filter interface{}, opts ...
 	return
 }
 
-// Aggregate 在集合上执行聚合命令，并返回一个 AggregateI，用于获取结果文档。 md5:e57ffed517c59fbc
-// ff:聚合
-// c:
-// ctx:上下文
-// pipeline:聚合管道
-// opts:可选选项
+// Aggregate executes an aggregate command against the collection and returns a AggregateI to get resulting documents.
 func (c *Collection) Aggregate(ctx context.Context, pipeline interface{}, opts ...opts.AggregateOptions) AggregateI {
 	return &Aggregate{
 		ctx:        ctx,
@@ -506,6 +428,7 @@ func (c *Collection) Aggregate(ctx context.Context, pipeline interface{}, opts .
 // ensureIndex create multiple indexes on the collection and returns the names of
 // Example：indexes = []string{"idx1", "-idx2", "idx3,idx4"}
 // Three indexes will be created, index idx1 with ascending order, index idx2 with descending order, idex3 and idex4 are Compound ascending sort index
+// Reference: https://docs.mongodb.com/manual/reference/command/createIndexes/
 func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel) error {
 	var indexModels []mongo.IndexModel
 	for _, idx := range indexes {
@@ -537,18 +460,12 @@ func (c *Collection) ensureIndex(ctx context.Context, indexes []opts.IndexModel)
 	return nil
 }
 
-// 确保索引（已弃用）
-// 建议使用CreateIndexes / CreateOneIndex以获取更多功能）
-// EnsureIndexes 在集合中创建唯一和非唯一的索引，与CreateIndexes的组合不同：
-// 如果uniques/indexes是`[]string{"name"}`，意味着创建名为"name"的索引
-// 如果uniques/indexes是`[]string{"name,-age", "uid"}`，表示创建复合索引：name和-age，然后创建一个索引：uid
-// md5:c595ad59f9c60c06
-// ff:EnsureIndexes弃用
-// c:
-// ctx:
-// uniques:
-// indexes:
-// err:
+// EnsureIndexes Deprecated
+// Recommend to use CreateIndexes / CreateOneIndex for more function)
+// EnsureIndexes creates unique and non-unique indexes in collection
+// the combination of indexes is different from CreateIndexes:
+// if uniques/indexes is []string{"name"}, means create index "name"
+// if uniques/indexes is []string{"name,-age","uid"} means create Compound indexes: name and -age, then create one index: uid
 func (c *Collection) EnsureIndexes(ctx context.Context, uniques []string, indexes []string) (err error) {
 	var uniqueModel []opts.IndexModel
 	var indexesModel []opts.IndexModel
@@ -574,53 +491,32 @@ func (c *Collection) EnsureIndexes(ctx context.Context, uniques []string, indexe
 	return
 }
 
-// CreateIndexes 在集合中创建多个索引
-// 如果opts.IndexModel中的Key为[]string{"name"}，表示创建索引：name
-// 如果opts.IndexModel中的Key为[]string{"name", "-age"}，表示创建复合索引：name和-age
-// md5:822a787892c2186f索引s
-// ff:创建多条索引
-// c:
-// ctx:上下文
-// indexes:索引s
-// err:错误
+// CreateIndexes creates multiple indexes in collection
+// If the Key in opts.IndexModel is []string{"name"}, means create index: name
+// If the Key in opts.IndexModel is []string{"name","-age"} means create Compound indexes: name and -age
 func (c *Collection) CreateIndexes(ctx context.Context, indexes []opts.IndexModel) (err error) {
 	err = c.ensureIndex(ctx, indexes)
 	return
 }
 
-// CreateOneIndex 创建一个索引
-// 如果opts.IndexModel中的Key为[]string{"name"}，表示创建名为"name"的索引
-// 如果opts.IndexModel中的Key为[]string{"name","-age"}，表示创建复合索引：按照"name"升序和"age"降序
-// md5:70c27ea42ff3bbbf
-// ff:创建索引
-// c:
-// ctx:上下文
-// index:索引
+// CreateOneIndex creates one index
+// If the Key in opts.IndexModel is []string{"name"}, means create index name
+// If the Key in opts.IndexModel is []string{"name","-age"} means create Compound index: name and -age
 func (c *Collection) CreateOneIndex(ctx context.Context, index opts.IndexModel) error {
 	return c.ensureIndex(ctx, []opts.IndexModel{index})
 
 }
 
-// DropAllIndexes 会删除集合上除了_id字段索引之外的所有索引
-// 如果集合上只有_id字段的索引，该函数调用将报告错误
-// md5:e7655b40436f93df全部索引
-// ff:删除全部索引
-// c:
-// ctx:上下文
-// err:错误
+// DropAllIndexes drop all indexes on the collection except the index on the _id field
+// if there is only _id field index on the collection, the function call will report an error
 func (c *Collection) DropAllIndexes(ctx context.Context) (err error) {
 	_, err = c.collection.Indexes().DropAll(ctx)
 	return err
 }
 
-// DropIndex 从集合中删除索引，需要删除的索引应与输入的索引列表匹配
-// 索引是 []string{"name"} 表示删除名为 "name" 的单个索引
-// 索引是 []string{"name", "-age"} 表示删除复合索引：name 和排除年龄 (-age) 的部分索引
-// md5:4ad77e88557061c7索引索引s
-// ff:删除索引
-// c:
-// ctx:上下文
-// indexes:索引s
+// DropIndex drop indexes in collection, indexes that be dropped should be in line with inputting indexes
+// The indexes is []string{"name"} means drop index: name
+// The indexes is []string{"name","-age"} means drop Compound indexes: name and -age
 func (c *Collection) DropIndex(ctx context.Context, indexes []string) error {
 	_, err := c.collection.Indexes().DropOne(ctx, generateDroppedIndex(indexes))
 	if err != nil {
@@ -629,7 +525,7 @@ func (c *Collection) DropIndex(ctx context.Context, indexes []string) error {
 	return err
 }
 
-// 生成存储在Mongo中的索引，可能包含多个索引（如[]string{"index1","index2"}存储为"index1_1_index2_1"） md5:15332a053c924233
+// generate indexes that store in mongo which may consist more than one index(like []string{"index1","index2"} is stored as "index1_1_index2_1")
 func generateDroppedIndex(index []string) string {
 	var res string
 	for _, e := range index {
@@ -644,36 +540,24 @@ func generateDroppedIndex(index []string) string {
 	return res
 }
 
-// DropIndexDropIndex 会删除索引
-// 即使索引不存在，这个操作也是安全的
-// md5:e7b65cd93b1de7f7集合
-// ff:删除集合
-// c:
-// ctx:上下文
+// DropCollection drops collection
+// it's safe even collection is not exists
 func (c *Collection) DropCollection(ctx context.Context) error {
 	return c.collection.Drop(ctx)
 }
 
-// CloneCollection 创建集合的副本 md5:5df787f1c8ebab26
-// ff:取副本
-// c:
+// CloneCollection creates a copy of the Collection
 func (c *Collection) CloneCollection() (*mongo.Collection, error) {
 	return c.collection.Clone()
 }
 
-// GetCollectionName 返回集合的名字 md5:440484db8f2a466d
-// ff:取集合名
-// c:
+// GetCollectionName returns the name of collection
 func (c *Collection) GetCollectionName() string {
 	return c.collection.Name()
 }
 
 // Watch returns a change stream for all changes on the corresponding collection. See
-// ff:取变更流
-// c:
-// ctx:上下文
-// pipeline:管道
-// opts:可选选项
+// https://docs.mongodb.com/manual/changeStreams/ for more information about change streams.
 func (c *Collection) Watch(ctx context.Context, pipeline interface{}, opts ...*opts.ChangeStreamOptions) (*mongo.ChangeStream, error) {
 	changeStreamOption := options.ChangeStream()
 	if len(opts) > 0 && opts[0].ChangeStreamOptions != nil {
@@ -682,7 +566,7 @@ func (c *Collection) Watch(ctx context.Context, pipeline interface{}, opts ...*o
 	return c.collection.Watch(ctx, pipeline, changeStreamOption)
 }
 
-// translateUpdateResult 将Mongo的更新结果转换为qmgo定义的UpdateResult md5:cb683a73f25cfe75
+// translateUpdateResult translates mongo update result to qmgo define UpdateResult
 func translateUpdateResult(res *mongo.UpdateResult) (result *UpdateResult) {
 	result = &UpdateResult{
 		MatchedCount:  res.MatchedCount,

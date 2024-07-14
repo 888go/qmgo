@@ -9,17 +9,15 @@ import (
 	"github.com/qiniu/qmgo/operator"
 )
 
-// 使用单例的Validate，它缓存结构体信息 md5:37316caf6446b052
+// use a single instance of Validate, it caches struct info
 var validate = validator.New()
 
-// SetValidate 允许使用自定义规则进行验证 md5:c45d0acce1bafd26
-// ff:
-// v:
+// SetValidate let validate can use custom rules
 func SetValidate(v *validator.Validate) {
 	validate = v
 }
 
-// validatorNeeded 检查操作类型（opType）是否需要验证器 md5:69c24cea9b0cf3e4
+// validatorNeeded checks if the validator is needed to opType
 func validatorNeeded(opType operator.OpType) bool {
 	switch opType {
 	case operator.BeforeInsert, operator.BeforeUpsert, operator.BeforeReplace:
@@ -28,14 +26,8 @@ func validatorNeeded(opType operator.OpType) bool {
 	return false
 }
 
-// Do 调用验证器检查
-// 不要在這裡使用 opts
-// md5:a3e02eb169c74704
-// ff:
-// ctx:
-// doc:
-// opType:
-// opts:
+// Do calls validator check
+// Don't use opts here
 func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil
@@ -60,9 +52,9 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 	}
 }
 
-// sliceHandle处理切片文档 md5:92800dd5899836ce
+// sliceHandle handles the slice docs
 func sliceHandle(docs interface{}, opType operator.OpType) error {
-	// []interface{}{UserType实例...} md5:bda81608072dd1ad
+	// []interface{}{UserType{}...}
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v); err != nil {
@@ -82,7 +74,7 @@ func sliceHandle(docs interface{}, opType operator.OpType) error {
 	return nil
 }
 
-// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
+// do check if opType is supported and call fieldHandler
 func do(doc interface{}) error {
 	if !validatorStruct(doc) {
 		return nil
@@ -90,9 +82,8 @@ func do(doc interface{}) error {
 	return validate.Struct(doc)
 }
 
-// validatorStruct 检查doc的类型是否为validator支持的结构体
-// 实现方式与validator相同
-// md5:566d3931e3bc9c80
+// validatorStruct check if kind of doc is validator supported struct
+// same implement as validator
 func validatorStruct(doc interface{}) bool {
 	val := reflect.ValueOf(doc)
 	if val.Kind() == reflect.Ptr && !val.IsNil() {

@@ -23,7 +23,7 @@ import (
 
 var nilTime time.Time
 
-// filedHandler 定义字段类型和处理器之间的关系 md5:c7cd659bd6a053b2
+// filedHandler defines the relations between field type and handler
 var fieldHandler = map[operator.OpType]func(doc interface{}) error{
 	operator.BeforeInsert:  beforeInsert,
 	operator.BeforeUpdate:  beforeUpdate,
@@ -31,19 +31,12 @@ var fieldHandler = map[operator.OpType]func(doc interface{}) error{
 	operator.BeforeUpsert:  beforeUpsert,
 }
 
-// 函数 init() {
-// 注册 middleware，参数为 Do
+//func init() {
+//	middleware.Register(Do)
 //}
-// md5:4bdefdddb5ec33c1
 
-// Do 调用特定方法根据 fType 处理字段
-// 不在这里使用 opts
-// md5:01967b5b64a19adb
-// ff:
-// ctx:
-// doc:
-// opType:
-// opts:
+// Do call the specific method to handle field based on fType
+// Don't use opts here
 func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
@@ -61,13 +54,13 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 			return do(doc, opType)
 		}
 	}
-	//fmt.Println("不支持此类类型") md5:2ba1fad322480d74
+	//fmt.Println("not support type")
 	return nil
 }
 
-// sliceHandle处理切片文档 md5:92800dd5899836ce
+// sliceHandle handles the slice docs
 func sliceHandle(docs interface{}, opType operator.OpType) error {
-	// []interface{}{UserType实例...} md5:bda81608072dd1ad
+	// []interface{}{UserType{}...}
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v, opType); err != nil {
@@ -86,11 +79,10 @@ func sliceHandle(docs interface{}, opType operator.OpType) error {
 	return nil
 }
 
-// beforeInsert 在插入前处理字段
-// 如果文档中的createAt字段的值有效，upsert 不会改变它
-// 如果文档中的id字段的值有效，upsert 不会改变它
-// 无论如何，改变updateAt字段的值
-// md5:f49d81597c8212f6
+// beforeInsert handles field before insert
+// If value of field createAt is valid in doc, upsert doesn't change it
+// If value of field id is valid in doc, upsert doesn't change it
+// Change the value of field updateAt anyway
 func beforeInsert(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultId()
@@ -106,7 +98,7 @@ func beforeInsert(doc interface{}) error {
 	return nil
 }
 
-// beforeUpdate处理更新前的字段 md5:a783a1aa99fba490
+// beforeUpdate handles field before update
 func beforeUpdate(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultUpdateAt()
@@ -118,11 +110,10 @@ func beforeUpdate(doc interface{}) error {
 	return nil
 }
 
-// beforeUpsert 处理字段的before upsert操作
-// 如果doc中field createAt的值有效，upsert操作不会改变它
-// 如果doc中field id的值有效，upsert操作也不会改变它
-// 无论如何都会更新field updateAt的值
-// md5:d286cfb6c0a1f1da
+// beforeUpsert handles field before upsert
+// If value of field createAt is valid in doc, upsert doesn't change it
+// If value of field id is valid in doc, upsert doesn't change it
+// Change the value of field updateAt anyway
 func beforeUpsert(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultId()
@@ -138,7 +129,7 @@ func beforeUpsert(doc interface{}) error {
 	return nil
 }
 
-// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
+// do check if opType is supported and call fieldHandler
 func do(doc interface{}, opType operator.OpType) error {
 	if f, ok := fieldHandler[opType]; !ok {
 		return nil

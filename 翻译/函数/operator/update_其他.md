@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [CurrentDate = "$currentDate"]
 qm=更新为当前时间
 cz=CurrentDate #等号# "$currentDate"

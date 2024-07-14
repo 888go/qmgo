@@ -19,7 +19,7 @@ import (
 	"reflect"
 )
 
-// hookHandler 定义钩子类型和处理器之间的关系 md5:bce577bc34fd8393
+// hookHandler defines the relations between hook type and handler
 var hookHandler = map[operator.OpType]func(ctx context.Context, hook interface{}) error{
 	operator.BeforeInsert:  beforeInsert,
 	operator.AfterInsert:   afterInsert,
@@ -35,23 +35,13 @@ var hookHandler = map[operator.OpType]func(ctx context.Context, hook interface{}
 	operator.AfterReplace:  afterUpdate,
 }
 
-// ```go
-// 函数init() {
-// 中间件注册(Do)
-// }
-// ```
 //
-// 这段Go代码的注释是描述`init()`函数的作用，它用于在程序启动时注册一个名为`Do`的中间件。
-// md5:a0604c723a346113
+//func init() {
+//	middleware.Register(Do)
+//}
 
-// 根据hType调用特定的方法来处理钩子
-// 如果opts有有效的值，将使用它替换原始的钩子
-// md5:8a28d86282a2f1cb
-// ff:
-// ctx:
-// hook:
-// opType:
-// opts:
+// Do call the specific method to handle hook based on hType
+// If opts has valid value, use it instead of original hook
 func Do(ctx context.Context, hook interface{}, opType operator.OpType, opts ...interface{}) error {
 	if len(opts) > 0 {
 		hook = opts[0]
@@ -77,9 +67,9 @@ func Do(ctx context.Context, hook interface{}, opType operator.OpType, opts ...i
 	}
 }
 
-// sliceHandle 处理切片钩子 md5:c688842b5e68c3d2
+// sliceHandle handles the slice hooks
 func sliceHandle(ctx context.Context, hook interface{}, opType operator.OpType) error {
-	// []interface{}{UserType实例...} md5:bda81608072dd1ad
+	// []interface{}{UserType{}...}
 	if h, ok := hook.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(ctx, v, opType); err != nil {
@@ -98,7 +88,7 @@ func sliceHandle(ctx context.Context, hook interface{}, opType operator.OpType) 
 	return nil
 }
 
-// BeforeInsertHook 插入钩子接口定义了插入操作前的钩子函数 md5:d21219ecf0626005
+// BeforeInsertHook InsertHook defines the insert hook interface
 type BeforeInsertHook interface {
 	BeforeInsert(ctx context.Context) error
 }
@@ -106,7 +96,7 @@ type AfterInsertHook interface {
 	AfterInsert(ctx context.Context) error
 }
 
-// beforeInsert 调用自定义的 BeforeInsert md5:615b3c8fedf08917
+// beforeInsert calls custom BeforeInsert
 func beforeInsert(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(BeforeInsertHook); ok {
 		return ih.BeforeInsert(ctx)
@@ -114,7 +104,7 @@ func beforeInsert(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// afterInsert 调用自定义的 AfterInsert md5:2c328449f2524700
+// afterInsert calls custom AfterInsert
 func afterInsert(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(AfterInsertHook); ok {
 		return ih.AfterInsert(ctx)
@@ -122,7 +112,7 @@ func afterInsert(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// BeforeUpdateHook 定义了 Update 钩子接口 md5:5b0bf7445582bfc4
+// BeforeUpdateHook defines the Update hook interface
 type BeforeUpdateHook interface {
 	BeforeUpdate(ctx context.Context) error
 }
@@ -130,7 +120,7 @@ type AfterUpdateHook interface {
 	AfterUpdate(ctx context.Context) error
 }
 
-// beforeUpdate 调用自定义的 BeforeUpdate md5:4241dc99bc7049cb
+// beforeUpdate calls custom BeforeUpdate
 func beforeUpdate(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(BeforeUpdateHook); ok {
 		return ih.BeforeUpdate(ctx)
@@ -138,7 +128,7 @@ func beforeUpdate(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// afterUpdate 调用自定义的 AfterUpdate md5:e97728f60d7fb285
+// afterUpdate calls custom AfterUpdate
 func afterUpdate(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(AfterUpdateHook); ok {
 		return ih.AfterUpdate(ctx)
@@ -146,7 +136,7 @@ func afterUpdate(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// BeforeQueryHook QueryHook 定义了查询钩子接口 md5:7190d574d8ba3bb9
+// BeforeQueryHook QueryHook defines the query hook interface
 type BeforeQueryHook interface {
 	BeforeQuery(ctx context.Context) error
 }
@@ -154,7 +144,7 @@ type AfterQueryHook interface {
 	AfterQuery(ctx context.Context) error
 }
 
-// beforeQuery 调用自定义的 BeforeQuery md5:269716e251327a4b
+// beforeQuery calls custom BeforeQuery
 func beforeQuery(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(BeforeQueryHook); ok {
 		return ih.BeforeQuery(ctx)
@@ -162,7 +152,7 @@ func beforeQuery(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// afterQuery 调用自定义的 AfterQuery md5:3975e33a3442aa92
+// afterQuery calls custom AfterQuery
 func afterQuery(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(AfterQueryHook); ok {
 		return ih.AfterQuery(ctx)
@@ -170,7 +160,7 @@ func afterQuery(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// BeforeRemoveHook RemoveHook 定义了移除钩子接口 md5:9c4d45d4f016c9cc
+// BeforeRemoveHook RemoveHook defines the remove hook interface
 type BeforeRemoveHook interface {
 	BeforeRemove(ctx context.Context) error
 }
@@ -178,7 +168,7 @@ type AfterRemoveHook interface {
 	AfterRemove(ctx context.Context) error
 }
 
-// beforeRemove 调用自定义的 BeforeRemove md5:28aee6c76322664d
+// beforeRemove calls custom BeforeRemove
 func beforeRemove(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(BeforeRemoveHook); ok {
 		return ih.BeforeRemove(ctx)
@@ -186,7 +176,7 @@ func beforeRemove(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// afterRemove 调用自定义的 AfterRemove 方法 md5:76432724d5d50929
+// afterRemove calls custom AfterRemove
 func afterRemove(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(AfterRemoveHook); ok {
 		return ih.AfterRemove(ctx)
@@ -194,7 +184,7 @@ func afterRemove(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// BeforeUpsertHook UpsertHook 定义了 Upsert 操作前的钩子接口 md5:745e467bebed93fc
+// BeforeUpsertHook UpsertHook defines the upsert hook interface
 type BeforeUpsertHook interface {
 	BeforeUpsert(ctx context.Context) error
 }
@@ -202,7 +192,7 @@ type AfterUpsertHook interface {
 	AfterUpsert(ctx context.Context) error
 }
 
-// beforeUpsert 调用自定义的 BeforeUpsert md5:c4bfb36f702295c2
+// beforeUpsert calls custom BeforeUpsert
 func beforeUpsert(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(BeforeUpsertHook); ok {
 		return ih.BeforeUpsert(ctx)
@@ -210,7 +200,7 @@ func beforeUpsert(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// afterUpsert 调用自定义的 AfterUpsert md5:2bcc20678061e065
+// afterUpsert calls custom AfterUpsert
 func afterUpsert(ctx context.Context, hook interface{}) error {
 	if ih, ok := hook.(AfterUpsertHook); ok {
 		return ih.AfterUpsert(ctx)
@@ -218,7 +208,7 @@ func afterUpsert(ctx context.Context, hook interface{}) error {
 	return nil
 }
 
-// 检查opType是否支持，并调用hookHandler md5:1b5144f1d5dc2b78
+// do check if opType is supported and call hookHandler
 func do(ctx context.Context, hook interface{}, opType operator.OpType) error {
 	if f, ok := hookHandler[opType]; !ok {
 		return nil

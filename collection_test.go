@@ -43,7 +43,7 @@ func TestCollection_EnsureIndex(t *testing.T) {
 	// same index，error
 	ast.Error(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"id1"}}}))
 
-	// 检查唯一索引是否正常工作 md5:9b2257b60d7b5998
+	// check if unique indexs is working
 	var err error
 	doc := bson.M{
 		"id1": 1,
@@ -70,7 +70,7 @@ func TestCollection_EnsureIndexes(t *testing.T) {
 	// same index，error
 	ast.Error(cli.EnsureIndexes(context.Background(), nil, unique))
 
-	// 检查唯一索引是否正常工作 md5:9b2257b60d7b5998
+	// check if unique indexs is working
 	var err error
 	doc := bson.M{
 		"id1": 1,
@@ -99,7 +99,7 @@ func TestCollection_CreateIndexes(t *testing.T) {
 	// same index，error
 	ast.Error(cli.CreateOneIndex(context.Background(), options.IndexModel{Key: unique}))
 
-	// 检查唯一索引是否正常工作 md5:9b2257b60d7b5998
+	// check if unique indexs is working
 	var err error
 	doc := bson.M{
 		"id1": 1,
@@ -286,7 +286,7 @@ func TestCollection_Upsert(t *testing.T) {
 	ast.Equal(int64(1), res.UpsertedCount)
 	ast.NotNil(res.UpsertedID)
 
-	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
+	// filter is nil or wrong BSON Document format
 	replacement3 := bson.M{
 		"name": "Geek",
 		"age":  21,
@@ -299,7 +299,7 @@ func TestCollection_Upsert(t *testing.T) {
 	ast.Error(err)
 	ast.Empty(res)
 
-	// replacement 是空的或者不符合正确的BSON文档格式 md5:7b0ecb01590a648b
+	// replacement is nil or wrong BSON Document format
 	filter4 := bson.M{
 		"name": "Geek",
 	}
@@ -356,9 +356,9 @@ func TestCollection_UpsertId(t *testing.T) {
 	ast.Equal(int64(0), res.MatchedCount)
 	ast.Equal(int64(0), res.ModifiedCount)
 	ast.Equal(int64(1), res.UpsertedCount)
-	ast.Equal(id3, res.UpsertedID) // id3 将会插入到已插入的文档中 md5:4cdfbeaa6a4c59ce
+	ast.Equal(id3, res.UpsertedID) // id3 will insert into the inserted document
 
-	// 使用与文档中id不同的过滤器，错误 md5:1864a41611ea40ba
+	// filter with id different from id in document, error
 	id4 := primitive.NewObjectID()
 	replacement3 := bson.M{
 		"_id":  id4,
@@ -382,7 +382,7 @@ func TestCollection_UpsertId(t *testing.T) {
 	ast.Equal(int64(1), res.UpsertedCount)
 	ast.Nil(res.UpsertedID)
 
-	// replacement 是空的或者不符合正确的BSON文档格式 md5:7b0ecb01590a648b
+	// replacement is nil or wrong BSON Document format
 	res, err = cli.UpsertId(context.Background(), id1, nil)
 	ast.Error(err)
 	ast.Empty(res)
@@ -408,7 +408,7 @@ func TestCollection_Update(t *testing.T) {
 	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
-	// 更新已存在的记录 md5:cc4fac8615b8fc8a
+	// update already exist record
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -441,7 +441,7 @@ func TestCollection_Update(t *testing.T) {
 	err = cli.UpdateOne(context.Background(), filter2, update2, opts)
 	ast.NoError(err)
 
-	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
+	// filter is nil or wrong BSON Document format
 	update3 := bson.M{
 		"name": "Geek",
 		"age":  21,
@@ -452,7 +452,7 @@ func TestCollection_Update(t *testing.T) {
 	err = cli.UpdateOne(context.Background(), 1, update3)
 	ast.Error(err)
 
-	// update 是 nil 或者格式错误的 BSON 文档 md5:8f6e8bd5cf0af638
+	// update is nil or wrong BSON Document format
 	filter4 := bson.M{
 		"name": "Geek",
 	}
@@ -479,7 +479,7 @@ func TestCollection_UpdateId(t *testing.T) {
 	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
-	// 更新已存在的记录 md5:cc4fac8615b8fc8a
+	// update already exist record
 	update1 := bson.M{
 		operator.Set: bson.M{
 			"name": "Alice1",
@@ -527,7 +527,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
-	// 更新已存在的记录 md5:cc4fac8615b8fc8a
+	// update already exist record
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -546,7 +546,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 	ast.Equal(int64(0), res.UpsertedCount)
 	ast.Equal(nil, res.UpsertedID)
 
-	// 如果记录不存在，err为nil，res中的MatchedCount为0 md5:ffbbcabc3c0f02fe
+	// if record is not exist，err is nil， MatchedCount in res is 0
 	filter2 := bson.M{
 		"name": "Lily",
 	}
@@ -560,7 +560,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 	ast.NotNil(res)
 	ast.Equal(int64(0), res.MatchedCount)
 
-	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
+	// filter is nil or wrong BSON Document format
 	update3 := bson.M{
 		"name": "Geek",
 		"age":  21,
@@ -573,7 +573,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 	ast.Error(err)
 	ast.Nil(res)
 
-	// update 是 nil 或者格式错误的 BSON 文档 md5:8f6e8bd5cf0af638
+	// update is nil or wrong BSON Document format
 	filter4 := bson.M{
 		"name": "Geek",
 	}
@@ -616,7 +616,7 @@ func TestCollection_Remove(t *testing.T) {
 	ast.NoError(cli.RemoveId(context.Background(), id4))
 	ast.NoError(cli.RemoveId(context.Background(), id5))
 
-	// 删除记录：名称为 "Alice"，之后预期存在一条名称为 "Alice" 的记录。 md5:274874b30e4288bb
+	// delete record: name = "Alice" , after that, expect one name = "Alice" record
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -629,14 +629,14 @@ func TestCollection_Remove(t *testing.T) {
 	ast.NoError(err)
 	ast.Equal(int64(1), cnt)
 
-	// 删除不匹配的记录，如果发生错误则报告错误 md5:46e3eb8e95abdfcc
+	// delete not match  record , report err
 	filter2 := bson.M{
 		"name": "Lily",
 	}
 	err = cli.Remove(context.Background(), filter2)
 	ast.Equal(err, ErrNoSuchDocuments)
 
-	// filter 是 bson.M{}，删除一个文档 md5:dc8fa3aa9522cd67
+	// filter is bson.M{}，delete one document
 	filter3 := bson.M{}
 	preCnt, err := cli.Find(context.Background(), filter3).Count()
 	ast.NoError(err)
@@ -649,7 +649,7 @@ func TestCollection_Remove(t *testing.T) {
 	ast.NoError(err)
 	ast.Equal(preCnt-1, afterCnt)
 
-	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
+	// filter is nil or wrong BSON Document format
 	err = cli.Remove(context.Background(), nil)
 	ast.Error(err)
 
@@ -677,7 +677,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
-	// 删除记录：名称为 "Alice"，之后，预期 - 记录：名称为 "Alice" md5:e6ccda4a8c588184
+	// delete record: name = "Alice" ,after that, expect - record : name = "Alice"
 	filter1 := bson.M{
 		"name": "Alice",
 	}
@@ -692,7 +692,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	ast.NoError(err)
 	ast.Equal(int64(0), cnt)
 
-	// 使用不匹配的过滤器删除，结果中的DeletedCount为0 md5:61f4e36a0742d763
+	// delete with not match filter， DeletedCount in res is 0
 	filter2 := bson.M{
 		"name": "Lily",
 	}
@@ -701,7 +701,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	ast.NotNil(res)
 	ast.Equal(int64(0), res.DeletedCount)
 
-	// filter 是 bson.M{}，删除所有文档 md5:bbe0ca02d153a930
+	// filter is bson.M{}，delete all docs
 	filter3 := bson.M{}
 	preCnt, err := cli.Find(context.Background(), filter3).Count()
 	ast.NoError(err)
@@ -716,7 +716,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 	ast.NoError(err)
 	ast.Equal(int64(0), afterCnt)
 
-	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
+	// filter is nil or wrong BSON Document format
 	res, err = cli.RemoveAll(context.Background(), nil)
 	ast.Error(err)
 	ast.Nil(res)

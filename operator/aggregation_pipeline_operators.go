@@ -14,9 +14,10 @@
 package operator
 
 // Aggregation Pipeline Operators
+// refer: https://docs.mongodb.com/manual/reference/operator/aggregation/
 const (
-	// 算术运算符 md5:862d53c43dccda12
-	Abs      = "$abs" //qm:聚合绝对值  cz:Abs = "$abs"
+	// Arithmetic Expression Operators
+	Abs      = "$abs"
 	Add      = "$add"
 	Ceil     = "$ceil"
 	Divide   = "$divide"
@@ -32,7 +33,7 @@ const (
 	Subtract = "$subtract"
 	Trunc    = "$trunc"
 
-	// 数组表达式运算符 md5:ec78a0b8bc2385f3
+	// Array Expression Operators
 	ArrayElemAt   = "$arrayElemAt"
 	ArrayToObject = "$arrayToObject"
 	ConcatArrays  = "$concatArrays"
@@ -46,15 +47,15 @@ const (
 	ReverseArray  = "$reverseArray"
 	Zip           = "$zip"
 
-	// 比较表达式运算符 md5:c44b496f05f62dec
+	// Comparison Expression Operators
 	Cmp = "$cmp"
 
-	// 条件表达式运算符 md5:5dd78ba4ae108ba1
+	// Conditional Expression Operators
 	Cond   = "$cond"
 	IfNull = "$ifNull"
 	Switch = "$switch"
 
-	// 自定义聚合表达式运算符 md5:c2e3d7a49a64bbbf
+	// Custom Aggregation Expression Operators
 	Accumulator = "$accumulator"
 	Function    = "$function"
 
@@ -62,7 +63,7 @@ const (
 	BinarySize = "$binarySize"
 	BsonSize   = "$bsonSize"
 
-	// 日期表达式运算符 md5:9109a9260ffcf4b1
+	// Date Expression Operators
 	DateFromParts  = "$dateFromParts"
 	DateFromString = "$dateFromString"
 	DateToParts    = "$dateToParts"
@@ -70,25 +71,25 @@ const (
 	DayOfMonth     = "$dayOfMonth"
 	DayOfWeek      = "$dayOfWeek"
 	DayOfYear      = "$dayOfYear"
-	Hour           = "$hour" //qm:小时  cz:Hour = "$hour"
+	Hour           = "$hour"
 	IsoDayOfWeek   = "$isoDayOfWeek"
 	IsoWeek        = "$isoWeek"
 	IsoWeekYear    = "$isoWeekYear"
 	Millisecond    = "$millisecond"
 	Minute         = "$minute"
-	Month          = "$month"  //qm:月  cz:Month = "$month"
-	Second         = "$second" //qm:秒  cz:Second = "$second"
+	Month          = "$month"
+	Second         = "$second"
 	ToDate         = "$toDate"
-	Week           = "$week" //qm:周  cz:Week = "$week"
-	Year           = "$year" //qm:年  cz:Year = "$year"
+	Week           = "$week"
+	Year           = "$year"
 
-	// 字面量表达式操作符 md5:8501f5c82ee2c883
+	// Literal Expression Operator
 	Literal = "$literal"
 
-	// 对象表达式运算符 md5:b6f2383d804984d9
+	// Object Expression Operators
 	MergeObjects = "$mergeObjects"
 
-	// 设置表达式运算符 md5:e745772d17491d89
+	// Set Expression Operators
 	AllElementsTrue = "$allElementsTrue"
 	AnyElementTrue  = "$anyElementTrue"
 	SetDifference   = "$setDifference"
@@ -97,7 +98,7 @@ const (
 	SetIsSubset     = "$setIsSubset"
 	SetUnion        = "$setUnion"
 
-	// 字符串表达式操作符 md5:eb3461a712d14fac
+	// String Expression Operators
 	Concat       = "$concat"
 	IndexOfBytes = "$indexOfBytes"
 	IndexOfCP    = "$indexOfCP"
@@ -120,7 +121,7 @@ const (
 	ReplaceOne   = "$replaceOne"
 	ReplaceAll   = "$replaceAll"
 
-	// 三角函数表达式运算符 md5:c83fcb6cf067b355
+	// Trigonometry Expression Operators
 	Sin              = "$sin"
 	Cos              = "$cos"
 	Tan              = "$tan"
@@ -134,7 +135,7 @@ const (
 	DegreesToRadians = "$degreesToRadians"
 	RadiansToDegrees = "$radiansToDegrees"
 
-	// 类型表达式运算符 md5:021bcd14e2b085e1
+	// Type Expression Operators
 	Convert    = "$convert"
 	ToBool     = "$toBool"
 	ToDecimal  = "$toDecimal"
@@ -145,14 +146,14 @@ const (
 	IsNumber   = "$isNumber"
 
 	// Accumulators ($group)
-	Avg   = "$avg" //qm:平均值  cz:Avg = "$avg"
+	Avg   = "$avg"
 	First = "$first"
 	Last  = "$last"
 
 	StdDevPop  = "$stdDevPop"
 	StdDevSamp = "$stdDevSamp"
-	Sum        = "$sum" //qm:求和  cz:Sum = "$sum"
+	Sum        = "$sum"
 
-	// 变量表达式操作符 md5:b84290815043dc99
+	// Variable Expression Operators
 	Let = "$let"
 )

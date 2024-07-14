@@ -16,6 +16,6 @@ package options
 import "go.mongodb.org/mongo-driver/mongo/options"
 
 type IndexModel struct {
-	Key []string // 指定索引键字段；以减号（-）前缀名称表示降序排列 md5:69763ade41fb7152
+	Key []string // Index key fields; prefix name with dash (-) for descending order
 	*options.IndexOptions
 }

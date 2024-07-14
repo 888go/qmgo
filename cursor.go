@@ -26,11 +26,8 @@ type Cursor struct {
 	err    error
 }
 
-// Next 获取此游标下的下一个文档。如果未发生错误且游标未耗尽，它将返回true。
-// md5:29446221269baaee
-// ff:下一个
-// c:
-// result:
+// Next gets the next document for this cursor. It returns true if there were no errors and the cursor has not been
+// exhausted.
 func (c *Cursor) Next(result interface{}) bool {
 	if c.err != nil {
 		return false
@@ -46,12 +43,8 @@ func (c *Cursor) Next(result interface{}) bool {
 	return false
 }
 
-// All 使用游标遍历每个文档，并将其解码到结果中。results 参数必须是指向切片的指针。
-// 建议在 struct Query 或 Aggregate 中使用 All() 方法。
-// md5:283225edc771266b
-// ff:取全部
-// c:
-// results:
+// All iterates the cursor and decodes each document into results. The results parameter must be a pointer to a slice.
+// recommend to use All() in struct Query or Aggregate
 func (c *Cursor) All(results interface{}) error {
 	if c.err != nil {
 		return c.err
@@ -59,18 +52,16 @@ func (c *Cursor) All(results interface{}) error {
 	return c.cursor.All(c.ctx, results)
 }
 
-// ID 返回游标ID，如果游标已关闭或耗尽，则返回0。
+// ID returns the ID of this cursor, or 0 if the cursor has been closed or exhausted.
 //func (c *Cursor) ID() int64 {
-// 如果c.err不为nil，则返回0
-// 否则返回游标c.cursor的ID
+//	if c.err != nil {
+//		return 0
+//	}
+//	return c.cursor.ID()
 //}
-// md5:bfd41b068bf5e581
 
-// Close 关闭这个游标。在调用 Close 之后，不应再调用 Next 或 TryNext。
-// 当游标对象不再使用时，应主动关闭它。
-// md5:7c67b9468038ed61
-// ff:关闭
-// c:
+// Close closes this cursor. Next and TryNext must not be called after Close has been called.
+// When the cursor object is no longer in use, it should be actively closed
 func (c *Cursor) Close() error {
 	if c.err != nil {
 		return c.err
@@ -78,9 +69,7 @@ func (c *Cursor) Close() error {
 	return c.cursor.Close(c.ctx)
 }
 
-// Err 返回Cursor的最后一个错误，如果没有发生错误，则返回nil md5:2ebbf5e5b4796f72
-// ff:取错误
-// c:
+// Err return the last error of Cursor, if no error occurs, return nil
 func (c *Cursor) Err() error {
 	if c.err != nil {
 		return c.err

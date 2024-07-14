@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [func Now() time.Time {]
 ff=取当前时间
 
