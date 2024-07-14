@@ -35,18 +35,13 @@
 # //zj:
 # 备注结束
 
-
-
 [InsertedID interface{}]
 qm=插入ID
 cz=InsertedID interface{}
 
-
-
 [InsertedIDs #左中括号##右中括号#interface{}]
 qm=插入IDs
 cz=InsertedIDs []interface{}
-
 
 [MatchedCount int64]
 qm=匹配数
@@ -63,7 +58,6 @@ cz=UpsertedCount int64
 [UpsertedID interface{}]
 qm=替换插入ID
 cz=UpsertedID interface{}
-
 
 [DeletedCount int64]
 qm=删除数量

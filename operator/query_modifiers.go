@@ -11,11 +11,9 @@
  limitations under the License.
 */
 
-package mgo常量
+package operator
 
-// 查询修饰符
-// 参考：https://docs.mongodb.com/manual/reference/operator/query-modifier/
-// md5:d060699c713ecc32
+// Query Modifiers
 const (
 	// Modifiers
 	Explain     = "$explain"

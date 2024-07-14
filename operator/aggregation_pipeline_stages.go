@@ -11,36 +11,34 @@
  limitations under the License.
 */
 
-package mgo常量
+package operator
 
-// 定义聚合管道阶段
-// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
-// md5:40bdaebb510f842e
+// define the aggregation pipeline stages
 const (
 	// 集合聚合阶段 md5:37e4a0637949107b
 	AddFields      = "$addFields"
 	Bucket         = "$bucket"
 	BucketAuto     = "$bucketAuto"
 	CollStats      = "$collStats"
-	X聚合计数          = "$count"
+	Count          = "$count" //qm:聚合计数  cz:Count = "$count"
 	Facet          = "$facet"
 	GeoNear        = "$geoNear"
 	GraphLookup    = "$graphLookup"
-	X聚合分组          = "$group"
+	Group          = "$group" //qm:聚合分组  cz:Group = "$group"
 	IndexStats     = "$indexStats"
-	X聚合限制数量          = "$limit"
+	Limit          = "$limit" //qm:聚合限制数量  cz:Limit = "$limit"
 	ListSessions   = "$listSessions"
-	X聚合关联集合         = "$lookup"
-	X聚合条件          = "$match"
-	X聚合合并          = "$merge"
+	Lookup         = "$lookup" //qm:聚合关联集合  cz:Lookup = "$lookup"
+	Match          = "$match"  //qm:聚合条件  cz:Match = "$match"
+	Merge          = "$merge"  //qm:聚合合并  cz:Merge = "$merge"
 	Out            = "$out"
 	PlanCacheStats = "$planCacheStats"
-	X聚合字段        = "$project"
+	Project        = "$project" //qm:聚合字段  cz:Project = "$project"
 	Redact         = "$redact"
 	ReplaceRoot    = "$replaceRoot"
 	ReplaceWith    = "$replaceWith"
 	Sample         = "$sample"
-	X聚合跳过           = "$skip"
+	Skip           = "$skip" //qm:聚合跳过  cz:Skip = "$skip"
 	SortByCount    = "$sortByCount"
 	UnionWith      = "$unionWith"
 	Unwind         = "$unwind"

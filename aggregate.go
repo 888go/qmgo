@@ -11,11 +11,11 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo //bm:mgo类
 
 import (
 	"context"
-	opts "github.com/888go/qmgo/options"
+	opts "github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -33,8 +33,11 @@ type Aggregate struct {
 	options    []opts.AggregateOptions
 }
 
-// X取全部 遍历聚合的游标，并将每个文档解码为结果。 md5:22b8eb7acebfa36a
-func (a *Aggregate) X取全部(结果指针 interface{}) error {
+// All 遍历聚合的游标，并将每个文档解码为结果。 md5:22b8eb7acebfa36a
+// ff:取全部
+// a:
+// results:结果指针
+func (a *Aggregate) All(results interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions
@@ -43,11 +46,14 @@ func (a *Aggregate) X取全部(结果指针 interface{}) error {
 	if err != nil {
 		return err
 	}
-	return c.All(a.ctx, 结果指针)
+	return c.All(a.ctx, results)
 }
 
-// X取一条 从聚合结果中遍历游标，并将当前文档解码到结果中。 md5:95d05e20ff85babc
-func (a *Aggregate) X取一条(结果指针 interface{}) error {
+// One 从聚合结果中遍历游标，并将当前文档解码到结果中。 md5:95d05e20ff85babc
+// ff:取一条
+// a:
+// result:结果指针
+func (a *Aggregate) One(result interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions
@@ -61,25 +67,29 @@ func (a *Aggregate) X取一条(结果指针 interface{}) error {
 		cursor: c,
 		err:    err,
 	}
-	defer cr.X关闭()
-	if !cr.X下一个(结果指针) {
-		if err := cr.X取错误(); err != nil {
+	defer cr.Close()
+	if !cr.Next(result) {
+		if err := cr.Err(); err != nil {
 			return err
 		}
-		return X错误_未找到文档
+		return ErrNoSuchDocuments
 	}
 	return err
 }
 
-// Iter弃用 返回聚合后的游标
+// Iter 返回聚合后的游标
 // 已弃用，请使用Cursor
 // md5:722184e644380849
-func (a *Aggregate) Iter弃用() CursorI {
-	return a.X取结果集()
+// ff:Iter弃用
+// a:
+func (a *Aggregate) Iter() CursorI {
+	return a.Cursor()
 }
 
-// X取结果集返回聚合后的游标 md5:eac4fdc1facaf217
-func (a *Aggregate) X取结果集() CursorI {
+// Cursor返回聚合后的游标 md5:eac4fdc1facaf217
+// ff:取结果集
+// a:
+func (a *Aggregate) Cursor() CursorI {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions

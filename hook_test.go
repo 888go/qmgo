@@ -11,15 +11,15 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
 	"errors"
 	"testing"
 
-	"github.com/888go/qmgo/operator"
-	"github.com/888go/qmgo/options"
+	"github.com/qiniu/qmgo/operator"
+	"github.com/qiniu/qmgo/options"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -86,12 +86,12 @@ func TestInsertHook(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.X关闭连接(ctx)
-	defer cli.X删除集合(ctx)
+	defer cli.Close(ctx)
+	defer cli.DropCollection(ctx)
 
 	afterInsertCount = 0
 	u := &UserHook{Name: "Lucas", Age: 7}
-	_, err := cli.X插入(context.Background(), u, options.InsertOneOptions{
+	_, err := cli.InsertOne(context.Background(), u, options.InsertOneOptions{
 		InsertHook: u,
 	})
 	ast.NoError(err)
@@ -99,9 +99,9 @@ func TestInsertHook(t *testing.T) {
 	uc := bson.M{"name": "Lucas"}
 	ur := &UserHook{}
 	uk := &MyQueryHook{}
-	err = cli.X查询(ctx, uc, options.FindOptions{
+	err = cli.Find(ctx, uc, options.FindOptions{
 		QueryHook: uk,
-	}).X取一条(ur)
+	}).One(ur)
 	ast.NoError(err)
 
 	ast.Equal(17, ur.Age)
@@ -115,14 +115,14 @@ func TestInsertManyHook(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.X关闭连接(ctx)
-	defer cli.X删除集合(ctx)
+	defer cli.Close(ctx)
+	defer cli.DropCollection(ctx)
 
 	afterInsertCount = 0
 	u1 := &UserHook{Name: "Lucas", Age: 7}
 	u2 := &UserHook{Name: "xm", Age: 7}
 	us := []*UserHook{u1, u2}
-	_, err := cli.X插入多个(ctx, us, options.InsertManyOptions{
+	_, err := cli.InsertMany(ctx, us, options.InsertManyOptions{
 		InsertHook: us,
 	})
 	ast.NoError(err)
@@ -130,9 +130,9 @@ func TestInsertManyHook(t *testing.T) {
 	uc := bson.M{"name": "Lucas"}
 	ur := []UserHook{}
 	qh := &MyQueryHook{}
-	err = cli.X查询(ctx, uc, options.FindOptions{
+	err = cli.Find(ctx, uc, options.FindOptions{
 		QueryHook: qh,
-	}).X取全部(&ur)
+	}).All(&ur)
 	ast.NoError(err)
 
 	ast.Equal(17, ur[0].Age)
@@ -162,41 +162,41 @@ func TestUpdateHook(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.X关闭连接(ctx)
-	defer cli.X删除集合(ctx)
+	defer cli.Close(ctx)
+	defer cli.DropCollection(ctx)
 
 	u := UserHook{Name: "Lucas", Age: 7}
 	uh := &MyUpdateHook{}
-	res, err := cli.X插入(context.Background(), u)
+	res, err := cli.InsertOne(context.Background(), u)
 	ast.NoError(err)
 
-	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.UpdateOne(ctx, bson.M{"name": "Lucas"}, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: uh,
 	})
 	ast.NoError(err)
 	ast.Equal(1, uh.beforeUpdateCount)
 	ast.Equal(1, uh.afterUpdateCount)
 
-	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.UpdateId(ctx, res.InsertedID, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: uh,
 	})
 	ast.NoError(err)
 	ast.Equal(2, uh.beforeUpdateCount)
 	ast.Equal(2, uh.afterUpdateCount)
 
-	err = cli.X替换一条(ctx, bson.M{"name": "Lucas"}, &u)
+	err = cli.ReplaceOne(ctx, bson.M{"name": "Lucas"}, &u)
 	ast.NoError(err)
 	ast.Equal(1, u.beforeCount)
 	ast.Equal(1, u.afterCount)
 
-	err = cli.X替换一条(ctx, bson.M{"name": "Lucas"}, &u, options.ReplaceOptions{
+	err = cli.ReplaceOne(ctx, bson.M{"name": "Lucas"}, &u, options.ReplaceOptions{
 		UpdateHook: &u,
 	})
 	ast.NoError(err)
 	ast.Equal(2, u.beforeCount)
 	ast.Equal(2, u.afterCount)
 
-	cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	cli.UpdateAll(ctx, bson.M{"name": "Lucas"}, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: uh,
 	})
 	ast.NoError(err)
@@ -223,16 +223,16 @@ func TestRemoveHook(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.X关闭连接(ctx)
-	defer cli.X删除集合(ctx)
+	defer cli.Close(ctx)
+	defer cli.DropCollection(ctx)
 
 	u := []*UserHook{&UserHook{Name: "Lucas", Age: 7}, &UserHook{Name: "xm", Age: 7},
 		&UserHook{Name: "wxy", Age: 7}, &UserHook{Name: "zp", Age: 7}}
-	rlt, err := cli.X插入多个(context.Background(), u)
+	rlt, err := cli.InsertMany(context.Background(), u)
 	ast.NoError(err)
 
 	rh := &MyRemoveHook{}
-	err = cli.X删除并按ID(ctx, rlt.X插入IDs[0].(primitive.ObjectID), options.RemoveOptions{
+	err = cli.RemoveId(ctx, rlt.InsertedIDs[0].(primitive.ObjectID), options.RemoveOptions{
 		RemoveHook: rh,
 	})
 	ast.NoError(err)
@@ -240,7 +240,7 @@ func TestRemoveHook(t *testing.T) {
 	ast.Equal(1, rh.beforeCount)
 
 	rh = &MyRemoveHook{}
-	err = cli.X删除一条(ctx, bson.M{"age": 17}, options.RemoveOptions{
+	err = cli.Remove(ctx, bson.M{"age": 17}, options.RemoveOptions{
 		RemoveHook: rh,
 	})
 	ast.NoError(err)
@@ -248,7 +248,7 @@ func TestRemoveHook(t *testing.T) {
 	ast.Equal(1, rh.beforeCount)
 
 	rh = &MyRemoveHook{}
-	_, err = cli.X删除(ctx, bson.M{"age": "7"}, options.RemoveOptions{
+	_, err = cli.RemoveAll(ctx, bson.M{"age": "7"}, options.RemoveOptions{
 		RemoveHook: rh,
 	})
 	ast.NoError(err)
@@ -261,24 +261,24 @@ func TestUpsertHook(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.X关闭连接(ctx)
-	defer cli.X删除集合(ctx)
+	defer cli.Close(ctx)
+	defer cli.DropCollection(ctx)
 
 	afterInsertCount = 0
 	u := &UserHook{Name: "Lucas", Age: 7}
-	res, err := cli.X插入(context.Background(), u, options.InsertOneOptions{
+	res, err := cli.InsertOne(context.Background(), u, options.InsertOneOptions{
 		InsertHook: u,
 	})
 	ast.NoError(err)
 
 	u.Age = 17
-	_, err = cli.X替换插入(context.Background(), bson.M{"name": "Lucas"}, u)
+	_, err = cli.Upsert(context.Background(), bson.M{"name": "Lucas"}, u)
 	ast.NoError(err)
 
 	ast.Equal(1, u.beforeCount)
 	ast.Equal(1, u.afterCount)
 
-	_, err = cli.X替换插入并按ID(context.Background(), res.X插入ID, u)
+	_, err = cli.UpsertId(context.Background(), res.InsertedID, u)
 	ast.NoError(err)
 
 	ast.Equal(2, u.beforeCount)
@@ -378,30 +378,30 @@ func TestHookErr(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
 	ctx := context.Background()
-	defer cli.X关闭连接(ctx)
-	defer cli.X删除集合(ctx)
+	defer cli.Close(ctx)
+	defer cli.DropCollection(ctx)
 
 	u := &UserHook{Name: "Lucas", Age: 7}
 	myHook := &MyErrorHook{}
 	myHook1 := &MyErrorHook{}
 	myHook2 := &MyErrorHook{}
 	myHooks := []*MyErrorHook{myHook1, myHook2}
-	res, err := cli.X插入(context.Background(), u)
-	_, err = cli.X插入(context.Background(), u, options.InsertOneOptions{
+	res, err := cli.InsertOne(context.Background(), u)
+	_, err = cli.InsertOne(context.Background(), u, options.InsertOneOptions{
 		InsertHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myHook.beforeICount)
 	ast.Equal(0, myHook.afterICount)
 
-	_, err = cli.X插入(context.Background(), u, options.InsertOneOptions{
+	_, err = cli.InsertOne(context.Background(), u, options.InsertOneOptions{
 		InsertHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(2, myHook.beforeICount)
 	ast.Equal(1, myHook.afterICount)
 
-	_, err = cli.X插入多个(context.Background(), myHooks, options.InsertManyOptions{
+	_, err = cli.InsertMany(context.Background(), myHooks, options.InsertManyOptions{
 		InsertHook: myHooks,
 	})
 	ast.Error(err)
@@ -410,10 +410,10 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(0, myHook1.afterICount)
 	ast.Equal(0, myHook2.afterICount)
 
-	_, err = cli.X插入多个(context.Background(), myHooks, options.InsertManyOptions{
+	_, err = cli.InsertMany(context.Background(), myHooks, options.InsertManyOptions{
 		InsertHook: myHooks,
 	})
-	_, err = cli.X插入多个(context.Background(), myHooks, options.InsertManyOptions{
+	_, err = cli.InsertMany(context.Background(), myHooks, options.InsertManyOptions{
 		InsertHook: myHooks,
 	})
 	ast.Error(err)
@@ -422,14 +422,14 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myHook1.afterICount)
 	ast.Equal(0, myHook2.afterICount)
 
-	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.UpdateOne(ctx, bson.M{"name": "Lucas"}, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myHook.beforeUCount)
 	ast.Equal(0, myHook.afterUCount)
 
-	err = cli.X更新一条(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.UpdateOne(ctx, bson.M{"name": "Lucas"}, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myHook,
 	})
 	ast.Error(err)
@@ -437,13 +437,13 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myHook.afterUCount)
 
 	myUpdateHook := &MyErrorHook{}
-	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.UpdateId(ctx, res.InsertedID, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myUpdateHook.beforeUCount)
 	ast.Equal(0, myUpdateHook.afterUCount)
-	err = cli.X更新并按ID(ctx, res.X插入ID, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	err = cli.UpdateId(ctx, res.InsertedID, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateHook,
 	})
 	ast.Error(err)
@@ -451,56 +451,56 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myUpdateHook.afterUCount)
 
 	myUpdateAllHook := &MyErrorHook{}
-	_, err = cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	_, err = cli.UpdateAll(ctx, bson.M{"name": "Lucas"}, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateAllHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myUpdateAllHook.beforeUCount)
 	ast.Equal(0, myUpdateAllHook.afterUCount)
 
-	_, err = cli.X更新(ctx, bson.M{"name": "Lucas"}, bson.M{mgo常量.X更新值: bson.M{"age": 27}}, options.UpdateOptions{
+	_, err = cli.UpdateAll(ctx, bson.M{"name": "Lucas"}, bson.M{operator.Set: bson.M{"age": 27}}, options.UpdateOptions{
 		UpdateHook: myUpdateAllHook,
 	})
 	ast.Error(err)
 	ast.Equal(2, myUpdateAllHook.beforeUCount)
 	ast.Equal(1, myUpdateAllHook.afterUCount)
 
-	err = cli.X查询(ctx, bson.M{"age": 27}, options.FindOptions{
+	err = cli.Find(ctx, bson.M{"age": 27}, options.FindOptions{
 		QueryHook: myHook,
-	}).X取一条(u)
+	}).One(u)
 	ast.Error(err)
 	ast.Equal(1, myHook.beforeQCount)
 	ast.Equal(0, myHook.afterQCount)
 
-	err = cli.X查询(ctx, bson.M{"age": 27}, options.FindOptions{
+	err = cli.Find(ctx, bson.M{"age": 27}, options.FindOptions{
 		QueryHook: myHook,
-	}).X取一条(u)
+	}).One(u)
 	ast.Error(err)
 	ast.Equal(2, myHook.beforeQCount)
 	ast.Equal(1, myHook.afterQCount)
 
-	err = cli.X删除一条(ctx, bson.M{"age": 27}, options.RemoveOptions{
+	err = cli.Remove(ctx, bson.M{"age": 27}, options.RemoveOptions{
 		RemoveHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myHook.beforeRCount)
 	ast.Equal(0, myHook.afterRCount)
 
-	err = cli.X删除一条(ctx, bson.M{"age": 27}, options.RemoveOptions{
+	err = cli.Remove(ctx, bson.M{"age": 27}, options.RemoveOptions{
 		RemoveHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(2, myHook.beforeRCount)
 	ast.Equal(1, myHook.afterRCount)
 
-	_, err = cli.X替换插入(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
+	_, err = cli.Upsert(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
 		UpsertHook: myHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myHook.beforeUsCount)
 	ast.Equal(0, myHook.afterUsCount)
 
-	_, err = cli.X替换插入(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
+	_, err = cli.Upsert(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
 		UpsertHook: myHook,
 	})
 	ast.Error(err)
@@ -508,14 +508,14 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myHook.afterUsCount)
 
 	myUpsertHook := &MyErrorHook{}
-	_, err = cli.X替换插入并按ID(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
+	_, err = cli.UpsertId(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
 		UpsertHook: myUpsertHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myUpsertHook.beforeUsCount)
 	ast.Equal(0, myUpsertHook.afterUsCount)
 
-	_, err = cli.X替换插入并按ID(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
+	_, err = cli.UpsertId(ctx, bson.M{"name": "Lucas"}, u, options.UpsertOptions{
 		UpsertHook: myUpsertHook,
 	})
 	ast.Error(err)
@@ -523,14 +523,14 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myUpsertHook.afterUsCount)
 
 	myRemoveHook := &MyErrorHook{}
-	resRemoved, err := cli.X插入(context.Background(), u)
-	err = cli.X删除并按ID(ctx, resRemoved.X插入ID, options.RemoveOptions{
+	resRemoved, err := cli.InsertOne(context.Background(), u)
+	err = cli.RemoveId(ctx, resRemoved.InsertedID, options.RemoveOptions{
 		RemoveHook: myRemoveHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myRemoveHook.beforeRCount)
 	ast.Equal(0, myRemoveHook.afterRCount)
-	err = cli.X删除并按ID(ctx, resRemoved.X插入ID, options.RemoveOptions{
+	err = cli.RemoveId(ctx, resRemoved.InsertedID, options.RemoveOptions{
 		RemoveHook: myRemoveHook,
 	})
 	ast.Error(err)
@@ -538,13 +538,13 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myRemoveHook.afterRCount)
 
 	myRemoveHook = &MyErrorHook{}
-	_, err = cli.X删除(ctx, bson.M{"name": "Lucas"}, options.RemoveOptions{
+	_, err = cli.RemoveAll(ctx, bson.M{"name": "Lucas"}, options.RemoveOptions{
 		RemoveHook: myRemoveHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myRemoveHook.beforeRCount)
 	ast.Equal(0, myRemoveHook.afterRCount)
-	_, err = cli.X删除(ctx, bson.M{"name": "Lucas"}, options.RemoveOptions{
+	_, err = cli.RemoveAll(ctx, bson.M{"name": "Lucas"}, options.RemoveOptions{
 		RemoveHook: myRemoveHook,
 	})
 	ast.Error(err)
@@ -552,15 +552,15 @@ func TestHookErr(t *testing.T) {
 	ast.Equal(1, myRemoveHook.afterRCount)
 
 	myReplaceHook := &MyErrorHook{}
-	_, err = cli.X插入(context.Background(), u)
-	err = cli.X替换一条(ctx, bson.M{"name": "Lucas"}, &u, options.ReplaceOptions{
+	_, err = cli.InsertOne(context.Background(), u)
+	err = cli.ReplaceOne(ctx, bson.M{"name": "Lucas"}, &u, options.ReplaceOptions{
 		UpdateHook: myReplaceHook,
 	})
 	ast.Error(err)
 	ast.Equal(1, myReplaceHook.beforeUCount)
 	ast.Equal(0, myReplaceHook.afterUCount)
 
-	err = cli.X替换一条(ctx, bson.M{"name": "Lucas"}, &u, options.ReplaceOptions{
+	err = cli.ReplaceOne(ctx, bson.M{"name": "Lucas"}, &u, options.ReplaceOptions{
 		UpdateHook: myReplaceHook,
 	})
 	ast.Error(err)

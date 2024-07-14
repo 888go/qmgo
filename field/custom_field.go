@@ -20,8 +20,8 @@ import (
 	"time"
 )
 
-// X自定义字段 定义了支持的自定义字段的结构体 md5:d6f9da51bb1f9550
-type X自定义字段 struct {
+// CustomFields 定义了支持的自定义字段的结构体 md5:d6f9da51bb1f9550
+type CustomFields struct {
 	createAt string
 	updateAt string
 	id       string
@@ -29,66 +29,85 @@ type X自定义字段 struct {
 
 // CustomFieldsHook 定义了接口，CustomFields 返回用户想要自定义的字段 md5:7c964cacd7711950
 type CustomFieldsHook interface {
-	X设置更新时间字段名() CustomFieldsBuilder
+	CustomFields() CustomFieldsBuilder
 }
 
 // CustomFieldsBuilder 定义了用户用来设置自定义字段的接口 md5:68d7427693ef0a18
 type CustomFieldsBuilder interface {
-	X设置更新时间字段名(fieldName string) CustomFieldsBuilder
-	X设置创建时间字段名(fieldName string) CustomFieldsBuilder
-	X设置ID字段名(fieldName string) CustomFieldsBuilder
+	SetUpdateAt(fieldName string) CustomFieldsBuilder
+	SetCreateAt(fieldName string) CustomFieldsBuilder
+	SetId(fieldName string) CustomFieldsBuilder
 }
 
 // NewCustom 创建一个新的Builder，用于设置自定义字段 md5:f37c4ab7a682c81a
+// ff:
 func NewCustom() CustomFieldsBuilder {
-	return &X自定义字段{}
+	return &CustomFields{}
 }
 
-// X设置更新时间字段名 设置自定义的UpdateAt字段 md5:fa5a62704b166e17设置更新时间字段名
-func (c *X自定义字段) X设置更新时间字段名(字段名称 string) CustomFieldsBuilder {
-	c.updateAt = 字段名称
+// SetUpdateAt 设置自定义的UpdateAt字段 md5:fa5a62704b166e17设置更新时间字段名
+// ff:
+// c:
+// fieldName:字段名称
+func (c *CustomFields) SetUpdateAt(fieldName string) CustomFieldsBuilder {
+	c.updateAt = fieldName
 	return c
 }
 
-// X设置创建时间字段名 设置自定义的创建时间字段 md5:9d021ddb5b3276d1设置创建时间字段名
-func (c *X自定义字段) X设置创建时间字段名(字段名称 string) CustomFieldsBuilder {
-	c.createAt = 字段名称
+// SetCreateAt 设置自定义的创建时间字段 md5:9d021ddb5b3276d1设置创建时间字段名
+// ff:
+// c:
+// fieldName:字段名称
+func (c *CustomFields) SetCreateAt(fieldName string) CustomFieldsBuilder {
+	c.createAt = fieldName
 	return c
 }
 
-// X设置ID字段名 设置自定义Id字段 md5:769568d47e77f5fe设置ID字段名
-func (c *X自定义字段) X设置ID字段名(字段名称 string) CustomFieldsBuilder {
-	c.id = 字段名称
+// SetId 设置自定义Id字段 md5:769568d47e77f5fe设置ID字段名
+// ff:
+// c:
+// fieldName:字段名称
+func (c *CustomFields) SetId(fieldName string) CustomFieldsBuilder {
+	c.id = fieldName
 	return c
 }
 
-// X自定义创建时间 更改自定义创建时间 md5:0ddb85c54f1b54c2自定义创建时间
-func (c X自定义字段) X自定义创建时间(待插入文档 interface{}) {
+// CustomCreateTime 更改自定义创建时间 md5:0ddb85c54f1b54c2自定义创建时间
+// ff:自定义创建时间
+// c:
+// doc:待插入文档
+func (c CustomFields) CustomCreateTime(doc interface{}) {
 	if c.createAt == "" {
 		return
 	}
 	fieldName := c.createAt
-	setTime(待插入文档, fieldName, false)
-	return
-}
-
-// X自定义更新时间 修改自定义更新时间 md5:71153ba9520a179c自定义更新时间
-func (c X自定义字段) X自定义更新时间(待插入文档 interface{}) {
-	if c.updateAt == "" {
-		return
-	}
-	fieldName := c.updateAt
-	setTime(待插入文档, fieldName, true)
+	setTime(doc, fieldName, false)
 	return
 }
 
 // CustomUpdateTime 修改自定义更新时间 md5:71153ba9520a179c自定义更新时间
-func (c X自定义字段) X自定义ID(待插入文档 interface{}) {
+// ff:自定义更新时间
+// c:
+// doc:待插入文档
+func (c CustomFields) CustomUpdateTime(doc interface{}) {
+	if c.updateAt == "" {
+		return
+	}
+	fieldName := c.updateAt
+	setTime(doc, fieldName, true)
+	return
+}
+
+// CustomUpdateTime 修改自定义更新时间 md5:71153ba9520a179c自定义更新时间
+// ff:自定义ID
+// c:
+// doc:待插入文档
+func (c CustomFields) CustomId(doc interface{}) {
 	if c.id == "" {
 		return
 	}
 	fieldName := c.id
-	setId(待插入文档, fieldName)
+	setId(doc, fieldName)
 	return
 }
 

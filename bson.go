@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import "go.mongodb.org/mongo-driver/bson"
 

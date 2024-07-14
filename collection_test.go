@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
@@ -23,52 +23,52 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	officialOpts "go.mongodb.org/mongo-driver/mongo/options"
 
-	"github.com/888go/qmgo/operator"
-	"github.com/888go/qmgo/options"
+	"github.com/qiniu/qmgo/operator"
+	"github.com/qiniu/qmgo/options"
 )
 
 func TestCollection_EnsureIndex(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
 
 	cli.ensureIndex(context.Background(), nil)
 	indexOpts := officialOpts.Index()
 	indexOpts.SetUnique(true)
-	cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"id1"}, IndexOptions: indexOpts}})
-	cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"id2", "id3"}}})
-	cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"id4", "-id5"}}})
+	cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"id1"}, IndexOptions: indexOpts}})
+	cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"id2", "id3"}}})
+	cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"id4", "-id5"}}})
 
 	// same index，error
-	ast.Error(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"id1"}}}))
+	ast.Error(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"id1"}}}))
 
 	// 检查唯一索引是否正常工作 md5:9b2257b60d7b5998
 	var err error
 	doc := bson.M{
 		"id1": 1,
 	}
-	_, err = cli.X插入(context.Background(), doc)
+	_, err = cli.InsertOne(context.Background(), doc)
 	ast.NoError(err)
 
-	coll, err := cli.X取副本()
+	coll, err := cli.CloneCollection()
 	ast.NoError(err)
 	_, err = coll.InsertOne(context.Background(), doc)
-	ast.Equal(true, X是否为重复键错误(err))
+	ast.Equal(true, IsDup(err))
 }
 
 func TestCollection_EnsureIndexes(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
 
 	unique := []string{"id1"}
 	common := []string{"id2,id3", "id4,-id5"}
-	cli.EnsureIndexes弃用(context.Background(), unique, common)
+	cli.EnsureIndexes(context.Background(), unique, common)
 
 	// same index，error
-	ast.Error(cli.EnsureIndexes弃用(context.Background(), nil, unique))
+	ast.Error(cli.EnsureIndexes(context.Background(), nil, unique))
 
 	// 检查唯一索引是否正常工作 md5:9b2257b60d7b5998
 	var err error
@@ -76,28 +76,28 @@ func TestCollection_EnsureIndexes(t *testing.T) {
 		"id1": 1,
 	}
 
-	_, err = cli.X插入(context.Background(), doc)
+	_, err = cli.InsertOne(context.Background(), doc)
 	ast.NoError(err)
-	_, err = cli.X插入(context.Background(), doc)
-	ast.Equal(true, X是否为重复键错误(err))
+	_, err = cli.InsertOne(context.Background(), doc)
+	ast.Equal(true, IsDup(err))
 }
 
 func TestCollection_CreateIndexes(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
 
 	var expireS int32 = 100
 	unique := []string{"id1"}
 	indexOpts := officialOpts.Index()
 	indexOpts.SetUnique(true).SetExpireAfterSeconds(expireS)
-	ast.NoError(cli.X创建索引(context.Background(), options.X索引选项{X索引字段: unique, IndexOptions: indexOpts}))
+	ast.NoError(cli.CreateOneIndex(context.Background(), options.IndexModel{Key: unique, IndexOptions: indexOpts}))
 
-	ast.NoError(cli.X创建多条索引(context.Background(), []options.X索引选项{{X索引字段: []string{"id2", "id3"}},
-		{X索引字段: []string{"id4", "-id5"}}}))
+	ast.NoError(cli.CreateIndexes(context.Background(), []options.IndexModel{{Key: []string{"id2", "id3"}},
+		{Key: []string{"id4", "-id5"}}}))
 	// same index，error
-	ast.Error(cli.X创建索引(context.Background(), options.X索引选项{X索引字段: unique}))
+	ast.Error(cli.CreateOneIndex(context.Background(), options.IndexModel{Key: unique}))
 
 	// 检查唯一索引是否正常工作 md5:9b2257b60d7b5998
 	var err error
@@ -105,27 +105,27 @@ func TestCollection_CreateIndexes(t *testing.T) {
 		"id1": 1,
 	}
 
-	_, err = cli.X插入(context.Background(), doc)
+	_, err = cli.InsertOne(context.Background(), doc)
 	ast.NoError(err)
-	_, err = cli.X插入(context.Background(), doc)
-	ast.Equal(true, X是否为重复键错误(err))
+	_, err = cli.InsertOne(context.Background(), doc)
+	ast.Equal(true, IsDup(err))
 }
 
 func TestCollection_DropAllIndexes(t *testing.T) {
 	ast := require.New(t)
 
 	cli := initClient("test")
-	defer cli.X删除集合(context.Background())
+	defer cli.DropCollection(context.Background())
 
 	var err error
-	err = cli.X删除全部索引(context.Background())
+	err = cli.DropAllIndexes(context.Background())
 	ast.Error(err)
 
 	unique := []string{"id1"}
 	common := []string{"id2,id3", "id4,-id5"}
-	cli.EnsureIndexes弃用(context.Background(), unique, common)
+	cli.EnsureIndexes(context.Background(), unique, common)
 
-	err = cli.X删除全部索引(context.Background())
+	err = cli.DropAllIndexes(context.Background())
 	ast.NoError(err)
 }
 
@@ -133,44 +133,44 @@ func TestCollection_DropIndex(t *testing.T) {
 	ast := require.New(t)
 
 	cli := initClient("test")
-	defer cli.X删除集合(context.Background())
+	defer cli.DropCollection(context.Background())
 
 	indexOpts := officialOpts.Index()
 	indexOpts.SetUnique(true)
-	cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"index1"}, IndexOptions: indexOpts}})
+	cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"index1"}, IndexOptions: indexOpts}})
 
 	// same index，error
-	ast.Error(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"index1"}}}))
+	ast.Error(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"index1"}}}))
 
-	err := cli.X删除索引(context.Background(), []string{"index1"})
+	err := cli.DropIndex(context.Background(), []string{"index1"})
 	ast.NoError(err)
-	ast.NoError(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"index1"}}}))
+	ast.NoError(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"index1"}}}))
 
 	indexOpts = officialOpts.Index()
 	indexOpts.SetUnique(true)
-	cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"-index1"}, IndexOptions: indexOpts}})
+	cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"-index1"}, IndexOptions: indexOpts}})
 	// same index，error
-	ast.Error(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"-index1"}}}))
+	ast.Error(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"-index1"}}}))
 
-	err = cli.X删除索引(context.Background(), []string{"-index1"})
+	err = cli.DropIndex(context.Background(), []string{"-index1"})
 	ast.NoError(err)
-	ast.NoError(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"-index1"}}}))
+	ast.NoError(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"-index1"}}}))
 
-	err = cli.X删除索引(context.Background(), []string{""})
+	err = cli.DropIndex(context.Background(), []string{""})
 	ast.Error(err)
 
-	err = cli.X删除索引(context.Background(), []string{"index2"})
+	err = cli.DropIndex(context.Background(), []string{"index2"})
 	ast.Error(err)
 
 	indexOpts = officialOpts.Index()
 	indexOpts.SetUnique(true)
-	cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"index2", "-index1"}, IndexOptions: indexOpts}})
-	ast.Error(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"index2", "-index1"}}}))
-	err = cli.X删除索引(context.Background(), []string{"index2", "-index1"})
+	cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"index2", "-index1"}, IndexOptions: indexOpts}})
+	ast.Error(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"index2", "-index1"}}}))
+	err = cli.DropIndex(context.Background(), []string{"index2", "-index1"})
 	ast.NoError(err)
-	ast.NoError(cli.ensureIndex(context.Background(), []options.X索引选项{{X索引字段: []string{"index2", "-index1"}}}))
+	ast.NoError(cli.ensureIndex(context.Background(), []options.IndexModel{{Key: []string{"index2", "-index1"}}}))
 
-	err = cli.X删除索引(context.Background(), []string{"-"})
+	err = cli.DropIndex(context.Background(), []string{"-"})
 	ast.Error(err)
 }
 
@@ -179,45 +179,45 @@ func TestCollection_Insert(t *testing.T) {
 
 	cli := initClient("test")
 
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
 
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	var err error
 	doc := bson.M{"_id": primitive.NewObjectID(), "name": "Alice"}
 
 	opts := options.InsertOneOptions{}
 	opts.InsertOneOptions = officialOpts.InsertOne().SetBypassDocumentValidation(true)
-	res, err := cli.X插入(context.Background(), doc, opts)
+	res, err := cli.InsertOne(context.Background(), doc, opts)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(doc["_id"], res.X插入ID)
+	ast.Equal(doc["_id"], res.InsertedID)
 
-	res, err = cli.X插入(context.Background(), doc)
-	ast.Equal(true, X是否为重复键错误(err))
+	res, err = cli.InsertOne(context.Background(), doc)
+	ast.Equal(true, IsDup(err))
 	ast.Empty(res)
 }
 
 func TestCollection_InsertMany(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	var err error
-	newDocs := []UserInfo{{Id: X生成对象ID(), Name: "Alice", Age: 10}, {Id: X生成对象ID(), Name: "Lucas", Age: 11}}
-	res, err := cli.X插入多个(context.Background(), newDocs)
+	newDocs := []UserInfo{{Id: NewObjectID(), Name: "Alice", Age: 10}, {Id: NewObjectID(), Name: "Lucas", Age: 11}}
+	res, err := cli.InsertMany(context.Background(), newDocs)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(2, len(res.X插入IDs))
+	ast.Equal(2, len(res.InsertedIDs))
 
-	newPDocs := []*UserInfo{{Id: X生成对象ID(), Name: "Alice03", Age: 10}, {Id: X生成对象ID(), Name: "Lucas03", Age: 11}}
-	res, err = cli.X插入多个(context.Background(), newPDocs)
+	newPDocs := []*UserInfo{{Id: NewObjectID(), Name: "Alice03", Age: 10}, {Id: NewObjectID(), Name: "Lucas03", Age: 11}}
+	res, err = cli.InsertMany(context.Background(), newPDocs)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(2, len(res.X插入IDs))
+	ast.Equal(2, len(res.InsertedIDs))
 
 	docs2 := []UserInfo{
 		{Name: "Alice"},
@@ -225,12 +225,12 @@ func TestCollection_InsertMany(t *testing.T) {
 	}
 	opts := options.InsertManyOptions{}
 	opts.InsertManyOptions = officialOpts.InsertMany().SetBypassDocumentValidation(true)
-	res, err = cli.X插入多个(context.Background(), docs2, opts)
-	ast.Equal(true, X是否为重复键错误(err))
-	ast.Equal(0, len(res.X插入IDs))
+	res, err = cli.InsertMany(context.Background(), docs2, opts)
+	ast.Equal(true, IsDup(err))
+	ast.Equal(0, len(res.InsertedIDs))
 
 	docs4 := []UserInfo{}
-	res, err = cli.X插入多个(context.Background(), []interface{}{docs4})
+	res, err = cli.InsertMany(context.Background(), []interface{}{docs4})
 	ast.Error(err)
 	ast.Empty(res)
 
@@ -239,9 +239,9 @@ func TestCollection_InsertMany(t *testing.T) {
 func TestCollection_Upsert(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -249,7 +249,7 @@ func TestCollection_Upsert(t *testing.T) {
 		bson.D{{Key: "_id", Value: id1}, {Key: "name", Value: "Alice"}},
 		bson.D{{Key: "_id", Value: id2}, {Key: "name", Value: "Lucas"}},
 	}
-	_, err := cli.X插入多个(context.Background(), docs)
+	_, err := cli.InsertMany(context.Background(), docs)
 
 	ast.NoError(err)
 	// replace already exist
@@ -262,13 +262,13 @@ func TestCollection_Upsert(t *testing.T) {
 	}
 	opts := options.UpsertOptions{}
 	opts.ReplaceOptions = officialOpts.Replace()
-	res, err := cli.X替换插入(context.Background(), filter1, replacement1, opts)
+	res, err := cli.Upsert(context.Background(), filter1, replacement1, opts)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(int64(1), res.X匹配数)
-	ast.Equal(int64(1), res.X修改数)
-	ast.Equal(int64(0), res.X替换插入数)
-	ast.Equal(nil, res.X替换插入ID)
+	ast.Equal(int64(1), res.MatchedCount)
+	ast.Equal(int64(1), res.ModifiedCount)
+	ast.Equal(int64(0), res.UpsertedCount)
+	ast.Equal(nil, res.UpsertedID)
 
 	// not exist
 	filter2 := bson.M{
@@ -278,24 +278,24 @@ func TestCollection_Upsert(t *testing.T) {
 		"name": "Lily",
 		"age":  20,
 	}
-	res, err = cli.X替换插入(context.Background(), filter2, replacement2)
+	res, err = cli.Upsert(context.Background(), filter2, replacement2)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(int64(0), res.X匹配数)
-	ast.Equal(int64(0), res.X修改数)
-	ast.Equal(int64(1), res.X替换插入数)
-	ast.NotNil(res.X替换插入ID)
+	ast.Equal(int64(0), res.MatchedCount)
+	ast.Equal(int64(0), res.ModifiedCount)
+	ast.Equal(int64(1), res.UpsertedCount)
+	ast.NotNil(res.UpsertedID)
 
 	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
 	replacement3 := bson.M{
 		"name": "Geek",
 		"age":  21,
 	}
-	res, err = cli.X替换插入(context.Background(), nil, replacement3)
+	res, err = cli.Upsert(context.Background(), nil, replacement3)
 	ast.Error(err)
 	ast.Empty(res)
 
-	res, err = cli.X替换插入(context.Background(), 1, replacement3)
+	res, err = cli.Upsert(context.Background(), 1, replacement3)
 	ast.Error(err)
 	ast.Empty(res)
 
@@ -303,11 +303,11 @@ func TestCollection_Upsert(t *testing.T) {
 	filter4 := bson.M{
 		"name": "Geek",
 	}
-	res, err = cli.X替换插入(context.Background(), filter4, nil)
+	res, err = cli.Upsert(context.Background(), filter4, nil)
 	ast.Error(err)
 	ast.Empty(res)
 
-	res, err = cli.X替换插入(context.Background(), filter4, 1)
+	res, err = cli.Upsert(context.Background(), filter4, 1)
 	ast.Error(err)
 	ast.Empty(res)
 }
@@ -315,9 +315,9 @@ func TestCollection_Upsert(t *testing.T) {
 func TestCollection_UpsertId(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -325,7 +325,7 @@ func TestCollection_UpsertId(t *testing.T) {
 		bson.D{{Key: "_id", Value: id1}, {Key: "name", Value: "Alice"}},
 		bson.D{{Key: "_id", Value: id2}, {Key: "name", Value: "Lucas"}},
 	}
-	_, _ = cli.X插入多个(context.Background(), docs)
+	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
 
@@ -334,13 +334,13 @@ func TestCollection_UpsertId(t *testing.T) {
 		"name": "Alice1",
 		"age":  18,
 	}
-	res, err := cli.X替换插入并按ID(context.Background(), id1, replacement1)
+	res, err := cli.UpsertId(context.Background(), id1, replacement1)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(int64(1), res.X匹配数)
-	ast.Equal(int64(1), res.X修改数)
-	ast.Equal(int64(0), res.X替换插入数)
-	ast.Equal(nil, res.X替换插入ID)
+	ast.Equal(int64(1), res.MatchedCount)
+	ast.Equal(int64(1), res.ModifiedCount)
+	ast.Equal(int64(0), res.UpsertedCount)
+	ast.Equal(nil, res.UpsertedID)
 
 	// not exist filter id
 	replacement2 := bson.M{
@@ -350,13 +350,13 @@ func TestCollection_UpsertId(t *testing.T) {
 	id3 := primitive.NewObjectID()
 	opts := options.UpsertOptions{}
 	opts.ReplaceOptions = officialOpts.Replace()
-	res, err = cli.X替换插入并按ID(context.Background(), id3, replacement2, opts)
+	res, err = cli.UpsertId(context.Background(), id3, replacement2, opts)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(int64(0), res.X匹配数)
-	ast.Equal(int64(0), res.X修改数)
-	ast.Equal(int64(1), res.X替换插入数)
-	ast.Equal(id3, res.X替换插入ID) // id3 将会插入到已插入的文档中 md5:4cdfbeaa6a4c59ce
+	ast.Equal(int64(0), res.MatchedCount)
+	ast.Equal(int64(0), res.ModifiedCount)
+	ast.Equal(int64(1), res.UpsertedCount)
+	ast.Equal(id3, res.UpsertedID) // id3 将会插入到已插入的文档中 md5:4cdfbeaa6a4c59ce
 
 	// 使用与文档中id不同的过滤器，错误 md5:1864a41611ea40ba
 	id4 := primitive.NewObjectID()
@@ -366,7 +366,7 @@ func TestCollection_UpsertId(t *testing.T) {
 		"age":  20,
 	}
 	id5 := primitive.NewObjectID()
-	res, err = cli.X替换插入并按ID(context.Background(), id5, replacement3)
+	res, err = cli.UpsertId(context.Background(), id5, replacement3)
 	ast.Error(err)
 
 	// filter is nil
@@ -374,20 +374,20 @@ func TestCollection_UpsertId(t *testing.T) {
 		"name": "Geek",
 		"age":  21,
 	}
-	res, err = cli.X替换插入并按ID(context.Background(), nil, replacement4)
+	res, err = cli.UpsertId(context.Background(), nil, replacement4)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(int64(0), res.X匹配数)
-	ast.Equal(int64(0), res.X修改数)
-	ast.Equal(int64(1), res.X替换插入数)
-	ast.Nil(res.X替换插入ID)
+	ast.Equal(int64(0), res.MatchedCount)
+	ast.Equal(int64(0), res.ModifiedCount)
+	ast.Equal(int64(1), res.UpsertedCount)
+	ast.Nil(res.UpsertedID)
 
 	// replacement 是空的或者不符合正确的BSON文档格式 md5:7b0ecb01590a648b
-	res, err = cli.X替换插入并按ID(context.Background(), id1, nil)
+	res, err = cli.UpsertId(context.Background(), id1, nil)
 	ast.Error(err)
 	ast.Empty(res)
 
-	res, err = cli.X替换插入并按ID(context.Background(), id1, 1)
+	res, err = cli.UpsertId(context.Background(), id1, 1)
 	ast.Error(err)
 	ast.Empty(res)
 }
@@ -395,9 +395,9 @@ func TestCollection_UpsertId(t *testing.T) {
 func TestCollection_Update(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -405,7 +405,7 @@ func TestCollection_Update(t *testing.T) {
 		bson.D{{Key: "_id", Value: id1}, {Key: "name", Value: "Alice"}},
 		bson.D{{Key: "_id", Value: id2}, {Key: "name", Value: "Lucas"}},
 	}
-	_, _ = cli.X插入多个(context.Background(), docs)
+	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
 	// 更新已存在的记录 md5:cc4fac8615b8fc8a
@@ -413,14 +413,14 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Alice",
 	}
 	update1 := bson.M{
-		mgo常量.X更新值: bson.M{
+		operator.Set: bson.M{
 			"name": "Alice1",
 			"age":  18,
 		},
 	}
 	opts := options.UpdateOptions{}
 	opts.UpdateOptions = officialOpts.Update().SetBypassDocumentValidation(false)
-	err = cli.X更新一条(context.Background(), filter1, update1, opts)
+	err = cli.UpdateOne(context.Background(), filter1, update1, opts)
 	ast.NoError(err)
 
 	// error when not exist
@@ -428,17 +428,17 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Lily",
 	}
 	update2 := bson.M{
-		mgo常量.X更新值: bson.M{
+		operator.Set: bson.M{
 			"name": "Lily",
 			"age":  20,
 		},
 	}
-	err = cli.X更新一条(context.Background(), filter2, update2)
-	ast.Equal(err, X错误_未找到文档)
+	err = cli.UpdateOne(context.Background(), filter2, update2)
+	ast.Equal(err, ErrNoSuchDocuments)
 
 	opt := officialOpts.Update().SetUpsert(true)
 	opts = options.UpdateOptions{UpdateOptions: opt}
-	err = cli.X更新一条(context.Background(), filter2, update2, opts)
+	err = cli.UpdateOne(context.Background(), filter2, update2, opts)
 	ast.NoError(err)
 
 	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
@@ -446,29 +446,29 @@ func TestCollection_Update(t *testing.T) {
 		"name": "Geek",
 		"age":  21,
 	}
-	err = cli.X更新一条(context.Background(), nil, update3)
+	err = cli.UpdateOne(context.Background(), nil, update3)
 	ast.Error(err)
 
-	err = cli.X更新一条(context.Background(), 1, update3)
+	err = cli.UpdateOne(context.Background(), 1, update3)
 	ast.Error(err)
 
 	// update 是 nil 或者格式错误的 BSON 文档 md5:8f6e8bd5cf0af638
 	filter4 := bson.M{
 		"name": "Geek",
 	}
-	err = cli.X更新一条(context.Background(), filter4, nil)
+	err = cli.UpdateOne(context.Background(), filter4, nil)
 	ast.Error(err)
 
-	err = cli.X更新一条(context.Background(), filter4, 1)
+	err = cli.UpdateOne(context.Background(), filter4, 1)
 	ast.Error(err)
 }
 
 func TestCollection_UpdateId(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -476,19 +476,19 @@ func TestCollection_UpdateId(t *testing.T) {
 		bson.D{{Key: "_id", Value: id1}, {Key: "name", Value: "Alice"}},
 		bson.D{{Key: "_id", Value: id2}, {Key: "name", Value: "Lucas"}},
 	}
-	_, _ = cli.X插入多个(context.Background(), docs)
+	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
 	// 更新已存在的记录 md5:cc4fac8615b8fc8a
 	update1 := bson.M{
-		mgo常量.X更新值: bson.M{
+		operator.Set: bson.M{
 			"name": "Alice1",
 			"age":  18,
 		},
 	}
 	opts := options.UpdateOptions{}
 	opts.UpdateOptions = officialOpts.Update().SetBypassDocumentValidation(false)
-	err = cli.X更新并按ID(context.Background(), id1, update1, opts)
+	err = cli.UpdateId(context.Background(), id1, update1, opts)
 	ast.NoError(err)
 
 	// id is nil or not exist
@@ -496,25 +496,25 @@ func TestCollection_UpdateId(t *testing.T) {
 		"name": "Geek",
 		"age":  21,
 	}
-	err = cli.X更新并按ID(context.Background(), nil, update3)
+	err = cli.UpdateId(context.Background(), nil, update3)
 	ast.Error(err)
 
-	err = cli.X更新并按ID(context.Background(), 1, update3)
+	err = cli.UpdateId(context.Background(), 1, update3)
 	ast.Error(err)
 
-	err = cli.X更新并按ID(context.Background(), "not_exist_id", nil)
+	err = cli.UpdateId(context.Background(), "not_exist_id", nil)
 	ast.Error(err)
 
-	err = cli.X更新并按ID(context.Background(), "not_exist_id", 1)
+	err = cli.UpdateId(context.Background(), "not_exist_id", 1)
 	ast.Error(err)
 }
 
 func TestCollection_UpdateAll(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), nil, []string{"name"})
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), nil, []string{"name"})
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -524,7 +524,7 @@ func TestCollection_UpdateAll(t *testing.T) {
 		bson.D{{Key: "_id", Value: id2}, {Key: "name", Value: "Alice"}, {Key: "age", Value: 19}},
 		bson.D{{Key: "_id", Value: id3}, {Key: "name", Value: "Lucas"}, {Key: "age", Value: 20}},
 	}
-	_, _ = cli.X插入多个(context.Background(), docs)
+	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
 	// 更新已存在的记录 md5:cc4fac8615b8fc8a
@@ -532,44 +532,44 @@ func TestCollection_UpdateAll(t *testing.T) {
 		"name": "Alice",
 	}
 	update1 := bson.M{
-		mgo常量.X更新值: bson.M{
+		operator.Set: bson.M{
 			"age": 33,
 		},
 	}
 	opts := options.UpdateOptions{}
 	opts.UpdateOptions = officialOpts.Update().SetBypassDocumentValidation(false)
-	res, err := cli.X更新(context.Background(), filter1, update1, opts)
+	res, err := cli.UpdateAll(context.Background(), filter1, update1, opts)
 	ast.NoError(err)
 	ast.NotEmpty(res)
-	ast.Equal(int64(2), res.X匹配数)
-	ast.Equal(int64(2), res.X修改数)
-	ast.Equal(int64(0), res.X替换插入数)
-	ast.Equal(nil, res.X替换插入ID)
+	ast.Equal(int64(2), res.MatchedCount)
+	ast.Equal(int64(2), res.ModifiedCount)
+	ast.Equal(int64(0), res.UpsertedCount)
+	ast.Equal(nil, res.UpsertedID)
 
 	// 如果记录不存在，err为nil，res中的MatchedCount为0 md5:ffbbcabc3c0f02fe
 	filter2 := bson.M{
 		"name": "Lily",
 	}
 	update2 := bson.M{
-		mgo常量.X更新值: bson.M{
+		operator.Set: bson.M{
 			"age": 22,
 		},
 	}
-	res, err = cli.X更新(context.Background(), filter2, update2)
+	res, err = cli.UpdateAll(context.Background(), filter2, update2)
 	ast.Nil(err)
 	ast.NotNil(res)
-	ast.Equal(int64(0), res.X匹配数)
+	ast.Equal(int64(0), res.MatchedCount)
 
 	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
 	update3 := bson.M{
 		"name": "Geek",
 		"age":  21,
 	}
-	res, err = cli.X更新(context.Background(), nil, update3)
+	res, err = cli.UpdateAll(context.Background(), nil, update3)
 	ast.Error(err)
 	ast.Nil(res)
 
-	res, err = cli.X更新(context.Background(), 1, update3)
+	res, err = cli.UpdateAll(context.Background(), 1, update3)
 	ast.Error(err)
 	ast.Nil(res)
 
@@ -577,11 +577,11 @@ func TestCollection_UpdateAll(t *testing.T) {
 	filter4 := bson.M{
 		"name": "Geek",
 	}
-	res, err = cli.X更新(context.Background(), filter4, nil)
+	res, err = cli.UpdateAll(context.Background(), filter4, nil)
 	ast.Error(err)
 	ast.Nil(res)
 
-	res, err = cli.X更新(context.Background(), filter4, 1)
+	res, err = cli.UpdateAll(context.Background(), filter4, 1)
 	ast.Error(err)
 	ast.Nil(res)
 }
@@ -589,9 +589,9 @@ func TestCollection_UpdateAll(t *testing.T) {
 func TestCollection_Remove(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), nil, []string{"name"})
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), nil, []string{"name"})
 
 	id1 := primitive.NewObjectID().Hex()
 	id2 := primitive.NewObjectID().Hex()
@@ -605,16 +605,16 @@ func TestCollection_Remove(t *testing.T) {
 		bson.D{{Key: "_id", Value: id4}, {Key: "name", Value: "Joe"}, {Key: "age", Value: 20}},
 		bson.D{{Key: "_id", Value: id5}, {Key: "name", Value: "Ethan"}, {Key: "age", Value: 1}},
 	}
-	_, _ = cli.X插入多个(context.Background(), docs)
+	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
 	// remove id
-	err = cli.X删除并按ID(context.Background(), "")
+	err = cli.RemoveId(context.Background(), "")
 	ast.Error(err)
-	err = cli.X删除并按ID(context.Background(), "not-exists-id")
-	ast.True(X是否为无文档错误(err))
-	ast.NoError(cli.X删除并按ID(context.Background(), id4))
-	ast.NoError(cli.X删除并按ID(context.Background(), id5))
+	err = cli.RemoveId(context.Background(), "not-exists-id")
+	ast.True(IsErrNoDocuments(err))
+	ast.NoError(cli.RemoveId(context.Background(), id4))
+	ast.NoError(cli.RemoveId(context.Background(), id5))
 
 	// 删除记录：名称为 "Alice"，之后预期存在一条名称为 "Alice" 的记录。 md5:274874b30e4288bb
 	filter1 := bson.M{
@@ -622,10 +622,10 @@ func TestCollection_Remove(t *testing.T) {
 	}
 	opts := options.RemoveOptions{}
 	opts.DeleteOptions = officialOpts.Delete()
-	err = cli.X删除一条(context.Background(), filter1, opts)
+	err = cli.Remove(context.Background(), filter1, opts)
 	ast.NoError(err)
 
-	cnt, err := cli.X查询(context.Background(), filter1).X取数量()
+	cnt, err := cli.Find(context.Background(), filter1).Count()
 	ast.NoError(err)
 	ast.Equal(int64(1), cnt)
 
@@ -633,36 +633,36 @@ func TestCollection_Remove(t *testing.T) {
 	filter2 := bson.M{
 		"name": "Lily",
 	}
-	err = cli.X删除一条(context.Background(), filter2)
-	ast.Equal(err, X错误_未找到文档)
+	err = cli.Remove(context.Background(), filter2)
+	ast.Equal(err, ErrNoSuchDocuments)
 
 	// filter 是 bson.M{}，删除一个文档 md5:dc8fa3aa9522cd67
 	filter3 := bson.M{}
-	preCnt, err := cli.X查询(context.Background(), filter3).X取数量()
+	preCnt, err := cli.Find(context.Background(), filter3).Count()
 	ast.NoError(err)
 	ast.Equal(int64(2), preCnt)
 
-	err = cli.X删除一条(context.Background(), filter3)
+	err = cli.Remove(context.Background(), filter3)
 	ast.NoError(err)
 
-	afterCnt, err := cli.X查询(context.Background(), filter3).X取数量()
+	afterCnt, err := cli.Find(context.Background(), filter3).Count()
 	ast.NoError(err)
 	ast.Equal(preCnt-1, afterCnt)
 
 	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
-	err = cli.X删除一条(context.Background(), nil)
+	err = cli.Remove(context.Background(), nil)
 	ast.Error(err)
 
-	err = cli.X删除一条(context.Background(), 1)
+	err = cli.Remove(context.Background(), 1)
 	ast.Error(err)
 }
 
 func TestCollection_RemoveAll(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), nil, []string{"name"})
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), nil, []string{"name"})
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -674,7 +674,7 @@ func TestCollection_RemoveAll(t *testing.T) {
 		bson.D{{Key: "_id", Value: id3}, {Key: "name", Value: "Lucas"}, {Key: "age", Value: 20}},
 		bson.D{{Key: "_id", Value: id4}, {Key: "name", Value: "Rocket"}, {Key: "age", Value: 23}},
 	}
-	_, _ = cli.X插入多个(context.Background(), docs)
+	_, _ = cli.InsertMany(context.Background(), docs)
 
 	var err error
 	// 删除记录：名称为 "Alice"，之后，预期 - 记录：名称为 "Alice" md5:e6ccda4a8c588184
@@ -683,12 +683,12 @@ func TestCollection_RemoveAll(t *testing.T) {
 	}
 	opts := options.RemoveOptions{}
 	opts.DeleteOptions = officialOpts.Delete()
-	res, err := cli.X删除(context.Background(), filter1, opts)
+	res, err := cli.RemoveAll(context.Background(), filter1, opts)
 	ast.NoError(err)
 	ast.NotNil(res)
-	ast.Equal(int64(2), res.X删除数量)
+	ast.Equal(int64(2), res.DeletedCount)
 
-	cnt, err := cli.X查询(context.Background(), filter1).X取数量()
+	cnt, err := cli.Find(context.Background(), filter1).Count()
 	ast.NoError(err)
 	ast.Equal(int64(0), cnt)
 
@@ -696,32 +696,32 @@ func TestCollection_RemoveAll(t *testing.T) {
 	filter2 := bson.M{
 		"name": "Lily",
 	}
-	res, err = cli.X删除(context.Background(), filter2)
+	res, err = cli.RemoveAll(context.Background(), filter2)
 	ast.NoError(err)
 	ast.NotNil(res)
-	ast.Equal(int64(0), res.X删除数量)
+	ast.Equal(int64(0), res.DeletedCount)
 
 	// filter 是 bson.M{}，删除所有文档 md5:bbe0ca02d153a930
 	filter3 := bson.M{}
-	preCnt, err := cli.X查询(context.Background(), filter3).X取数量()
+	preCnt, err := cli.Find(context.Background(), filter3).Count()
 	ast.NoError(err)
 	ast.Equal(int64(2), preCnt)
 
-	res, err = cli.X删除(context.Background(), filter3)
+	res, err = cli.RemoveAll(context.Background(), filter3)
 	ast.NoError(err)
 	ast.NotNil(res)
-	ast.Equal(preCnt, res.X删除数量)
+	ast.Equal(preCnt, res.DeletedCount)
 
-	afterCnt, err := cli.X查询(context.Background(), filter3).X取数量()
+	afterCnt, err := cli.Find(context.Background(), filter3).Count()
 	ast.NoError(err)
 	ast.Equal(int64(0), afterCnt)
 
 	// filter 是空或者不符合正确的BSON文档格式 md5:a55c6ef20a253667
-	res, err = cli.X删除(context.Background(), nil)
+	res, err = cli.RemoveAll(context.Background(), nil)
 	ast.Error(err)
 	ast.Nil(res)
 
-	res, err = cli.X删除(context.Background(), 1)
+	res, err = cli.RemoveAll(context.Background(), 1)
 	ast.Error(err)
 	ast.Nil(res)
 }
@@ -752,41 +752,41 @@ func TestSliceInsert(t *testing.T) {
 func TestCollection_ReplaceOne(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), []string{"name"}, nil)
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), []string{"name"}, nil)
 
 	id := primitive.NewObjectID()
 	ui := UserInfo{Id: id, Name: "Lucas", Age: 17}
-	_, err := cli.X插入(context.Background(), ui)
+	_, err := cli.InsertOne(context.Background(), ui)
 	ast.NoError(err)
 	ui.Id = id
 	ui.Age = 27
-	err = cli.X替换一条(context.Background(), bson.M{"_id": id}, &ui)
+	err = cli.ReplaceOne(context.Background(), bson.M{"_id": id}, &ui)
 	ast.NoError(err)
 
 	findUi := UserInfo{}
-	err = cli.X查询(context.Background(), bson.M{"name": "Lucas"}).X取一条(&findUi)
+	err = cli.Find(context.Background(), bson.M{"name": "Lucas"}).One(&findUi)
 	ast.NoError(err)
 	ast.Equal(ui.Age, findUi.Age)
 
 	opts := options.ReplaceOptions{}
 	opts.ReplaceOptions = officialOpts.Replace()
-	err = cli.X替换一条(context.Background(), bson.M{"_id": "notexist"}, &ui, opts)
-	ast.Equal(X错误_未找到文档, err)
+	err = cli.ReplaceOne(context.Background(), bson.M{"_id": "notexist"}, &ui, opts)
+	ast.Equal(ErrNoSuchDocuments, err)
 
-	err = cli.X替换一条(context.Background(), bson.M{"_id": "notexist"}, nil)
+	err = cli.ReplaceOne(context.Background(), bson.M{"_id": "notexist"}, nil)
 	ast.Error(err)
 }
 
 func TestChangeStream(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
 
 	opts := &options.ChangeStreamOptions{officialOpts.ChangeStream()}
-	c, e := cli.X取变更流(context.Background(), mongo.Pipeline{}, opts)
+	c, e := cli.Watch(context.Background(), mongo.Pipeline{}, opts)
 	ast.NoError(e)
 	defer c.Close(context.Background())
 
@@ -799,7 +799,7 @@ func TestChangeStream(t *testing.T) {
 
 	id := primitive.NewObjectID()
 	ui := UserInfo{Id: id, Name: "Lucas", Age: 17}
-	_, err := cli.X插入(context.Background(), ui)
+	_, err := cli.InsertOne(context.Background(), ui)
 	ast.NoError(err)
 	<-doneChane
 

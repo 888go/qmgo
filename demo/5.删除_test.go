@@ -8,12 +8,12 @@ import (
 
 func Test_删除一条文档(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/write-operations/delete/
-	err := cli.X删除一条(ctx, bson.M{"年龄": 7})
+	err := cli.Remove(ctx, bson.M{"年龄": 7})
 	fmt.Println(err)
 }
 
 func Test_删除多条文档(t *testing.T) {
 	//https://www.mongodb.com/zh-cn/docs/drivers/go/current/fundamentals/crud/write-operations/delete/
-	返回, _ := cli.X删除(ctx, bson.M{"年龄": 7})
-	fmt.Println(返回.X删除数量)
+	返回, _ := cli.RemoveAll(ctx, bson.M{"年龄": 7})
+	fmt.Println(返回.DeletedCount)
 }

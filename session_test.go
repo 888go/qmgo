@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
@@ -19,34 +19,34 @@ import (
 	"fmt"
 	"testing"
 
-	opts "github.com/888go/qmgo/options"
+	opts "github.com/qiniu/qmgo/options"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 )
 
-func initTransactionClient(coll string) *XMongo客户端 {
-	cfg := X配置{
-		X连接URI:      "mongodb://localhost:27017",
-		X数据库名: "transaction",
-		X集合名:     coll,
+func initTransactionClient(coll string) *QmgoClient {
+	cfg := Config{
+		Uri:      "mongodb://localhost:27017",
+		Database: "transaction",
+		Coll:     coll,
 	}
 	var cTimeout int64 = 0
 	var sTimeout int64 = 500000
 	var maxPoolSize uint64 = 30000
 	var minPoolSize uint64 = 0
-	cfg.X连接超时毫秒 = &cTimeout
-	cfg.X套接字超时毫秒 = &sTimeout
-	cfg.X最大连接池大小 = &maxPoolSize
-	cfg.X最小连接池大小 = &minPoolSize
-	cfg.X读取偏好 = &X读取偏好{Mode: readpref.PrimaryMode}
-	qClient, err := X连接(context.Background(), &cfg)
+	cfg.ConnectTimeoutMS = &cTimeout
+	cfg.SocketTimeoutMS = &sTimeout
+	cfg.MaxPoolSize = &maxPoolSize
+	cfg.MinPoolSize = &minPoolSize
+	cfg.ReadPreference = &ReadPref{Mode: readpref.PrimaryMode}
+	qClient, err := Open(context.Background(), &cfg)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
 	}
-	qClient.X插入(context.Background(), bson.M{"name": "before_transaction"})
+	qClient.InsertOne(context.Background(), bson.M{"name": "before_transaction"})
 	return qClient
 
 }
@@ -54,26 +54,26 @@ func TestClient_DoTransaction(t *testing.T) {
 	ast := require.New(t)
 	ctx := context.Background()
 	cli := initTransactionClient("test")
-	defer cli.X删除数据库(ctx)
+	defer cli.DropDatabase(ctx)
 
 	fn := func(sCtx context.Context) (interface{}, error) {
-		if _, err := cli.X插入(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
 			return nil, err
 		}
-		if _, err := cli.X插入(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
 			return nil, err
 		}
 		return nil, nil
 	}
 	tops := options.Transaction()
 	op := &opts.TransactionOptions{TransactionOptions: tops}
-	_, err := cli.X事务(ctx, fn, op)
+	_, err := cli.DoTransaction(ctx, fn, op)
 	ast.NoError(err)
 	r := bson.M{}
-	cli.X查询(ctx, bson.M{"abc": 1}).X取一条(&r)
+	cli.Find(ctx, bson.M{"abc": 1}).One(&r)
 	ast.Equal(r["abc"], int32(1))
 
-	cli.X查询(ctx, bson.M{"xyz": 999}).X取一条(&r)
+	cli.Find(ctx, bson.M{"xyz": 999}).One(&r)
 	ast.Equal(r["xyz"], int32(999))
 }
 
@@ -81,35 +81,35 @@ func TestSession_AbortTransaction(t *testing.T) {
 	ast := require.New(t)
 	cli := initTransactionClient("test")
 
-	defer cli.X删除集合(context.Background())
+	defer cli.DropCollection(context.Background())
 	sOpts := options.Session().SetSnapshot(false)
 	o := &opts.SessionOptions{sOpts}
-	s, err := cli.X创建Session事务(o)
+	s, err := cli.Session(o)
 	ast.NoError(err)
 	ctx := context.Background()
-	defer s.X结束Session(ctx)
+	defer s.EndSession(ctx)
 
 	callback := func(sCtx context.Context) (interface{}, error) {
-		if _, err := cli.X插入(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
 			return nil, err
 		}
-		if _, err := cli.X插入(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
 			return nil, err
 		}
-		err = s.X中止事务(sCtx)
+		err = s.AbortTransaction(sCtx)
 
 		return nil, nil
 	}
 
-	_, err = s.X开始事务(ctx, callback)
+	_, err = s.StartTransaction(ctx, callback)
 	ast.NoError(err)
 
 	r := bson.M{}
-	err = cli.X查询(ctx, bson.M{"abc": 1}).X取一条(&r)
+	err = cli.Find(ctx, bson.M{"abc": 1}).One(&r)
 	ast.Error(err)
-// 中止已经进行的操作，无法中止后续操作 // 这似乎是一个mongodb-go-driver的bug
-// md5:62f4455c1ed84e55
-	err = cli.X查询(ctx, bson.M{"xyz": 999}).X取一条(&r)
+	// 中止已经进行的操作，无法中止后续操作 // 这似乎是一个mongodb-go-driver的bug
+	// md5:62f4455c1ed84e55
+	err = cli.Find(ctx, bson.M{"xyz": 999}).One(&r)
 	ast.Error(err)
 }
 
@@ -117,59 +117,59 @@ func TestSession_Cancel(t *testing.T) {
 	ast := require.New(t)
 	cli := initTransactionClient("test")
 
-	defer cli.X删除集合(context.Background())
-	s, err := cli.X创建Session事务()
+	defer cli.DropCollection(context.Background())
+	s, err := cli.Session()
 	ast.NoError(err)
 	ctx := context.Background()
-	defer s.X结束Session(ctx)
+	defer s.EndSession(ctx)
 
 	callback := func(sCtx context.Context) (interface{}, error) {
-		if _, err := cli.X插入(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
 			return nil, err
 		}
-		if _, err := cli.X插入(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
 			return nil, err
 		}
 		return nil, errors.New("cancel operations")
 	}
-	_, err = s.X开始事务(ctx, callback)
+	_, err = s.StartTransaction(ctx, callback)
 	ast.Error(err)
 	r := bson.M{}
-	err = cli.X查询(ctx, bson.M{"abc": 1}).X取一条(&r)
-	ast.True(X是否为无文档错误(err))
-	err = cli.X查询(ctx, bson.M{"xyz": 999}).X取一条(&r)
-	ast.True(X是否为无文档错误(err))
+	err = cli.Find(ctx, bson.M{"abc": 1}).One(&r)
+	ast.True(IsErrNoDocuments(err))
+	err = cli.Find(ctx, bson.M{"xyz": 999}).One(&r)
+	ast.True(IsErrNoDocuments(err))
 }
 
 func TestSession_RetryTransAction(t *testing.T) {
 	ast := require.New(t)
 	cli := initTransactionClient("test")
-	defer cli.X删除集合(context.Background())
-	s, err := cli.X创建Session事务()
+	defer cli.DropCollection(context.Background())
+	s, err := cli.Session()
 	ast.NoError(err)
 	ctx := context.Background()
-	defer s.X结束Session(ctx)
+	defer s.EndSession(ctx)
 
 	count := 0
 	callback := func(sCtx context.Context) (interface{}, error) {
-		if _, err := cli.X插入(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"abc", int32(1)}}); err != nil {
 			return nil, err
 		}
-		if _, err := cli.X插入(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
+		if _, err := cli.InsertOne(sCtx, bson.D{{"xyz", int32(999)}}); err != nil {
 			return nil, err
 		}
 		if count == 0 {
 			count++
-			return nil, X错误_事务_重试
+			return nil, ErrTransactionRetry
 		}
 		return nil, nil
 	}
-	_, err = s.X开始事务(ctx, callback)
+	_, err = s.StartTransaction(ctx, callback)
 	ast.NoError(err)
 	r := bson.M{}
-	cli.X查询(ctx, bson.M{"abc": 1}).X取一条(&r)
+	cli.Find(ctx, bson.M{"abc": 1}).One(&r)
 	ast.Equal(r["abc"], int32(1))
-	cli.X查询(ctx, bson.M{"xyz": 999}).X取一条(&r)
+	cli.Find(ctx, bson.M{"xyz": 999}).One(&r)
 	ast.Equal(r["xyz"], int32(999))
 	ast.Equal(count, 1)
 }

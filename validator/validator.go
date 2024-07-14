@@ -6,21 +6,23 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/888go/qmgo/operator"
+	"github.com/qiniu/qmgo/operator"
 )
 
 // 使用单例的Validate，它缓存结构体信息 md5:37316caf6446b052
 var validate = validator.New()
 
 // SetValidate 允许使用自定义规则进行验证 md5:c45d0acce1bafd26
+// ff:
+// v:
 func SetValidate(v *validator.Validate) {
 	validate = v
 }
 
 // validatorNeeded 检查操作类型（opType）是否需要验证器 md5:69c24cea9b0cf3e4
-func validatorNeeded(opType mgo常量.OpType) bool {
+func validatorNeeded(opType operator.OpType) bool {
 	switch opType {
-	case mgo常量.X钩子_插入前, mgo常量.X钩子_替换插入前, mgo常量.X钩子_替换前:
+	case operator.BeforeInsert, operator.BeforeUpsert, operator.BeforeReplace:
 		return true
 	}
 	return false
@@ -29,7 +31,12 @@ func validatorNeeded(opType mgo常量.OpType) bool {
 // Do 调用验证器检查
 // 不要在這裡使用 opts
 // md5:a3e02eb169c74704
-func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error {
+// ff:
+// ctx:
+// doc:
+// opType:
+// opts:
+func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	if !validatorNeeded(opType) {
 		return nil
 	}
@@ -54,7 +61,7 @@ func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...i
 }
 
 // sliceHandle处理切片文档 md5:92800dd5899836ce
-func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
+func sliceHandle(docs interface{}, opType operator.OpType) error {
 	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {

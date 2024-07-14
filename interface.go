@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import "go.mongodb.org/mongo-driver/mongo/options"
 
@@ -32,19 +32,19 @@ import "go.mongodb.org/mongo-driver/mongo/options"
 
 // Change 包含了通过 Query.Apply 方法运行 findAndModify 命令时所需字段。 md5:39a15027acb265c1
 type Change struct {
-	X更新替换    interface{} // 更新/替换文档 md5:f186fdee95ec3578
-	X是否替换   bool        // 是否替换文档而不是更新 md5:876d0fb0ea394e91
-	X是否删除    bool        // 是否在找到文档后删除它，而不是更新 md5:af3a9b450dfa43f8
-	X是否未找到时插入    bool        // Whether to insert in case the document isn't found, take effect when Remove is false
-	X是否返回新文档 bool        // 当Remove为false时，是否返回修改后的文档而不是旧的文档 md5:52269f57ce5c8033
+	Update    interface{} // 更新/替换文档 md5:f186fdee95ec3578
+	Replace   bool        //qm:是否替换  cz:Replace bool          // 是否替换文档而不是更新 md5:876d0fb0ea394e91
+	Remove    bool        //qm:是否删除  cz:Remove bool          // 是否在找到文档后删除它，而不是更新 md5:af3a9b450dfa43f8
+	Upsert    bool        //qm:是否未找到时插入  cz:Upsert bool          // Whether to insert in case the document isn't found, take effect when Remove is false
+	ReturnNew bool        //qm:是否返回新文档  cz:ReturnNew bool          // 当Remove为false时，是否返回修改后的文档而不是旧的文档 md5:52269f57ce5c8033
 }
 
 // CursorI：Cursor 接口 md5:8a6fa5bfcb19cd93
 type CursorI interface {
-	X下一个(result interface{}) bool
-	X关闭() error
-	X取错误() error
-	X取全部(results interface{}) error
+	Next(result interface{}) bool  //qm:下一个  cz:Next(result interface{}) bool
+	Close() error                  //qm:关闭  cz:Close() error
+	Err() error                    //qm:取错误  cz:Err() error
+	All(results interface{}) error //qm:取全部  cz:All(results interface{}) error
 	//ID() int64
 }
 
@@ -54,28 +54,28 @@ type QueryI interface {
 	X分页(页码 int, 页大小 int) QueryI
 	X取分页数(perPage int) int
 	//zj:
-	X设置排序规则(collation *options.Collation) QueryI
-	X设置切片过滤(*options.ArrayFilters) QueryI
-	X排序(fields ...string) QueryI
-	X字段(selector interface{}) QueryI
-	X跳过(n int64) QueryI
-	X设置批量处理数量(n int64) QueryI
-	X设置不超时(n bool) QueryI
-	X设置最大返回数(n int64) QueryI
-	X取一条(result interface{}) error
-	X取全部(result interface{}) error
-	X取数量() (n int64, err error)
-	X取预估数量() (n int64, err error)
-	X去重(key string, result interface{}) error
-	X取结果集() CursorI
-	X执行命令(change Change, result interface{}) error
-	X指定索引字段(hint interface{}) QueryI
+	Collation(collation *options.Collation) QueryI //qm:设置排序规则  cz:Collation(collation *options.Collation) QueryI
+	SetArrayFilters(*options.ArrayFilters) QueryI  //qm:设置切片过滤  cz:SetArrayFilters(*options.ArrayFilters) QueryI
+	Sort(fields ...string) QueryI                  //qm:排序  cz:Sort(fields ...string) QueryI
+	Select(selector interface{}) QueryI            //qm:字段  cz:Select(selector interface{}) QueryI
+	Skip(n int64) QueryI                           //qm:跳过  cz:Skip(n int64) QueryI
+	BatchSize(n int64) QueryI                      //qm:设置批量处理数量  cz:BatchSize(n int64) QueryI
+	NoCursorTimeout(n bool) QueryI                 //qm:设置不超时  cz:NoCursorTimeout(n bool) QueryI
+	Limit(n int64) QueryI                          //qm:设置最大返回数  cz:Limit(n int64) QueryI
+	One(result interface{}) error                  //qm:取一条  cz:One(result interface{}) error
+	All(result interface{}) error                  //qm:取全部  cz:All(result interface{}) error
+	Count() (n int64, err error)                   //qm:取数量  cz:Count() (n int64, err error)
+	EstimatedCount() (n int64, err error)          //qm:取预估数量  cz:EstimatedCount() (n int64, err error)
+	Distinct(key string, result interface{}) error //qm:去重  cz:Distinct(key string, result interface{}) error
+	Cursor() CursorI                               //qm:取结果集  cz:Cursor() CursorI
+	Apply(change Change, result interface{}) error //qm:执行命令  cz:Apply(change Change, result interface{}) error
+	Hint(hint interface{}) QueryI                  //qm:指定索引字段  cz:Hint(hint interface{}) QueryI
 }
 
 // AggregateI 定义聚合接口 md5:e67c5263d98eafa6
 type AggregateI interface {
-	X取全部(results interface{}) error
-	X取一条(result interface{}) error
-	Iter弃用() CursorI // 被弃用，请使用Cursor替代 md5:56d9bc403e9aa9a9
-	X取结果集() CursorI
+	All(results interface{}) error //qm:取全部  cz:All(results interface{}) error
+	One(result interface{}) error  //qm:取一条  cz:One(result interface{}) error
+	Iter() CursorI                 // 被弃用，请使用Cursor替代 md5:56d9bc403e9aa9a9 //qm:Iter弃用 cz:Iter() CursorI
+	Cursor() CursorI               //qm:取结果集  cz:Cursor() CursorI
 }

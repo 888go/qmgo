@@ -11,39 +11,37 @@
  limitations under the License.
 */
 
-package mgo常量
+package operator //bm:mgo常量
 
-// 定义查询和投影运算符
-// 参考：https://docs.mongodb.com/manual/reference/operator/query/
-// md5:0562f490d100fe93
+// define the query and projection operators
 const (
 	// Comparison
-	X条件等于  = "$eq"
-	X条件大于  = "$gt"
-	X条件大于等于 = "$gte"
-	X条件包含  = "$in"
-	X条件小于  = "$lt"
-	X条件小于等于 = "$lte"
-	X条件不等于  = "$ne"
-	X条件不包含 = "$nin"
+	Eq  = "$eq"  //qm:条件等于  cz:Eq = "$eq"
+	Gt  = "$gt"  //qm:条件大于  cz:Gt = "$gt"
+	Gte = "$gte" //qm:条件大于等于  cz:Gte = "$gte"
+	In  = "$in"  //qm:条件包含  cz:In = "$in"
+	Lt  = "$lt"  //qm:条件小于  cz:Lt = "$lt"
+	Lte = "$lte" //qm:条件小于等于  cz:Lte = "$lte"
+	Ne  = "$ne"  //qm:条件不等于  cz:Ne = "$ne"
+	Nin = "$nin" //qm:条件不包含  cz:Nin = "$nin"
 
 	// Logical
-	X条件且 = "$and"
-	X条件非 = "$not"
-	X条件或非 = "$nor"
-	X条件或  = "$or"
+	And = "$and" //qm:条件且  cz:And = "$and"
+	Not = "$not" //qm:条件非  cz:Not = "$not"
+	Nor = "$nor" //qm:条件或非  cz:Nor = "$nor"
+	Or  = "$or"  //qm:条件或  cz:Or = "$or"
 
 	// Element
-	X条件字段存在 = "$exists"
-	X条件类型   = "$type"
+	Exists = "$exists" //qm:条件字段存在  cz:Exists = "$exists"
+	Type   = "$type"   //qm:条件类型  cz:Type = "$type"
 
 	// Evaluation
-	X条件表达式       = "$expr"
-	Json效验 = "$jsonSchema"
-	X取模        = "$mod"
-	X条件正则      = "$regex"
-	X条件全文搜索       = "$text"
-	X条件Js      = "$where"
+	Expr       = "$expr"       //qm:条件表达式  cz:Expr = "$expr"
+	JsonSchema = "$jsonSchema" //qm:Json效验  cz:JsonSchema = "$jsonSchema"
+	Mod        = "$mod"        //qm:取模  cz:Mod = "$mod"
+	Regex      = "$regex"      //qm:条件正则  cz:Regex = "$regex"
+	Text       = "$text"       //qm:条件全文搜索  cz:Text = "$text"
+	Where      = "$where"      //qm:条件Js  cz:Where = "$where"
 
 	// Geo spatial
 	GeoIntersects = "$geoIntersects"
@@ -52,9 +50,9 @@ const (
 	NearSphere    = "$nearSphere"
 
 	// Array
-	X数组全部       = "$all"
-	X数组匹配条件 = "$elemMatch"
-	X数组数量      = "$size"
+	All       = "$all"       //qm:数组全部  cz:All = "$all"
+	ElemMatch = "$elemMatch" //qm:数组匹配条件  cz:ElemMatch = "$elemMatch"
+	Size      = "$size"      //qm:数组数量  cz:Size = "$size"
 
 	// Bitwise
 	BitsAllClear = "$bitsAllClear"

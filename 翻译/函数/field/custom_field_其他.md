@@ -43,20 +43,4 @@ th= 替换,用于替换文本,文档内如果有多个相同的,会一起替换
 cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interface{}) error"需要重命名.
  但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
 
-
-
-[CustomFields() CustomFieldsBuilder]
-qm=设置更新时间字段名
-cz=CustomFields() CustomFieldsBuilder
-
-[SetUpdateAt(fieldName string) CustomFieldsBuilder]
-qm=设置更新时间字段名
-cz=SetUpdateAt(fieldName string) CustomFieldsBuilder
-
-[SetCreateAt(fieldName string) CustomFieldsBuilder]
-qm=设置创建时间字段名
-cz=SetCreateAt(fieldName string) CustomFieldsBuilder
-
-[SetId(fieldName string) CustomFieldsBuilder]
-qm=设置ID字段名
-cz=SetId(fieldName string) CustomFieldsBuilder
+ 

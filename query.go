@@ -11,16 +11,16 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
 	"fmt"
 	"reflect"
 
-	"github.com/888go/qmgo/middleware"
-	"github.com/888go/qmgo/operator"
-	qOpts "github.com/888go/qmgo/options"
+	"github.com/qiniu/qmgo/middleware"
+	"github.com/qiniu/qmgo/operator"
+	qOpts "github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -28,7 +28,7 @@ import (
 )
 
 // 定义查询结构体 md5:56541bbc29d4ce15
-type X查询 struct {
+type Query struct {
 	filter          interface{}
 	sort            interface{}
 	project         interface{}
@@ -46,42 +46,52 @@ type X查询 struct {
 	registry   *bsoncodec.Registry
 }
 
-func (q *X查询) X设置排序规则(规则 *options.Collation) QueryI {
+// ff:设置排序规则
+// q:
+// collation:规则
+func (q *Query) Collation(collation *options.Collation) QueryI {
 	newQ := q
-	newQ.collation = 规则
+	newQ.collation = collation
 	return newQ
 }
 
-func (q *X查询) X设置不超时(是否不超时 bool) QueryI {
+// ff:设置不超时
+// q:
+// n:是否不超时
+func (q *Query) NoCursorTimeout(n bool) QueryI {
 	newQ := q
-	newQ.noCursorTimeout = &是否不超时
+	newQ.noCursorTimeout = &n
 	return newQ
 }
 
-// X设置批量处理数量 设置 X设置批量处理数量 字段的值。
+// BatchSize 设置 BatchSize 字段的值。
 // 它表示服务器返回的每批文档的最大数量。
 // md5:66277d16095ac151
-func (q *X查询) X设置批量处理数量(数量 int64) QueryI {
+// ff:设置批量处理数量
+// q:
+// n:数量
+func (q *Query) BatchSize(n int64) QueryI {
 	newQ := q
-	newQ.batchSize = &数量
+	newQ.batchSize = &n
 	return newQ
 }
 
-// X排序 用于设置返回结果的排序规则
-// 格式："age" 或 "+age" 表示按年龄字段升序排序，"-age" 表示降序排序
-// 同时传入多个排序字段时，按照字段传递的顺序进行排列。
-// 例如，{"age", "-name"}，首先按年龄升序排序，然后按姓名降序排序。
-// md5:0b1b9f5345904541
-func (q *X查询) X排序(排序字段 ...string) QueryI {
-	if len(排序字段) == 0 {
-// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
-// md5:c94b59dcb408353d
+// Sort is Used to set the sorting rules for the returned results
+// When multiple sort fields are passed in at the same time, they are arranged in the order in which the fields are passed in.
+// For example, {"age", "-name"}, first sort by age in ascending order, then sort by name in descending order
+// ff:排序
+// q:
+// fields:排序字段
+func (q *Query) Sort(fields ...string) QueryI {
+	if len(fields) == 0 {
+		// 一个空的bson.D不会正确地序列化，但这种情况下可以提前返回。
+		// md5:c94b59dcb408353d
 		return q
 	}
 
 	var sorts bson.D
-	for _, field := range 排序字段 {
-		key, n := X分割排序字段(field)
+	for _, field := range fields {
+		key, n := SplitSortField(field)
 		if key == "" {
 			panic("Sort: empty field name")
 		}
@@ -103,60 +113,76 @@ func (q *X查询) X排序(排序字段 ...string) QueryI {
 //
 // cli.Find(context.Background(), bson.M{"name": "Lucas"}).
 //
-//	X设置切片过滤(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
+//	SetArrayFilters(&options.ArrayFilters{Filters: []interface{}{bson.M{"elem.warehouse": bson.M{"$in": []string{"C", "F"}}},}}).
 //	  Apply(change, &res)
 //
 // 这段代码的注释说明了`SetArrayFilter`方法是用于设置更新操作中的数组过滤器。它给出了一个例子，展示了如何使用该方法来更新名为"Lucas"的文档中，符合条件（"elem.warehouse"在"C"或"F"中）的`instock`数组元素的`qty`字段为100。`Apply`方法最后将变更应用到查询结果上。
 // md5:3fa80906c918e6a3
-func (q *X查询) X设置切片过滤(过滤条件 *options.ArrayFilters) QueryI {
+// ff:设置切片过滤
+// q:
+// filter:过滤条件
+func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {
 	newQ := q
-	newQ.arrayFilters = 过滤条件
+	newQ.arrayFilters = filter
 	return newQ
 }
 
-// X字段用于确定在返回结果中显示或不显示哪些字段
-// 格式：bson.M{"age": 1} 表示只显示age字段
-// bson.M{"age": 0} 表示除了age以外的其他字段都显示
-// 如果不显示_id并且设置为0，它将被返回并显示
-// md5:3beb3c9bd51ad3fe
-func (q *X查询) X字段(字段Map interface{}) QueryI {
+// Select is used to determine which fields are displayed or not displayed in the returned results
+// bson.M{"age": 0} means to display other fields except age
+// When _id is not displayed and is set to 0, it will be returned to display
+// ff:字段
+// q:
+// projection:字段Map
+func (q *Query) Select(projection interface{}) QueryI {
 	newQ := q
-	newQ.project = 字段Map
+	newQ.project = projection
 	return newQ
 }
 
-// X跳过 skip n records
-func (q *X查询) X跳过(跳过数量 int64) QueryI {
+// Skip skip n records
+// ff:跳过
+// q:
+// n:跳过数量
+func (q *Query) Skip(n int64) QueryI {
 	newQ := q
-	newQ.skip = &跳过数量
+	newQ.skip = &n
 	return newQ
 }
 
-// X指定索引字段 设置X指定索引字段字段的值。这应该是字符串形式的索引名称，或者是文档形式的索引规范。默认值为nil，表示不发送提示。
+// Hint 设置Hint字段的值。这应该是字符串形式的索引名称，或者是文档形式的索引规范。默认值为nil，表示不发送提示。
 // md5:3d3535508606dd43
-func (q *X查询) X指定索引字段(索引字段 interface{}) QueryI {
+// ff:指定索引字段
+// q:
+// hint:索引字段
+func (q *Query) Hint(hint interface{}) QueryI {
 	newQ := q
-	newQ.hint = 索引字段
+	newQ.hint = hint
 	return newQ
 }
 
-// X设置最大返回数 将找到的最大文档数量限制为 n
+// Limit 将找到的最大文档数量限制为 n
 // 默认值为 0，0 表示无限制，返回所有匹配的结果
 // 当限制值小于 0 时，负限制类似于正限制，但返回单个批次结果后关闭游标。
 // 参考 https://docs.mongodb.com/manual/reference/method/cursor.limit/index.html
 // md5:9081095bd35be08f
-func (q *X查询) X设置最大返回数(数量 int64) QueryI {
+// ff:设置最大返回数
+// q:
+// n:数量
+func (q *Query) Limit(n int64) QueryI {
 	newQ := q
-	newQ.limit = &数量
+	newQ.limit = &n
 	return newQ
 }
 
 // 对符合过滤条件的记录执行一次查询
 // 如果搜索失败，将返回一个错误
 // md5:68571c814c5cd088
-func (q *X查询) X取一条(结果指针 interface{}) error {
+// ff:取一条
+// q:
+// result:结果指针
+func (q *Query) One(result interface{}) error {
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询前); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.BeforeQuery); err != nil {
 			return err
 		}
 	}
@@ -178,13 +204,13 @@ func (q *X查询) X取一条(结果指针 interface{}) error {
 		opt.SetHint(q.hint)
 	}
 
-	err := q.collection.FindOne(q.ctx, q.filter, opt).Decode(结果指针)
+	err := q.collection.FindOne(q.ctx, q.filter, opt).Decode(result)
 
 	if err != nil {
 		return err
 	}
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询后); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.AfterQuery); err != nil {
 			return err
 		}
 	}
@@ -194,9 +220,12 @@ func (q *X查询) X取一条(结果指针 interface{}) error {
 // 用于查询满足过滤条件的所有记录
 // 结果的静态类型必须是切片指针
 // md5:5f57d8aff8afe252
-func (q *X查询) X取全部(结果指针 interface{}) error {
+// ff:取全部
+// q:
+// result:结果指针
+func (q *Query) All(result interface{}) error {
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询前); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.BeforeQuery); err != nil {
 			return err
 		}
 	}
@@ -236,20 +265,24 @@ func (q *X查询) X取全部(结果指针 interface{}) error {
 		cursor: cursor,
 		err:    err,
 	}
-	err = c.X取全部(结果指针)
+	err = c.All(result)
 	if err != nil {
 		return err
 	}
 	if len(q.opts) > 0 {
-		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, mgo常量.X钩子_查询后); err != nil {
+		if err := middleware.Do(q.ctx, q.opts[0].QueryHook, operator.AfterQuery); err != nil {
 			return err
 		}
 	}
 	return nil
 }
 
-// X取数量 计算符合条件的条目数量 md5:7bed3eaaee1ce368
-func (q *X查询) X取数量() (数量 int64, 错误 error) {
+// Count 计算符合条件的条目数量 md5:7bed3eaaee1ce368
+// ff:取数量
+// q:
+// n:数量
+// err:错误
+func (q *Query) Count() (n int64, err error) {
 	opt := options.Count()
 
 	if q.limit != nil {
@@ -262,34 +295,42 @@ func (q *X查询) X取数量() (数量 int64, 错误 error) {
 	return q.collection.CountDocuments(q.ctx, q.filter, opt)
 }
 
-// X取预估数量 通过元数据计算集合的数量,
+// EstimatedCount 通过元数据计算集合的数量,
 // EstimatedDocumentCount() 方法比 CountDocuments() 方法更快，因为它使用集合的元数据而不是扫描整个集合。
-// X取预估数量 通过元数据计算集合的数量,
+// EstimatedCount 通过元数据计算集合的数量,
 // EstimatedDocumentCount() 方法比 CountDocuments() 方法更快，因为它使用集合的元数据而不是扫描整个集合。
 // md5:8c9bd7e463139421
-func (q *X查询) X取预估数量() (数量 int64, 错误 error) {
+// ff:取预估数量
+// q:
+// n:数量
+// err:错误
+func (q *Query) EstimatedCount() (n int64, err error) {
 	return q.collection.EstimatedDocumentCount(q.ctx)
 }
 
-// X去重 从集合中获取指定字段的唯一值，并以切片形式返回。
+// Distinct 从集合中获取指定字段的唯一值，并以切片形式返回。
 // result 应该是一个指向切片的指针。
 // 函数会检查result切片元素的静态类型是否与MongoDB中获取的数据类型一致。
 // 参考：https://docs.mongodb.com/manual/reference/command/distinct/
 // md5:b83f3aa5718b2dfd
-func (q *X查询) X去重(字段名 string, 切片指针 interface{}) error {
-	resultVal := reflect.ValueOf(切片指针)
+// ff:去重
+// q:
+// key:字段名
+// result:切片指针
+func (q *Query) Distinct(key string, result interface{}) error {
+	resultVal := reflect.ValueOf(result)
 
 	if resultVal.Kind() != reflect.Ptr {
-		return X错误_结果参数_必须切片指针
+		return ErrQueryNotSlicePointer
 	}
 
 	resultElmVal := resultVal.Elem()
 	if resultElmVal.Kind() != reflect.Interface && resultElmVal.Kind() != reflect.Slice {
-		return X错误_结果参数_必须切片地址
+		return ErrQueryNotSliceType
 	}
 
 	opt := options.Distinct()
-	res, err := q.collection.Distinct(q.ctx, 字段名, q.filter, opt)
+	res, err := q.collection.Distinct(q.ctx, key, q.filter, opt)
 	if err != nil {
 		return err
 	}
@@ -304,19 +345,21 @@ func (q *X查询) X去重(字段名 string, 切片指针 interface{}) error {
 	}
 
 	rawValue := bson.RawValue{Type: valueType, Value: valueBytes}
-	err = rawValue.Unmarshal(切片指针)
+	err = rawValue.Unmarshal(result)
 	if err != nil {
 		fmt.Printf("rawValue.Unmarshal err: %+v\n", err)
-		return X错误_查询结果_类型不一致
+		return ErrQueryResultTypeInconsistent
 	}
 
 	return nil
 }
 
-// X取结果集 获取一个 X取结果集 对象，可用于遍历查询结果集
+// Cursor 获取一个 Cursor 对象，可用于遍历查询结果集
 // 在获取到 CursorI 对象后，应主动调用 Close 接口来关闭游标
 // md5:b1e9fc62a5f777fe
-func (q *X查询) X取结果集() CursorI {
+// ff:取结果集
+// q:
+func (q *Query) Cursor() CursorI {
 	opt := options.Find()
 
 	if q.sort != nil {
@@ -349,22 +392,35 @@ func (q *X查询) X取结果集() CursorI {
 	}
 }
 
-// X执行命令 执行 findAndModify 命令，该命令允许根据查询更新、替换或删除文档，并原子性地返回旧版本（默认）或新版本的文档（当 ReturnNew 为 true 时）。
-// 
-// Sort 和 Select 查询方法会影响 X执行命令 的结果。如果有多个文档匹配查询，Sort 可以通过排序来决定操作哪个文档。Select 则可以仅获取新或旧文档中选定字段的内容。
-// 
-// 当 Change.Replace 为 true 时，意味着在集合中最多替换一个文档，且 update 参数必须是一个文档，不能包含任何更新运算符；如果没有找到对象并且 Change.Upsert 为 false，则会返回 ErrNoDocuments 错误。当 Change.Remove 为 true 时，意味着最多删除集合中的一个文档，并返回删除前的文档状态；如果没有找到对象，同样返回 ErrNoDocuments。
-// 
-// 如果 Change.Replace 和 Change.Remove 都为 false，则表示最多更新集合中的一个文档，update 参数必须是一个包含更新运算符的文档；如果没有找到对象并且 Change.Upsert 为 false，则返回 ErrNoDocuments。
-// 
-// 参考：https://docs.mongodb.com/manual/reference/command/findAndModify/
-// md5:e14e8d7ceac827ac
-func (q *X查询) X执行命令(change Change, result interface{}) error {
+// Apply runs the findAndModify command, which allows updating, replacing
+// or removing a document matching a query and atomically returning either the old
+// version (the default) or the new version of the document (when ReturnNew is true)
+//
+// The Sort and Select query methods affect the result of Apply. In case
+// multiple documents match the query, Sort enables selecting which document to
+// act upon by ordering it first. Select enables retrieving only a selection
+// of fields of the new or old document.
+//
+// When Change.Replace is true, it means replace at most one document in the collection
+// and the update parameter must be a document and cannot contain any update operators;
+// if no objects are found and Change.Upsert is false, it will returns ErrNoDocuments.
+// When Change.Remove is true, it means delete at most one document in the collection
+// and returns the document as it appeared before deletion; if no objects are found,
+// it will returns ErrNoDocuments.
+// When both Change.Replace and Change.Remove are false，it means update at most one document
+// in the collection and the update parameter must be a document containing update operators;
+// if no objects are found and Change.Upsert is false, it will returns ErrNoDocuments.
+//
+// ff:执行命令
+// q:
+// change:
+// result:
+func (q *Query) Apply(change Change, result interface{}) error {
 	var err error
 
-	if change.X是否删除 {
+	if change.Remove {
 		err = q.findOneAndDelete(change, result)
-	} else if change.X是否替换 {
+	} else if change.Replace {
 		err = q.findOneAndReplace(change, result)
 	} else {
 		err = q.findOneAndUpdate(change, result)
@@ -374,11 +430,7 @@ func (q *X查询) X执行命令(change Change, result interface{}) error {
 }
 
 // findOneAndDelete
-// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndDelete/ 
-// 
-// 这段 Go 代码的注释表示这是一个名为 "findOneAndDelete" 的函数或方法，它用于从 MongoDB 集合中查找并删除第一个匹配的文档。参考链接指向 MongoDB 官方文档，提供了关于该方法的详细说明。
-// md5:23b36fd4f1711d7b
-func (q *X查询) findOneAndDelete(change Change, result interface{}) error {
+func (q *Query) findOneAndDelete(change Change, result interface{}) error {
 	opts := options.FindOneAndDelete()
 	if q.sort != nil {
 		opts.SetSort(q.sort)
@@ -391,9 +443,7 @@ func (q *X查询) findOneAndDelete(change Change, result interface{}) error {
 }
 
 // findOneAndReplace
-// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndReplace/
-// md5:cd4b97a5409057c1
-func (q *X查询) findOneAndReplace(change Change, result interface{}) error {
+func (q *Query) findOneAndReplace(change Change, result interface{}) error {
 	opts := options.FindOneAndReplace()
 	if q.sort != nil {
 		opts.SetSort(q.sort)
@@ -401,15 +451,15 @@ func (q *X查询) findOneAndReplace(change Change, result interface{}) error {
 	if q.project != nil {
 		opts.SetProjection(q.project)
 	}
-	if change.X是否未找到时插入 {
-		opts.SetUpsert(change.X是否未找到时插入)
+	if change.Upsert {
+		opts.SetUpsert(change.Upsert)
 	}
-	if change.X是否返回新文档 {
+	if change.ReturnNew {
 		opts.SetReturnDocument(options.After)
 	}
 
-	err := q.collection.FindOneAndReplace(q.ctx, q.filter, change.X更新替换, opts).Decode(result)
-	if change.X是否未找到时插入 && !change.X是否返回新文档 && err == mongo.ErrNoDocuments {
+	err := q.collection.FindOneAndReplace(q.ctx, q.filter, change.Update, opts).Decode(result)
+	if change.Upsert && !change.ReturnNew && err == mongo.ErrNoDocuments {
 		return nil
 	}
 
@@ -417,11 +467,7 @@ func (q *X查询) findOneAndReplace(change Change, result interface{}) error {
 }
 
 // findOneAndUpdate
-// 参考：https://docs.mongodb.com/manual/reference/method/db.collection.findOneAndUpdate/ 
-// 
-// 这段Go代码中的注释表示这是一个名为`findOneAndUpdate`的方法，它引用了MongoDB文档中关于`db.collection.findOneAndUpdate`方法的手册参考。这个方法在MongoDB数据库操作中用于根据指定的条件查找并更新第一个匹配的文档。
-// md5:fe84856a45a0b0f1
-func (q *X查询) findOneAndUpdate(change Change, result interface{}) error {
+func (q *Query) findOneAndUpdate(change Change, result interface{}) error {
 	opts := options.FindOneAndUpdate()
 	if q.sort != nil {
 		opts.SetSort(q.sort)
@@ -429,10 +475,10 @@ func (q *X查询) findOneAndUpdate(change Change, result interface{}) error {
 	if q.project != nil {
 		opts.SetProjection(q.project)
 	}
-	if change.X是否未找到时插入 {
-		opts.SetUpsert(change.X是否未找到时插入)
+	if change.Upsert {
+		opts.SetUpsert(change.Upsert)
 	}
-	if change.X是否返回新文档 {
+	if change.ReturnNew {
 		opts.SetReturnDocument(options.After)
 	}
 
@@ -440,8 +486,8 @@ func (q *X查询) findOneAndUpdate(change Change, result interface{}) error {
 		opts.SetArrayFilters(*q.arrayFilters)
 	}
 
-	err := q.collection.FindOneAndUpdate(q.ctx, q.filter, change.X更新替换, opts).Decode(result)
-	if change.X是否未找到时插入 && !change.X是否返回新文档 && err == mongo.ErrNoDocuments {
+	err := q.collection.FindOneAndUpdate(q.ctx, q.filter, change.Update, opts).Decode(result)
+	if change.Upsert && !change.ReturnNew && err == mongo.ErrNoDocuments {
 		return nil
 	}
 
@@ -449,13 +495,13 @@ func (q *X查询) findOneAndUpdate(change Change, result interface{}) error {
 }
 
 // zj:
-func (q *X查询) X分页(页码 int, 页大小 int) QueryI {
-	return q.X跳过(int64((页大小 * (页码 - 1)))).X设置最大返回数(int64(页大小))
+func (q *Query) X分页(页码 int, 页大小 int) QueryI {
+	return q.Skip(int64((页大小 * (页码 - 1)))).Limit(int64(页大小))
 }
 
-func (q *X查询) X取分页数(perPage int) int {
+func (q *Query) X取分页数(perPage int) int {
 	// 获取预估文档总数
-	docCount, _ := q.X取预估数量()
+	docCount, _ := q.EstimatedCount()
 	// 计算总分页数
 	totalPages := int(docCount) / perPage
 	if int(docCount)%perPage != 0 {

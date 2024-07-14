@@ -3,7 +3,7 @@ package validator
 import (
 	"context"
 	"github.com/go-playground/validator/v10"
-	"github.com/888go/qmgo/operator"
+	"github.com/qiniu/qmgo/operator"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"testing"
@@ -38,8 +38,8 @@ func TestValidator(t *testing.T) {
 
 	user := &User{}
 	// not need validator op
-	ast.NoError(Do(ctx, user, mgo常量.X钩子_删除前))
-	ast.NoError(Do(ctx, user, mgo常量.X钩子_插入后))
+	ast.NoError(Do(ctx, user, operator.BeforeRemove))
+	ast.NoError(Do(ctx, user, operator.AfterInsert))
 	// check success
 	address := &Address{
 		Street: "Eavesdown Docks",
@@ -56,52 +56,52 @@ func TestValidator(t *testing.T) {
 		FavouriteColor: "#000",
 		Addresses:      []*Address{address, address},
 	}
-	ast.NoError(Do(ctx, user, mgo常量.X钩子_插入前))
-	ast.NoError(Do(ctx, user, mgo常量.X钩子_替换插入前))
-	ast.NoError(Do(ctx, *user, mgo常量.X钩子_替换插入前))
+	ast.NoError(Do(ctx, user, operator.BeforeInsert))
+	ast.NoError(Do(ctx, user, operator.BeforeUpsert))
+	ast.NoError(Do(ctx, *user, operator.BeforeUpsert))
 
 	users := []*User{user, user, user}
-	ast.NoError(Do(ctx, users, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, users, operator.BeforeInsert))
 
 	// check failure
 	user.Age = 150
-	ast.Error(Do(ctx, user, mgo常量.X钩子_插入前))
+	ast.Error(Do(ctx, user, operator.BeforeInsert))
 	user.Age = 22
 	user.Email = "1234@gmail" // invalid email
-	ast.Error(Do(ctx, user, mgo常量.X钩子_插入前))
+	ast.Error(Do(ctx, user, operator.BeforeInsert))
 	user.Email = "1234@gmail.com"
 	user.Addresses[0].City = "" // 字符串标签使用默认值 md5:aa4a9770a393ec7e
-	ast.Error(Do(ctx, user, mgo常量.X钩子_插入前))
+	ast.Error(Do(ctx, user, operator.BeforeInsert))
 
 	// input slice
 	users = []*User{user, user, user}
-	ast.Error(Do(ctx, users, mgo常量.X钩子_插入前))
+	ast.Error(Do(ctx, users, operator.BeforeInsert))
 
 	useris := []interface{}{user, user, user}
-	ast.Error(Do(ctx, useris, mgo常量.X钩子_插入前))
+	ast.Error(Do(ctx, useris, operator.BeforeInsert))
 
 	user.Addresses[0].City = "shanghai"
 	users = []*User{user, user, user}
-	ast.NoError(Do(ctx, users, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, users, operator.BeforeInsert))
 
 	us := []User{*user, *user, *user}
-	ast.NoError(Do(ctx, us, mgo常量.X钩子_插入前))
-	ast.NoError(Do(ctx, &us, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, us, operator.BeforeInsert))
+	ast.NoError(Do(ctx, &us, operator.BeforeInsert))
 
 	// all bson type
 	mdoc := []interface{}{bson.M{"name": "", "age": 12}, bson.M{"name": "", "age": 12}}
-	ast.NoError(Do(ctx, mdoc, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, mdoc, operator.BeforeInsert))
 	adoc := bson.A{"Alex", "12"}
-	ast.NoError(Do(ctx, adoc, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, adoc, operator.BeforeInsert))
 	edoc := bson.E{"Alex", "12"}
-	ast.NoError(Do(ctx, edoc, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, edoc, operator.BeforeInsert))
 	ddoc := bson.D{{"foo", "bar"}, {"hello", "world"}, {"pi", 3.14159}}
-	ast.NoError(Do(ctx, ddoc, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, ddoc, operator.BeforeInsert))
 
 	// nil ptr
 	user = nil
-	ast.NoError(Do(ctx, user, mgo常量.X钩子_插入前))
-	ast.NoError(Do(ctx, nil, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, user, operator.BeforeInsert))
+	ast.NoError(Do(ctx, nil, operator.BeforeInsert))
 
 	// use custom rules
 	customRule := &CustomRule{Name: "bar"}
@@ -110,5 +110,5 @@ func TestValidator(t *testing.T) {
 		return fl.Field().String() == "bar"
 	})
 	SetValidate(v)
-	ast.NoError(Do(ctx, customRule, mgo常量.X钩子_插入前))
+	ast.NoError(Do(ctx, customRule, operator.BeforeInsert))
 }

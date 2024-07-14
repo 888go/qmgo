@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
@@ -20,7 +20,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/888go/qmgo/options"
+	"github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsoncodec"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -29,124 +29,135 @@ import (
 )
 
 // 初始MongoDB实例的配置 md5:09dcbab1d00adb46
-type X配置 struct {
-// URI 示例：[mongodb://][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
-// URI 参考：https://docs.mongodb.com/manual/reference/connection-string/ 
-// 
-// 这段注释解释了一个MongoDB连接字符串的格式，包括可选的部分如用户名、密码、多个服务器地址、数据库名以及可选的连接选项。URI以`mongodb://`开头，后面可以包含认证信息、主机列表、数据库路径和查询参数。链接：提供了官方文档的参考。
-// md5:038c28929efbdde0
-	X连接URI      string `json:"uri"`
-	X数据库名 string `json:"database"`
-	X集合名     string `json:"coll"`
-// X连接超时毫秒 指定了建立到服务器连接时使用的超时时间，以毫秒为单位。
-// 如果设置为 0，则不会使用超时。
-// 默认值为 30 秒。
-// md5:bdc6b23048c25478
-	X连接超时毫秒 *int64 `json:"connectTimeoutMS"`
-// X最大连接池大小 指定驱动程序连接池到每个服务器的最大连接数。
-// 如果设置为 0，则将其设置为 math.MaxInt64，
-// 默认值为 100。
-// md5:6840c2846a8fad6e
-	X最大连接池大小 *uint64 `json:"maxPoolSize"`
-// X最小连接池大小 指定了驱动程序到每个服务器的连接池中允许的最小连接数。如果此值不为零，将为每个服务器的连接池在后台维护，以确保其大小不低于最小值。这也可以通过 "minPoolSize" URI 选项（如 "minPoolSize=100"）进行设置。默认值为 0。
-// md5:9df8b44a6800236b
-	X最小连接池大小 *uint64 `json:"minPoolSize"`
-// X套接字超时毫秒 指定了驱动程序在返回网络错误之前，等待套接字读写操作返回的最长时间（以毫秒为单位）。如果此值为0，则表示不使用超时，套接字操作可能无限期阻塞。默认值为300,000毫秒。
-// md5:1e1ccf1f35a18417
-	X套接字超时毫秒 *int64 `json:"socketTimeoutMS"`
-// X读取偏好 确定哪些服务器适合进行读取操作。默认为 PrimaryMode。
-// md5:6ca3a191c28443b8
-	X读取偏好 *X读取偏好 `json:"readPreference"`
+type Config struct {
+	// URI 示例：[mongodb://][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
+	// URI 参考：https://docs.mongodb.com/manual/reference/connection-string/
+	//
+	// 这段注释解释了一个MongoDB连接字符串的格式，包括可选的部分如用户名、密码、多个服务器地址、数据库名以及可选的连接选项。URI以`mongodb://`开头，后面可以包含认证信息、主机列表、数据库路径和查询参数。链接：提供了官方文档的参考。
+	// md5:038c28929efbdde0
+	Uri      string `json:"uri"`      //qm:连接URI  cz:Uri string `json:"uri"`
+	Database string `json:"database"` //qm:数据库名  cz:Database string `json:"database"`
+	Coll     string `json:"coll"`     //qm:集合名  cz:Coll string `json:"coll"`
+	// ConnectTimeoutMS 指定了建立到服务器连接时使用的超时时间，以毫秒为单位。
+	// 如果设置为 0，则不会使用超时。
+	// 默认值为 30 秒。
+	// md5:bdc6b23048c25478
+	ConnectTimeoutMS *int64 `json:"connectTimeoutMS"` //qm:连接超时毫秒  cz:ConnectTimeoutMS *int64 `json:"connectTimeoutMS"`
+	// MaxPoolSize 指定驱动程序连接池到每个服务器的最大连接数。
+	// 如果设置为 0，则将其设置为 math.MaxInt64，
+	// 默认值为 100。
+	// md5:6840c2846a8fad6e
+	MaxPoolSize *uint64 `json:"maxPoolSize"` //qm:最大连接池大小  cz:MaxPoolSize *uint64 `json:"maxPoolSize"`
+	// MinPoolSize 指定了驱动程序到每个服务器的连接池中允许的最小连接数。如果此值不为零，将为每个服务器的连接池在后台维护，以确保其大小不低于最小值。这也可以通过 "minPoolSize" URI 选项（如 "minPoolSize=100"）进行设置。默认值为 0。
+	// md5:9df8b44a6800236b
+	MinPoolSize *uint64 `json:"minPoolSize"` //qm:最小连接池大小  cz:MinPoolSize *uint64 `json:"minPoolSize"`
+	// SocketTimeoutMS 指定了驱动程序在返回网络错误之前，等待套接字读写操作返回的最长时间（以毫秒为单位）。如果此值为0，则表示不使用超时，套接字操作可能无限期阻塞。默认值为300,000毫秒。
+	// md5:1e1ccf1f35a18417
+	SocketTimeoutMS *int64 `json:"socketTimeoutMS"` //qm:套接字超时毫秒  cz:SocketTimeoutMS *int64 `json:"socketTimeoutMS"`
+	// ReadPreference 确定哪些服务器适合进行读取操作。默认为 PrimaryMode。
+	// md5:6ca3a191c28443b8
+	ReadPreference *ReadPref `json:"readPreference"` //qm:读取偏好  zz:ReadPreference \*.*`json:"readPreference"`
 	// 可用于在配置客户端时提供身份验证选项。 md5:99c19d7fabc83d2d
-	X身份凭证 *X身份凭证 `json:"auth"`
+	Auth *Credential `json:"auth"` //qm:身份凭证  zz:Auth \*.+ `json:"auth"`
 }
 
-// X身份凭证 用于在配置客户端时提供认证选项。
+// Credential can be used to provide authentication options when configuring a Client.
 //
-// AuthMechanism: 认证机制。支持的值包括 "SCRAM-SHA-256", "SCRAM-SHA-1", "MONGODB-CR", "PLAIN", "GSSAPI", "MONGODB-X509" 和 "MONGODB-AWS"。
-// 这也可以通过 "authMechanism" URI 选项设置（例如 "authMechanism=PLAIN"）。更多信息请参阅
-// https://docs.mongodb.com/manual/core/authentication-mechanisms/。
-// AuthSource: 用于认证的数据库名称。对于 MONGODB-X509、GSSAPI 和 PLAIN，默认为 "$external"，对于所有其他机制默认为 "admin"。
-// 这也可以通过 "authSource" URI 选项设置（例如 "authSource=otherDb"）。
+// "MONGODB-CR", "PLAIN", "GSSAPI", "MONGODB-X509", and "MONGODB-AWS". This can also be set through the "authMechanism"
+// URI option. (e.g. "authMechanism=PLAIN"). For more information, see
+// GSSAPI, and PLAIN and "admin" for all other mechanisms. This can also be set through the "authSource" URI option
+// (e.g. "authSource=otherDb").
 //
-// Username: 认证用的用户名。这也可以通过 URI 在第一个 @ 字符前设置用户名和密码。例如，用户 "user"，密码 "pwd"，
-// 主机 "localhost:27017" 的 URI 为 "mongodb://user:pwd@localhost:27017"。对于 X509 认证这是可选的，如果没有指定，将从客户端证书中提取。
+// the first @ character. For example, a URI for user "user", password "pwd", and host "localhost:27017" would be
+// "mongodb://user:pwd@localhost:27017". This is optional for X509 authentication and will be extracted from the
+// client certificate if not specified.
 //
-// Password: 认证用的密码。对于 X509 不允许指定，对于 GSSAPI 是可选的。
+// authentication.
 //
-// PasswordSet: 对于 GSSAPI，如果指定了密码（即使密码为空字符串），此值必须为 true，如果未指定密码，表示应从运行进程的上下文中获取密码。
-// 对于其他机制，此字段会被忽略。
-// md5:e1c2a73d163c799a
-type X身份凭证 struct {
-	X认证机制 string `json:"authMechanism"`
-	X认证源    string `json:"authSource"`
-	X用户名      string `json:"username"`
-	X密码      string `json:"password"`
+// false if no password is specified, indicating that the password should be taken from the context of the running
+// process. For other mechanisms, this field is ignored.
+type Credential struct {
+	AuthMechanism string `json:"authMechanism"` //qm:认证机制  cz:AuthMechanism string `json:"authMechanism"`
+	AuthSource    string `json:"authSource"`    //qm:认证源  cz:AuthSource string `json:"authSource"`
+	Username      string `json:"username"`      //qm:用户名  cz:Username string `json:"username"`
+	Password      string `json:"password"`      //qm:密码  cz:Password string `json:"password"`
 	PasswordSet   bool   `json:"passwordSet"`
 }
 
-// X读取偏好确定哪些服务器适合进行读取操作。 md5:d5ae507a40965ac9
-type X读取偏好 struct {
-// MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
-// md5:01c3097a5d9a368b
-	X最大延迟毫秒 int64 `json:"maxStalenessMS"`
-// 表示用户在读取操作上的偏好。
-// 默认为PrimaryMode。
-// md5:85d94814e6ac8eca
+// ReadPref确定哪些服务器适合进行读取操作。 md5:d5ae507a40965ac9
+type ReadPref struct {
+	// MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
+	// md5:01c3097a5d9a368b
+	MaxStalenessMS int64 `json:"maxStalenessMS"` //qm:最大延迟毫秒  cz:MaxStalenessMS int64 `json:"maxStalenessMS"`
+	// 表示用户在读取操作上的偏好。
+	// 默认为PrimaryMode。
+	// md5:85d94814e6ac8eca
 	Mode readpref.Mode `json:"mode"`
 }
 
-// XMongo客户端 指定操作MongoDB的实例 md5:ef9044b4ab2af757
-type XMongo客户端 struct {
-	*X文档集合
-	*X数据库
-	*X客户端
+// QmgoClient 指定操作MongoDB的实例 md5:ef9044b4ab2af757
+type QmgoClient struct {
+	*Collection
+	*Database
+	*Client
 }
 
-// X连接 根据配置创建客户端实例
+// Open 根据配置创建客户端实例
 // QmgoClient 可以操作所有 qmgo.client、qmgo.database 和 qmgo.collection
 // md5:bc872aaa93cf801a
-func X连接(上下文 context.Context, 配置 *X配置, 可选选项 ...options.ClientOptions) (Qmgo客户端 *XMongo客户端, 错误 error) {
-	client, 错误 := X创建客户端(上下文, 配置, 可选选项...)
-	if 错误 != nil {
-		fmt.Println("new client fail", 错误)
+// ff:连接
+// ctx:上下文
+// conf:配置
+// o:可选选项
+// cli:Qmgo客户端
+// err:错误
+func Open(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *QmgoClient, err error) {
+	client, err := NewClient(ctx, conf, o...)
+	if err != nil {
+		fmt.Println("new client fail", err)
 		return
 	}
 
-	db := client.X设置数据库(配置.X数据库名)
-	coll := db.X取集合(配置.X集合名)
+	db := client.Database(conf.Database)
+	coll := db.Collection(conf.Coll)
 
-	Qmgo客户端 = &XMongo客户端{
-		X客户端:     client,
-		X数据库:   db,
-		X文档集合: coll,
+	cli = &QmgoClient{
+		Client:     client,
+		Database:   db,
+		Collection: coll,
 	}
 
 	return
 }
 
-// X客户端 创建一个到Mongo的客户端 md5:3527d3de272044c3
-type X客户端 struct {
+// Client 创建一个到Mongo的客户端 md5:3527d3de272044c3
+type Client struct {
 	client *mongo.Client
-	conf   X配置
+	conf   Config
 
 	registry *bsoncodec.Registry
 }
 
-// X创建客户端 创建 Qmgo MongoDB 客户端 md5:64c9dc0f30edc1ac
-func X创建客户端(上下文 context.Context, 配置 *X配置, 可选选项 ...options.ClientOptions) (客户端 *X客户端, 错误 error) {
-	opt, 错误 := newConnectOpts(配置, 可选选项...)
-	if 错误 != nil {
-		return nil, 错误
+// NewClient 创建 Qmgo MongoDB 客户端 md5:64c9dc0f30edc1ac
+// ff:创建客户端
+// ctx:上下文
+// conf:配置
+// o:可选选项
+// cli:客户端
+// err:错误
+func NewClient(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *Client, err error) {
+	opt, err := newConnectOpts(conf, o...)
+	if err != nil {
+		return nil, err
 	}
-	client, 错误 := client(上下文, opt)
-	if 错误 != nil {
-		fmt.Println("new client fail", 错误)
+	client, err := client(ctx, opt)
+	if err != nil {
+		fmt.Println("new client fail", err)
 		return
 	}
-	客户端 = &X客户端{
+	cli = &Client{
 		client:   client,
-		conf:     *配置,
+		conf:     *conf,
 		registry: opt.Registry,
 	}
 	return
@@ -174,92 +185,92 @@ func client(ctx context.Context, opt *officialOpts.ClientOptions) (client *mongo
 // - URI 中的配置优先于 setter 中的配置
 // - 检查 URI 中配置的有效性，而 setter 中的配置基本不进行检查
 // md5:e686e2f8bec69b3b
-func newConnectOpts(conf *X配置, o ...options.ClientOptions) (*officialOpts.ClientOptions, error) {
+func newConnectOpts(conf *Config, o ...options.ClientOptions) (*officialOpts.ClientOptions, error) {
 	option := officialOpts.Client()
 	for _, apply := range o {
 		option = officialOpts.MergeClientOptions(apply.ClientOptions)
 	}
-	if conf.X连接超时毫秒 != nil {
-		timeoutDur := time.Duration(*conf.X连接超时毫秒) * time.Millisecond
+	if conf.ConnectTimeoutMS != nil {
+		timeoutDur := time.Duration(*conf.ConnectTimeoutMS) * time.Millisecond
 		option.SetConnectTimeout(timeoutDur)
 
 	}
-	if conf.X套接字超时毫秒 != nil {
-		timeoutDur := time.Duration(*conf.X套接字超时毫秒) * time.Millisecond
+	if conf.SocketTimeoutMS != nil {
+		timeoutDur := time.Duration(*conf.SocketTimeoutMS) * time.Millisecond
 		option.SetSocketTimeout(timeoutDur)
 	} else {
 		option.SetSocketTimeout(300 * time.Second)
 	}
-	if conf.X最大连接池大小 != nil {
-		option.SetMaxPoolSize(*conf.X最大连接池大小)
+	if conf.MaxPoolSize != nil {
+		option.SetMaxPoolSize(*conf.MaxPoolSize)
 	}
-	if conf.X最小连接池大小 != nil {
-		option.SetMinPoolSize(*conf.X最小连接池大小)
+	if conf.MinPoolSize != nil {
+		option.SetMinPoolSize(*conf.MinPoolSize)
 	}
-	if conf.X读取偏好 != nil {
-		readPreference, err := newReadPref(*conf.X读取偏好)
+	if conf.ReadPreference != nil {
+		readPreference, err := newReadPref(*conf.ReadPreference)
 		if err != nil {
 			return nil, err
 		}
 		option.SetReadPreference(readPreference)
 	}
-	if conf.X身份凭证 != nil {
-		auth, err := newAuth(*conf.X身份凭证)
+	if conf.Auth != nil {
+		auth, err := newAuth(*conf.Auth)
 		if err != nil {
 			return nil, err
 		}
 		option.SetAuth(auth)
 	}
-	option.ApplyURI(conf.X连接URI)
+	option.ApplyURI(conf.Uri)
 
 	return option, nil
 }
 
 // newAuth 从conf.Auth创建options.Credential选项 md5:88ce8258f4551f1c
-func newAuth(auth X身份凭证) (credential officialOpts.Credential, err error) {
-	if auth.X认证机制 != "" {
-		credential.AuthMechanism = auth.X认证机制
+func newAuth(auth Credential) (credential officialOpts.Credential, err error) {
+	if auth.AuthMechanism != "" {
+		credential.AuthMechanism = auth.AuthMechanism
 	}
-	if auth.X认证源 != "" {
-		credential.AuthSource = auth.X认证源
+	if auth.AuthSource != "" {
+		credential.AuthSource = auth.AuthSource
 	}
-	if auth.X用户名 != "" {
+	if auth.Username != "" {
 		// 验证和处理用户名。 md5:3c89ddb7c004c9d6
-		if strings.Contains(auth.X用户名, "/") {
-			err = X错误_不支持用户名
+		if strings.Contains(auth.Username, "/") {
+			err = ErrNotSupportedUsername
 			return
 		}
-		credential.Username, err = url.QueryUnescape(auth.X用户名)
+		credential.Username, err = url.QueryUnescape(auth.Username)
 		if err != nil {
-			err = X错误_不支持用户名
+			err = ErrNotSupportedUsername
 			return
 		}
 	}
 	credential.PasswordSet = auth.PasswordSet
-	if auth.X密码 != "" {
-		if strings.Contains(auth.X密码, ":") {
-			err = X错误_不支持密码
+	if auth.Password != "" {
+		if strings.Contains(auth.Password, ":") {
+			err = ErrNotSupportedPassword
 			return
 		}
-		if strings.Contains(auth.X密码, "/") {
-			err = X错误_不支持密码
+		if strings.Contains(auth.Password, "/") {
+			err = ErrNotSupportedPassword
 			return
 		}
-		credential.Password, err = url.QueryUnescape(auth.X密码)
+		credential.Password, err = url.QueryUnescape(auth.Password)
 		if err != nil {
-			err = X错误_不支持密码
+			err = ErrNotSupportedPassword
 			return
 		}
-		credential.Password = auth.X密码
+		credential.Password = auth.Password
 	}
 	return
 }
 
 // newReadPref 根据配置创建 readpref.ReadPref md5:1c0e9080aed7b202
-func newReadPref(pref X读取偏好) (*readpref.ReadPref, error) {
+func newReadPref(pref ReadPref) (*readpref.ReadPref, error) {
 	readPrefOpts := make([]readpref.Option, 0, 1)
-	if pref.X最大延迟毫秒 != 0 {
-		readPrefOpts = append(readPrefOpts, readpref.WithMaxStaleness(time.Duration(pref.X最大延迟毫秒)*time.Millisecond))
+	if pref.MaxStalenessMS != 0 {
+		readPrefOpts = append(readPrefOpts, readpref.WithMaxStaleness(time.Duration(pref.MaxStalenessMS)*time.Millisecond))
 	}
 	mode := readpref.PrimaryMode
 	if pref.Mode != 0 {
@@ -269,16 +280,22 @@ func newReadPref(pref X读取偏好) (*readpref.ReadPref, error) {
 	return readPreference, err
 }
 
-// X关闭连接 关闭到此客户端引用的拓扑结构相关的套接字。 md5:a2c78aacda5cd470
-func (c *X客户端) X关闭连接(上下文 context.Context) error {
-	err := c.client.Disconnect(上下文)
+// Close 关闭到此客户端引用的拓扑结构相关的套接字。 md5:a2c78aacda5cd470
+// ff:关闭连接
+// c:
+// ctx:上下文
+func (c *Client) Close(ctx context.Context) error {
+	err := c.client.Disconnect(ctx)
 	return err
 }
 
-// X是否存活确认连接是否还活着 md5:1b88dbe0bbaa6726
-func (c *X客户端) X是否存活(超时时长 int64) error {
+// Ping确认连接是否还活着 md5:1b88dbe0bbaa6726
+// ff:是否存活
+// c:
+// timeout:超时时长
+func (c *Client) Ping(timeout int64) error {
 	var err error
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(超时时长)*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(timeout)*time.Second)
 	defer cancel()
 
 	if err = c.client.Ping(ctx, readpref.Primary()); err != nil {
@@ -287,29 +304,36 @@ func (c *X客户端) X是否存活(超时时长 int64) error {
 	return nil
 }
 
-// X设置数据库 创建到数据库的连接 md5:1aa03639d9adcf41
-func (c *X客户端) X设置数据库(数据库名称 string, 可选选项 ...*options.DatabaseOptions) *X数据库 {
-	opts := make([]*officialOpts.DatabaseOptions, 0, len(可选选项))
-	for _, o := range 可选选项 {
+// Database 创建到数据库的连接 md5:1aa03639d9adcf41
+// ff:设置数据库
+// c:
+// name:数据库名称
+// options:可选选项
+func (c *Client) Database(name string, options ...*options.DatabaseOptions) *Database {
+	opts := make([]*officialOpts.DatabaseOptions, 0, len(options))
+	for _, o := range options {
 		opts = append(opts, o.DatabaseOptions)
 	}
 	databaseOpts := officialOpts.MergeDatabaseOptions(opts...)
-	return &X数据库{database: c.client.Database(数据库名称, databaseOpts), registry: c.registry}
+	return &Database{database: c.client.Database(name, databaseOpts), registry: c.registry}
 }
 
-// X创建Session事务：在客户端创建一个会话
+// Session：在客户端创建一个会话
 // 注意，操作完成后要关闭会话
 // md5:a25c6035ffabaf48
-func (c *X客户端) X创建Session事务(可选选项 ...*options.SessionOptions) (*XSession事务, error) {
+// ff:创建Session事务
+// c:
+// opt:可选选项
+func (c *Client) Session(opt ...*options.SessionOptions) (*Session, error) {
 	sessionOpts := officialOpts.Session()
-	if len(可选选项) > 0 && 可选选项[0].SessionOptions != nil {
-		sessionOpts = 可选选项[0].SessionOptions
+	if len(opt) > 0 && opt[0].SessionOptions != nil {
+		sessionOpts = opt[0].SessionOptions
 	}
 	s, err := c.client.StartSession(sessionOpts)
-	return &XSession事务{session: s}, err
+	return &Session{session: s}, err
 }
 
-// X事务 在一个函数中执行整个事务
+// DoTransaction 在一个函数中执行整个事务
 // 前置条件：
 // - MongoDB服务器的版本 >= v4.0
 // - MongoDB服务器的拓扑结构不是Single
@@ -320,20 +344,28 @@ func (c *X客户端) X创建Session事务(可选选项 ...*options.SessionOption
 // - 如果回调中的操作返回qmgo.ErrTransactionNotSupported，
 // - 如果ctx参数已经绑定了Session，它将被这个Session替换。
 // md5:f5555fc9e2733cb9
-func (c *X客户端) X事务(上下文 context.Context, 回调函数 func(事务上下文 context.Context) (interface{}, error), 可选选项 ...*options.TransactionOptions) (interface{}, error) {
+// ff:事务
+// c:
+// ctx:上下文
+// callback:回调函数
+// sessCtx:事务上下文
+// opts:可选选项
+func (c *Client) DoTransaction(ctx context.Context, callback func(sessCtx context.Context) (interface{}, error), opts ...*options.TransactionOptions) (interface{}, error) {
 	if !c.transactionAllowed() {
-		return nil, X错误_事务_不支持
+		return nil, ErrTransactionNotSupported
 	}
-	s, err := c.X创建Session事务()
+	s, err := c.Session()
 	if err != nil {
 		return nil, err
 	}
-	defer s.X结束Session(上下文)
-	return s.X开始事务(上下文, 回调函数, 可选选项...)
+	defer s.EndSession(ctx)
+	return s.StartTransaction(ctx, callback, opts...)
 }
 
-// X取版本号 获取MongoDB服务器的版本，如4.4.0 md5:85f19b2205255d3a
-func (c *X客户端) X取版本号() string {
+// ServerVersion 获取MongoDB服务器的版本，如4.4.0 md5:85f19b2205255d3a
+// ff:取版本号
+// c:
+func (c *Client) ServerVersion() string {
 	var buildInfo bson.Raw
 	err := c.client.Database("admin").RunCommand(
 		context.Background(),
@@ -352,8 +384,8 @@ func (c *X客户端) X取版本号() string {
 }
 
 // transactionAllowed 检查交易是否被允许 md5:d9e86f3ad9610912
-func (c *X客户端) transactionAllowed() bool {
-	vr, err := X比较版本号("4.0", c.X取版本号())
+func (c *Client) transactionAllowed() bool {
+	vr, err := CompareVersions("4.0", c.ServerVersion())
 	if err != nil {
 		return false
 	}
@@ -361,11 +393,11 @@ func (c *X客户端) transactionAllowed() bool {
 		fmt.Println("transaction is not supported because mongo server version is below 4.0")
 		return false
 	}
-// TODO：不知道为什么在`topology()`函数中需要通过`cli, err := Open(ctx, &c.conf)`来获取topo，在弄清楚原因之前，我们只在这个UT（单元测试）中使用这个函数
-//topo, err := c.topology() // 从config对象获取topology信息
-//如果topo是description.Single（单点模式）：
-//    打印 "transaction is not supported because mongo server topology is single"
-//    返回false
-// md5:4d3e4bc17382c028
+	// TODO：不知道为什么在`topology()`函数中需要通过`cli, err := Open(ctx, &c.conf)`来获取topo，在弄清楚原因之前，我们只在这个UT（单元测试）中使用这个函数
+	//topo, err := c.topology() // 从config对象获取topology信息
+	//如果topo是description.Single（单点模式）：
+	//    打印 "transaction is not supported because mongo server topology is single"
+	//    返回false
+	// md5:4d3e4bc17382c028
 	return true
 }

@@ -44,49 +44,65 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [func (q *Query) Collation(collation *options.Collation) QueryI {]
 collation=规则
+ff=设置排序规则
 
 [func (q *Query) NoCursorTimeout(n bool) QueryI {]
 n=是否不超时
+ff=设置不超时
 
 [func (q *Query) BatchSize(n int64) QueryI {]
 n=数量
+ff=设置批量处理数量
 
 [func (q *Query) Sort(fields ...string) QueryI {]
 fields=排序字段
+ff=排序
 
 [func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {]
 filter=过滤条件
+ff=设置切片过滤
 
 [func (q *Query) Select(projection interface{}) QueryI {]
 projection=字段Map
+ff=字段
 
 [func (q *Query) Skip(n int64) QueryI {]
 n=跳过数量
+ff=跳过
 
 [func (q *Query) Hint(hint interface{}) QueryI {]
 hint=索引字段
+ff=指定索引字段
 
 [func (q *Query) Limit(n int64) QueryI {]
 n=数量
+ff=设置最大返回数
 
 [func (q *Query) One(result interface{}) error {]
 result=结果指针
+ff=取一条
 
 [func (q *Query) All(result interface{}) error {]
 result=结果指针
+ff=取全部
 
 [func (q *Query) Count() (n int64, err error) {]
 err=错误
 n=数量
+ff=取数量
 
 [func (q *Query) EstimatedCount() (n int64, err error) {]
 err=错误
 n=数量
+ff=取预估数量
 
 [func (q *Query) Distinct(key string, result interface{}) error {]
 result=切片指针
 key=字段名
+ff=去重
 
 [func (q *Query) Cursor() CursorI {]
+ff=取结果集
 
 [func (q *Query) Apply(change Change, result interface{}) error {]
+ff=执行命令

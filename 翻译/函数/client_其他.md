@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
-
-
 [Uri string `json:"uri"`]
 qm=连接URI
 cz=Uri string `json:"uri"`
@@ -73,7 +71,6 @@ zz=ReadPreference \*.*`json:"readPreference"`
 qm=身份凭证
 zz=Auth \*.+ `json:"auth"`
 
-
 [AuthMechanism string `json:"authMechanism"`]
 qm=认证机制
 cz=AuthMechanism string `json:"authMechanism"`
@@ -90,8 +87,6 @@ cz=Username string `json:"username"`
 qm=密码
 cz=Password string `json:"password"`
 
-
 [MaxStalenessMS int64 `json:"maxStalenessMS"`]
 qm=最大延迟毫秒
 cz=MaxStalenessMS int64 `json:"maxStalenessMS"`
-

@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
@@ -25,9 +25,9 @@ import (
 func TestCursor(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.X关闭连接(context.Background())
-	defer cli.X删除集合(context.Background())
-	cli.EnsureIndexes弃用(context.Background(), nil, []string{"name"})
+	defer cli.Close(context.Background())
+	defer cli.DropCollection(context.Background())
+	cli.EnsureIndexes(context.Background(), nil, []string{"name"})
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -39,7 +39,7 @@ func TestCursor(t *testing.T) {
 		bson.M{"_id": id3, "name": "Lucas", "age": 20},
 		bson.M{"_id": id4, "name": "Lucas", "age": 21},
 	}
-	_, err := cli.X插入多个(context.Background(), docs)
+	_, err := cli.InsertMany(context.Background(), docs)
 	ast.NoError(err)
 
 	var res QueryTestItem
@@ -52,56 +52,56 @@ func TestCursor(t *testing.T) {
 		"name": 0,
 	}
 
-	cursor := cli.X查询(context.Background(), filter1).X字段(projection1).X排序("age").X设置最大返回数(2).X跳过(1).X取结果集()
-	ast.NoError(cursor.X取错误())
+	cursor := cli.Find(context.Background(), filter1).Select(projection1).Sort("age").Limit(2).Skip(1).Cursor()
+	ast.NoError(cursor.Err())
 
-	val := cursor.X下一个(&res)
+	val := cursor.Next(&res)
 	ast.Equal(true, val)
 	ast.Equal(id2, res.Id)
 
-	val = cursor.X下一个(&res)
+	val = cursor.Next(&res)
 	ast.Equal(false, val)
 
-	cursor.X关闭()
+	cursor.Close()
 
 	// cursor ALL
-	cursor = cli.X查询(context.Background(), filter1).X字段(projection1).X排序("age").X设置最大返回数(2).X取结果集()
-	ast.NoError(cursor.X取错误())
+	cursor = cli.Find(context.Background(), filter1).Select(projection1).Sort("age").Limit(2).Cursor()
+	ast.NoError(cursor.Err())
 
 	var results []QueryTestItem
-	cursor.X取全部(&results)
+	cursor.All(&results)
 	ast.Equal(2, len(results))
 	// 无法匹配记录，游标运行Next方法并返回false md5:765217e0cad2c295
 	filter2 := bson.M{
 		"name": "Lily",
 	}
 
-	cursor = cli.X查询(context.Background(), filter2).X取结果集()
-	ast.NoError(cursor.X取错误())
+	cursor = cli.Find(context.Background(), filter2).Cursor()
+	ast.NoError(cursor.Err())
 	ast.NotNil(cursor)
 
 	res = QueryTestItem{}
-	val = cursor.X下一个(&res)
+	val = cursor.Next(&res)
 	ast.Equal(false, val)
 	ast.Empty(res)
 
-	cursor.X关闭()
+	cursor.Close()
 
 	// 1条记录，当游标关闭后，Next 函数返回 false md5:a3f791b1b606935e
-	cursor = cli.X查询(context.Background(), filter1).X字段(projection1).X排序("age").X设置最大返回数(2).X跳过(1).X取结果集()
-	ast.NoError(cursor.X取错误())
+	cursor = cli.Find(context.Background(), filter1).Select(projection1).Sort("age").Limit(2).Skip(1).Cursor()
+	ast.NoError(cursor.Err())
 	ast.NotNil(cursor)
 
-	cursor.X关闭()
+	cursor.Close()
 
-	ast.Equal(false, cursor.X下一个(&res))
-	ast.NoError(cursor.X取错误())
+	ast.Equal(false, cursor.Next(&res))
+	ast.NoError(cursor.Err())
 
 	// 使用错误生成Cursor md5:aa941bfed7793fe7
-	cursor = cli.X查询(context.Background(), 1).X字段(projection1).X排序("age").X设置最大返回数(2).X跳过(1).X取结果集()
-	ast.Error(cursor.X取错误())
+	cursor = cli.Find(context.Background(), 1).Select(projection1).Sort("age").Limit(2).Skip(1).Cursor()
+	ast.Error(cursor.Err())
 	// ast.Equal 认为 int64(0) 等于 cursor.ID() 的结果 md5:9676af4589eca183
-	ast.Error(cursor.X取全部(&res))
-	ast.Error(cursor.X关闭())
-	ast.Equal(false, cursor.X下一个(&res))
+	ast.Error(cursor.All(&res))
+	ast.Error(cursor.Close())
+	ast.Equal(false, cursor.Next(&res))
 }

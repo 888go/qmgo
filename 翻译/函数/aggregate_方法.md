@@ -45,6 +45,14 @@ cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interfac
 
 [func (a *Aggregate) All(results interface{}) error {]
 results=结果指针
+ff=取全部
 
 [func (a *Aggregate) One(result interface{}) error {]
 result=结果指针
+ff=取一条
+
+[func (a *Aggregate) Iter() CursorI {]
+ff=Iter弃用
+
+[func (a *Aggregate) Cursor() CursorI {]
+ff=取结果集

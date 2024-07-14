@@ -11,14 +11,12 @@
  limitations under the License.
 */
 
-package mgo常量
+package operator
 
-// 聚合管道运算符
-// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation/
-// md5:b743948494162fab
+// Aggregation Pipeline Operators
 const (
 	// 算术运算符 md5:862d53c43dccda12
-	X聚合绝对值      = "$abs"
+	Abs      = "$abs" //qm:聚合绝对值  cz:Abs = "$abs"
 	Add      = "$add"
 	Ceil     = "$ceil"
 	Divide   = "$divide"
@@ -72,17 +70,17 @@ const (
 	DayOfMonth     = "$dayOfMonth"
 	DayOfWeek      = "$dayOfWeek"
 	DayOfYear      = "$dayOfYear"
-	X小时           = "$hour"
+	Hour           = "$hour" //qm:小时  cz:Hour = "$hour"
 	IsoDayOfWeek   = "$isoDayOfWeek"
 	IsoWeek        = "$isoWeek"
 	IsoWeekYear    = "$isoWeekYear"
 	Millisecond    = "$millisecond"
 	Minute         = "$minute"
-	X月          = "$month"
-	X秒         = "$second"
+	Month          = "$month"  //qm:月  cz:Month = "$month"
+	Second         = "$second" //qm:秒  cz:Second = "$second"
 	ToDate         = "$toDate"
-	X周           = "$week"
-	X年           = "$year"
+	Week           = "$week" //qm:周  cz:Week = "$week"
+	Year           = "$year" //qm:年  cz:Year = "$year"
 
 	// 字面量表达式操作符 md5:8501f5c82ee2c883
 	Literal = "$literal"
@@ -147,13 +145,13 @@ const (
 	IsNumber   = "$isNumber"
 
 	// Accumulators ($group)
-	X平均值   = "$avg"
+	Avg   = "$avg" //qm:平均值  cz:Avg = "$avg"
 	First = "$first"
 	Last  = "$last"
 
 	StdDevPop  = "$stdDevPop"
 	StdDevSamp = "$stdDevSamp"
-	X求和        = "$sum"
+	Sum        = "$sum" //qm:求和  cz:Sum = "$sum"
 
 	// 变量表达式操作符 md5:b84290815043dc99
 	Let = "$let"

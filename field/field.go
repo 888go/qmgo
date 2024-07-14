@@ -18,17 +18,17 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/888go/qmgo/operator"
+	"github.com/qiniu/qmgo/operator"
 )
 
 var nilTime time.Time
 
 // filedHandler 定义字段类型和处理器之间的关系 md5:c7cd659bd6a053b2
-var fieldHandler = map[mgo常量.OpType]func(doc interface{}) error{
-	mgo常量.X钩子_插入前:  beforeInsert,
-	mgo常量.X钩子_更新前:  beforeUpdate,
-	mgo常量.X钩子_替换前: beforeUpdate,
-	mgo常量.X钩子_替换插入前:  beforeUpsert,
+var fieldHandler = map[operator.OpType]func(doc interface{}) error{
+	operator.BeforeInsert:  beforeInsert,
+	operator.BeforeUpdate:  beforeUpdate,
+	operator.BeforeReplace: beforeUpdate,
+	operator.BeforeUpsert:  beforeUpsert,
 }
 
 // 函数 init() {
@@ -39,7 +39,12 @@ var fieldHandler = map[mgo常量.OpType]func(doc interface{}) error{
 // Do 调用特定方法根据 fType 处理字段
 // 不在这里使用 opts
 // md5:01967b5b64a19adb
-func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error {
+// ff:
+// ctx:
+// doc:
+// opType:
+// opts:
+func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
 		return nil
@@ -61,7 +66,7 @@ func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...i
 }
 
 // sliceHandle处理切片文档 md5:92800dd5899836ce
-func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
+func sliceHandle(docs interface{}, opType operator.OpType) error {
 	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
@@ -93,10 +98,10 @@ func beforeInsert(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.X设置更新时间字段名()
-		fields.(*X自定义字段).X自定义ID(doc)
-		fields.(*X自定义字段).X自定义创建时间(doc)
-		fields.(*X自定义字段).X自定义更新时间(doc)
+		fields := ih.CustomFields()
+		fields.(*CustomFields).CustomId(doc)
+		fields.(*CustomFields).CustomCreateTime(doc)
+		fields.(*CustomFields).CustomUpdateTime(doc)
 	}
 	return nil
 }
@@ -107,8 +112,8 @@ func beforeUpdate(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.X设置更新时间字段名()
-		fields.(*X自定义字段).X自定义更新时间(doc)
+		fields := ih.CustomFields()
+		fields.(*CustomFields).CustomUpdateTime(doc)
 	}
 	return nil
 }
@@ -125,16 +130,16 @@ func beforeUpsert(doc interface{}) error {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
-		fields := ih.X设置更新时间字段名()
-		fields.(*X自定义字段).X自定义ID(doc)
-		fields.(*X自定义字段).X自定义创建时间(doc)
-		fields.(*X自定义字段).X自定义更新时间(doc)
+		fields := ih.CustomFields()
+		fields.(*CustomFields).CustomId(doc)
+		fields.(*CustomFields).CustomCreateTime(doc)
+		fields.(*CustomFields).CustomUpdateTime(doc)
 	}
 	return nil
 }
 
 // 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
-func do(doc interface{}, opType mgo常量.OpType) error {
+func do(doc interface{}, opType operator.OpType) error {
 	if f, ok := fieldHandler[opType]; !ok {
 		return nil
 	} else {

@@ -15,24 +15,24 @@ package hook
 
 import (
 	"context"
-	"github.com/888go/qmgo/operator"
+	"github.com/qiniu/qmgo/operator"
 	"reflect"
 )
 
 // hookHandler 定义钩子类型和处理器之间的关系 md5:bce577bc34fd8393
-var hookHandler = map[mgo常量.OpType]func(ctx context.Context, hook interface{}) error{
-	mgo常量.X钩子_插入前:  beforeInsert,
-	mgo常量.X钩子_插入后:   afterInsert,
-	mgo常量.X钩子_更新前:  beforeUpdate,
-	mgo常量.X钩子_更新后:   afterUpdate,
-	mgo常量.X钩子_查询前:   beforeQuery,
-	mgo常量.X钩子_查询后:    afterQuery,
-	mgo常量.X钩子_删除前:  beforeRemove,
-	mgo常量.X钩子_删除后:   afterRemove,
-	mgo常量.X钩子_替换插入前:  beforeUpsert,
-	mgo常量.X钩子_替换插入后:   afterUpsert,
-	mgo常量.X钩子_替换前: beforeUpdate,
-	mgo常量.X钩子_替换后:  afterUpdate,
+var hookHandler = map[operator.OpType]func(ctx context.Context, hook interface{}) error{
+	operator.BeforeInsert:  beforeInsert,
+	operator.AfterInsert:   afterInsert,
+	operator.BeforeUpdate:  beforeUpdate,
+	operator.AfterUpdate:   afterUpdate,
+	operator.BeforeQuery:   beforeQuery,
+	operator.AfterQuery:    afterQuery,
+	operator.BeforeRemove:  beforeRemove,
+	operator.AfterRemove:   afterRemove,
+	operator.BeforeUpsert:  beforeUpsert,
+	operator.AfterUpsert:   afterUpsert,
+	operator.BeforeReplace: beforeUpdate,
+	operator.AfterReplace:  afterUpdate,
 }
 
 // ```go
@@ -40,14 +40,19 @@ var hookHandler = map[mgo常量.OpType]func(ctx context.Context, hook interface{
 // 中间件注册(Do)
 // }
 // ```
-// 
+//
 // 这段Go代码的注释是描述`init()`函数的作用，它用于在程序启动时注册一个名为`Do`的中间件。
 // md5:a0604c723a346113
 
 // 根据hType调用特定的方法来处理钩子
 // 如果opts有有效的值，将使用它替换原始的钩子
 // md5:8a28d86282a2f1cb
-func Do(ctx context.Context, hook interface{}, opType mgo常量.OpType, opts ...interface{}) error {
+// ff:
+// ctx:
+// hook:
+// opType:
+// opts:
+func Do(ctx context.Context, hook interface{}, opType operator.OpType, opts ...interface{}) error {
 	if len(opts) > 0 {
 		hook = opts[0]
 	}
@@ -73,7 +78,7 @@ func Do(ctx context.Context, hook interface{}, opType mgo常量.OpType, opts ...
 }
 
 // sliceHandle 处理切片钩子 md5:c688842b5e68c3d2
-func sliceHandle(ctx context.Context, hook interface{}, opType mgo常量.OpType) error {
+func sliceHandle(ctx context.Context, hook interface{}, opType operator.OpType) error {
 	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := hook.([]interface{}); ok {
 		for _, v := range h {
@@ -214,7 +219,7 @@ func afterUpsert(ctx context.Context, hook interface{}) error {
 }
 
 // 检查opType是否支持，并调用hookHandler md5:1b5144f1d5dc2b78
-func do(ctx context.Context, hook interface{}, opType mgo常量.OpType) error {
+func do(ctx context.Context, hook interface{}, opType operator.OpType) error {
 	if f, ok := hookHandler[opType]; !ok {
 		return nil
 	} else {

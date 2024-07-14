@@ -11,15 +11,15 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
 	"errors"
 	"testing"
 
-	"github.com/888go/qmgo/operator"
-	"github.com/888go/qmgo/options"
+	"github.com/qiniu/qmgo/operator"
+	"github.com/qiniu/qmgo/options"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -41,19 +41,19 @@ type UserInfo struct {
 }
 
 var userInfo = UserInfo{
-	Id:     X生成对象ID(),
+	Id:     NewObjectID(),
 	Name:   "xm",
 	Age:    7,
 	Weight: 40,
 }
 
 var userInfos = []UserInfo{
-	{Id: X生成对象ID(), Name: "a1", Age: 6, Weight: 20},
-	{Id: X生成对象ID(), Name: "b2", Age: 6, Weight: 25},
-	{Id: X生成对象ID(), Name: "c3", Age: 6, Weight: 30},
-	{Id: X生成对象ID(), Name: "d4", Age: 6, Weight: 35},
-	{Id: X生成对象ID(), Name: "a1", Age: 7, Weight: 40},
-	{Id: X生成对象ID(), Name: "a1", Age: 8, Weight: 45},
+	{Id: NewObjectID(), Name: "a1", Age: 6, Weight: 20},
+	{Id: NewObjectID(), Name: "b2", Age: 6, Weight: 25},
+	{Id: NewObjectID(), Name: "c3", Age: 6, Weight: 30},
+	{Id: NewObjectID(), Name: "d4", Age: 6, Weight: 35},
+	{Id: NewObjectID(), Name: "a1", Age: 7, Weight: 40},
+	{Id: NewObjectID(), Name: "a1", Age: 8, Weight: 45},
 }
 
 var poolMonitor = &event.PoolMonitor{
@@ -71,45 +71,45 @@ func TestQmgo(t *testing.T) {
 
 	// create connect
 	opt := opts.Client().SetAppName("example")
-	cli, err := X连接(ctx, &X配置{X连接URI: URI, X数据库名: DATABASE, X集合名: COLL}, options.ClientOptions{ClientOptions: opt})
+	cli, err := Open(ctx, &Config{Uri: URI, Database: DATABASE, Coll: COLL}, options.ClientOptions{ClientOptions: opt})
 
 	ast.Nil(err)
 	defer func() {
-		if err = cli.X关闭连接(ctx); err != nil {
+		if err = cli.Close(ctx); err != nil {
 			panic(err)
 		}
 	}()
-	defer cli.X删除数据库(ctx)
+	defer cli.DropDatabase(ctx)
 
-	cli.EnsureIndexes弃用(ctx, []string{}, []string{"age", "name,weight"})
+	cli.EnsureIndexes(ctx, []string{}, []string{"age", "name,weight"})
 	// insert one document
-	_, err = cli.X插入(ctx, userInfo)
+	_, err = cli.InsertOne(ctx, userInfo)
 	ast.Nil(err)
 
 	// find one document
 	one := UserInfo{}
-	err = cli.X查询(ctx, bson.M{"name": userInfo.Name}).X取一条(&one)
+	err = cli.Find(ctx, bson.M{"name": userInfo.Name}).One(&one)
 	ast.Nil(err)
 	ast.Equal(userInfo, one)
 
 	// multiple insert
-	_, err = cli.X文档集合.X插入多个(ctx, userInfos)
+	_, err = cli.Collection.InsertMany(ctx, userInfos)
 	ast.Nil(err)
 
 	// 找到所有、排序并限制 md5:63d2a93384ca2556
 	batch := []UserInfo{}
-	cli.X查询(ctx, bson.M{"age": 6}).X排序("weight").X设置最大返回数(7).X取全部(&batch)
+	cli.Find(ctx, bson.M{"age": 6}).Sort("weight").Limit(7).All(&batch)
 	ast.Equal(4, len(batch))
 
-	count, err := cli.X查询(ctx, bson.M{"age": 6}).X取数量()
+	count, err := cli.Find(ctx, bson.M{"age": 6}).Count()
 	ast.NoError(err)
 	ast.Equal(int64(4), count)
 
 	// aggregate
-	matchStage := bson.D{{mgo常量.X聚合条件, []bson.E{{"weight", bson.D{{mgo常量.X条件大于, 30}}}}}}
-	groupStage := bson.D{{mgo常量.X聚合分组, bson.D{{"_id", "$name"}, {"total", bson.D{{mgo常量.X求和, "$age"}}}}}}
+	matchStage := bson.D{{operator.Match, []bson.E{{"weight", bson.D{{operator.Gt, 30}}}}}}
+	groupStage := bson.D{{operator.Group, bson.D{{"_id", "$name"}, {"total", bson.D{{operator.Sum, "$age"}}}}}}
 	var showsWithInfo []bson.M
-	err = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).X取全部(&showsWithInfo)
+	err = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}).All(&showsWithInfo)
 	ast.Equal(3, len(showsWithInfo))
 	for _, v := range showsWithInfo {
 		if "a1" == v["_id"] {
@@ -123,23 +123,23 @@ func TestQmgo(t *testing.T) {
 		ast.Error(errors.New("error"), "impossible")
 	}
 	// Update one
-	err = cli.X更新一条(ctx, bson.M{"name": "d4"}, bson.M{"$set": bson.M{"age": 17}})
+	err = cli.UpdateOne(ctx, bson.M{"name": "d4"}, bson.M{"$set": bson.M{"age": 17}})
 	ast.NoError(err)
-	cli.X查询(ctx, bson.M{"age": 17}).X取一条(&one)
+	cli.Find(ctx, bson.M{"age": 17}).One(&one)
 	ast.Equal("d4", one.Name)
 	// UpdateAll
-	result, err := cli.X更新(ctx, bson.M{"age": 6}, bson.M{"$set": bson.M{"age": 10}})
+	result, err := cli.UpdateAll(ctx, bson.M{"age": 6}, bson.M{"$set": bson.M{"age": 10}})
 	ast.NoError(err)
-	count, err = cli.X查询(ctx, bson.M{"age": 10}).X取数量()
+	count, err = cli.Find(ctx, bson.M{"age": 10}).Count()
 	ast.NoError(err)
-	ast.Equal(result.X修改数, count)
+	ast.Equal(result.ModifiedCount, count)
 	// select
 	one = UserInfo{}
-	err = cli.X查询(ctx, bson.M{"age": 10}).X字段(bson.M{"age": 1}).X取一条(&one)
+	err = cli.Find(ctx, bson.M{"age": 10}).Select(bson.M{"age": 1}).One(&one)
 	ast.NoError(err)
 	ast.Equal(10, int(one.Age))
 	ast.Equal("", one.Name)
 	// remove
-	err = cli.X删除一条(ctx, bson.M{"age": 7})
+	err = cli.Remove(ctx, bson.M{"age": 7})
 	ast.Nil(err)
 }

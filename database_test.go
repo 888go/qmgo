@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package mgo类
+package qmgo
 
 import (
 	"context"
@@ -19,7 +19,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/readpref"
 	"testing"
 
-	opts "github.com/888go/qmgo/options"
+	opts "github.com/qiniu/qmgo/options"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 )
@@ -34,25 +34,25 @@ func TestDatabase(t *testing.T) {
 	collName := "testopen"
 	dbName := "qmgotest"
 
-	cfg := X配置{
-		X连接URI:              "mongodb://localhost:27017",
-		X数据库名:         dbName,
-		X集合名:             collName,
-		X连接超时毫秒: &cTimeout,
-		X套接字超时毫秒:  &sTimeout,
-		X最大连接池大小:      &maxPoolSize,
-		X最小连接池大小:      &minPoolSize,
+	cfg := Config{
+		Uri:              "mongodb://localhost:27017",
+		Database:         dbName,
+		Coll:             collName,
+		ConnectTimeoutMS: &cTimeout,
+		SocketTimeoutMS:  &sTimeout,
+		MaxPoolSize:      &maxPoolSize,
+		MinPoolSize:      &minPoolSize,
 	}
 
-	c, err := X创建客户端(context.Background(), &cfg)
+	c, err := NewClient(context.Background(), &cfg)
 	ast.NoError(err)
-	cli := c.X设置数据库(cfg.X数据库名)
+	cli := c.Database(cfg.Database)
 	ast.Nil(err)
-	ast.Equal(dbName, cli.X取数据库名称())
-	coll := cli.X取集合(collName)
-	ast.Equal(collName, coll.X取集合名())
-	cli.X取集合(collName).X删除集合(context.Background())
-	cli.X删除数据库(context.Background())
+	ast.Equal(dbName, cli.GetDatabaseName())
+	coll := cli.Collection(collName)
+	ast.Equal(collName, coll.GetCollectionName())
+	cli.Collection(collName).DropCollection(context.Background())
+	cli.DropDatabase(context.Background())
 
 }
 
@@ -62,7 +62,7 @@ func TestRunCommand(t *testing.T) {
 	cli := initClient("test")
 
 	opts := opts.RunCommandOptions{RunCmdOptions: options.RunCmd().SetReadPreference(readpref.Primary())}
-	res := cli.X执行命令(context.Background(), bson.D{
+	res := cli.RunCommand(context.Background(), bson.D{
 		{"ping", 1}}, opts)
 	ast.NoError(res.Err())
 }
@@ -72,17 +72,17 @@ func TestRunCommand(t *testing.T) {
 // func TestCreateCollection(t *testing.T) {
 // 初始化断言工具
 // 	ast := require.New(t)
-// 
+//
 // 初始化客户端，连接名为"test"的数据库
 // 	cli := initClient("test")
-// 
+//
 // 设置时间序列选项
 // 	timeSeriesOpt := options.TimeSeriesOptions{
 // 		TimeField: "timestamp",
 // 	}
 // 设置元数据字段
 // 	timeSeriesOpt.SetMetaField("metadata")
-// 
+//
 // 创建上下文
 // 	ctx := context.Background()
 // 创建集合选项，设置时间序列相关选项
@@ -97,6 +97,6 @@ func TestRunCommand(t *testing.T) {
 // 	cli.DropDatabase(ctx)
 // }
 // ```
-// 
+//
 // 这段代码是一个测试函数，用于测试在ArangoDB中创建带有时间序列选项的集合。它首先初始化测试所需的工具和客户端，然后定义时间序列的配置，接着在上下文中创建集合。如果在创建过程中没有错误，会删除创建的集合和数据库。
 // md5:79faec56c35696a6

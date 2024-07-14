@@ -42,4 +42,15 @@ bm= 包名,更换新的包名称
 th= 替换,用于替换文本,文档内如果有多个相同的,会一起替换
 cf= 重复,用于重命名多次,如: 一个文档内有2个"One(result interface{}) error"需要重命名.
 但是要注意,多个新名称要保持一致. 如:"X取一条(result interface{})"
- 
+
+[func (c *Cursor) Next(result interface{}) bool {]
+ff=下一个
+
+[func (c *Cursor) All(results interface{}) error {]
+ff=取全部
+
+[func (c *Cursor) Close() error {]
+ff=关闭
+
+[func (c *Cursor) Err() error {]
+ff=取错误
