@@ -11,7 +11,7 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"errors"
@@ -22,14 +22,14 @@ import (
 
 func TestIsErrNoDocuments(t *testing.T) {
 	ast := require.New(t)
-	ast.False(IsErrNoDocuments(errors.New("dont match")))
-	ast.True(IsErrNoDocuments(ErrNoSuchDocuments))
-	ast.True(IsErrNoDocuments(mongo.ErrNoDocuments))
+	ast.False(X是否为无文档错误(errors.New("dont match")))
+	ast.True(X是否为无文档错误(X错误_未找到文档))
+	ast.True(X是否为无文档错误(mongo.ErrNoDocuments))
 }
 
 func TestIsDup(t *testing.T) {
 	ast := require.New(t)
-	ast.False(IsDup(nil))
-	ast.False(IsDup(errors.New("invaliderror")))
-	ast.True(IsDup(errors.New("E11000")))
+	ast.False(X是否为重复键错误(nil))
+	ast.False(X是否为重复键错误(errors.New("invaliderror")))
+	ast.True(X是否为重复键错误(errors.New("E11000")))
 }

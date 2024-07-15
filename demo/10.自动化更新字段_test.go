@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/qiniu/qmgo"
-	"github.com/qiniu/qmgo/field"
+	"github.com/888go/qmgo"
+	"github.com/888go/qmgo/field"
 	"testing"
 	"time"
 )
@@ -21,10 +21,10 @@ type X学生 struct {
 func Test_默认字段(t *testing.T) {
 	ctx := context.Background()
 	//注意要替换连接 mongodb://账号:密码@ip:端口
-	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "数据库_demo", Coll: "学生"})
+	cli, _ := mgo类.X连接(ctx, &mgo类.Config{X连接URI: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", X数据库名: "数据库_demo", X集合名: "学生"})
 
 	u := &X学生{X名字: "Lucas", X年龄: 7}
-	_, err := cli.InsertOne(context.Background(), u) // tag为createAt、updateAt 和 _id 的字段会自动更新插入
+	_, err := cli.X插入(context.Background(), u) // tag为createAt、updateAt 和 _id 的字段会自动更新插入
 	fmt.Println(err)
 }
 
@@ -36,9 +36,9 @@ func (u *X学生) CustomFields() field.CustomFieldsBuilder {
 func Test_自定义字段(t *testing.T) {
 	ctx := context.Background()
 	//注意要替换连接 mongodb://账号:密码@ip:端口
-	cli, _ := qmgo.Open(ctx, &qmgo.Config{Uri: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", Database: "数据库_demo", Coll: "学生"})
+	cli, _ := mgo类.X连接(ctx, &mgo类.Config{X连接URI: "mongodb://mongo_tdBG3A:mongo_RSmrcT@121.89.206.172:27017", X数据库名: "数据库_demo", X集合名: "学生"})
 
 	u := &X学生{X名字: "Lucas", X年龄: 7}
-	_, err := cli.InsertOne(context.Background(), u)
+	_, err := cli.X插入(context.Background(), u)
 	fmt.Println(err)
 }

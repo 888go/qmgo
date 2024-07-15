@@ -11,14 +11,14 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
 	"fmt"
 	"testing"
 
-	"github.com/qiniu/qmgo/options"
+	"github.com/888go/qmgo/options"
 	"github.com/stretchr/testify/require"
 	"go.mongodb.org/mongo-driver/bson"
 	officialOpts "go.mongodb.org/mongo-driver/mongo/options"
@@ -27,20 +27,20 @@ import (
 
 func initClient(col string) *QmgoClient {
 	cfg := Config{
-		Uri:      "mongodb://localhost:27017",
-		Database: "qmgotest",
-		Coll:     col,
+		X连接URI:      "mongodb://localhost:27017",
+		X数据库名: "qmgotest",
+		X集合名:     col,
 	}
 	var cTimeout int64 = 0
 	var sTimeout int64 = 500000
 	var maxPoolSize uint64 = 30000
 	var minPoolSize uint64 = 0
-	cfg.ConnectTimeoutMS = &cTimeout
-	cfg.SocketTimeoutMS = &sTimeout
-	cfg.MaxPoolSize = &maxPoolSize
-	cfg.MinPoolSize = &minPoolSize
-	cfg.ReadPreference = &ReadPref{Mode: readpref.PrimaryMode}
-	qClient, err := Open(context.Background(), &cfg)
+	cfg.X连接超时毫秒 = &cTimeout
+	cfg.X套接字超时毫秒 = &sTimeout
+	cfg.X最大连接池大小 = &maxPoolSize
+	cfg.X最小连接池大小 = &minPoolSize
+	cfg.X读取偏好 = &ReadPref{Mode: readpref.PrimaryMode}
+	qClient, err := X连接(context.Background(), &cfg)
 	if err != nil {
 		fmt.Println(err)
 		panic(err)
@@ -54,12 +54,12 @@ func TestQmgoClient(t *testing.T) {
 
 	// uri 错误
 	cfg := Config{
-		Uri:              "://127.0.0.1",
-		ConnectTimeoutMS: &timeout,
+		X连接URI:              "://127.0.0.1",
+		X连接超时毫秒: &timeout,
 	}
 
 	var err error
-	_, err = Open(context.Background(), &cfg)
+	_, err = X连接(context.Background(), &cfg)
 	ast.NotNil(err)
 
 	// Open 成功
@@ -67,48 +67,48 @@ func TestQmgoClient(t *testing.T) {
 	var minPoolSize uint64 = 0
 
 	cfg = Config{
-		Uri:              "mongodb://localhost:27017",
-		Database:         "qmgotest",
-		Coll:             "testopen",
-		ConnectTimeoutMS: &timeout,
-		MaxPoolSize:      &maxPoolSize,
-		MinPoolSize:      &minPoolSize,
-		ReadPreference:   &ReadPref{Mode: readpref.SecondaryMode, MaxStalenessMS: 500},
+		X连接URI:              "mongodb://localhost:27017",
+		X数据库名:         "qmgotest",
+		X集合名:             "testopen",
+		X连接超时毫秒: &timeout,
+		X最大连接池大小:      &maxPoolSize,
+		X最小连接池大小:      &minPoolSize,
+		X读取偏好:   &ReadPref{Mode: readpref.SecondaryMode, X最大延迟毫秒: 500},
 	}
 
-	cli, err := Open(context.Background(), &cfg)
+	cli, err := X连接(context.Background(), &cfg)
 	ast.NoError(err)
-	ast.Equal(cli.GetDatabaseName(), "qmgotest")
-	ast.Equal(cli.GetCollectionName(), "testopen")
+	ast.Equal(cli.X取数据库名称(), "qmgotest")
+	ast.Equal(cli.X取集合名(), "testopen")
 
-	err = cli.Ping(5)
+	err = cli.X是否存活(5)
 	ast.NoError(err)
 
-	res, err := cli.InsertOne(context.Background(), bson.D{{Key: "x", Value: 1}})
+	res, err := cli.X插入(context.Background(), bson.D{{Key: "x", Value: 1}})
 	ast.NoError(err)
 	ast.NotNil(res)
 
-	cli.DropCollection(context.Background())
+	cli.X删除集合(context.Background())
 
 	// close Client
-	cli.Close(context.TODO())
-	_, err = cli.InsertOne(context.Background(), bson.D{{Key: "x", Value: 1}})
+	cli.X关闭连接(context.TODO())
+	_, err = cli.X插入(context.Background(), bson.D{{Key: "x", Value: 1}})
 	ast.EqualError(err, "client is disconnected")
 
-	err = cli.Ping(5)
+	err = cli.X是否存活(5)
 	ast.Error(err)
 
-	// primary mode with max stalenessMS, error
+	// 主要模式，带有最大 stalenessMS，可能出现错误 md5:d85c933c21a84fc2
 	cfg = Config{
-		Uri:              "mongodb://localhost:27017",
-		Database:         "qmgotest",
-		Coll:             "testopen",
-		ConnectTimeoutMS: &timeout,
-		MaxPoolSize:      &maxPoolSize,
-		ReadPreference:   &ReadPref{Mode: readpref.PrimaryMode, MaxStalenessMS: 500},
+		X连接URI:              "mongodb://localhost:27017",
+		X数据库名:         "qmgotest",
+		X集合名:             "testopen",
+		X连接超时毫秒: &timeout,
+		X最大连接池大小:      &maxPoolSize,
+		X读取偏好:   &ReadPref{Mode: readpref.PrimaryMode, X最大延迟毫秒: 500},
 	}
 
-	cli, err = Open(context.Background(), &cfg)
+	cli, err = X连接(context.Background(), &cfg)
 	ast.Error(err)
 }
 
@@ -120,39 +120,39 @@ func TestClient(t *testing.T) {
 	var timeout int64 = 50
 
 	cfg := &Config{
-		Uri:              "mongodb://localhost:27017",
-		ConnectTimeoutMS: &timeout,
-		MaxPoolSize:      &maxPoolSize,
-		MinPoolSize:      &minPoolSize,
+		X连接URI:              "mongodb://localhost:27017",
+		X连接超时毫秒: &timeout,
+		X最大连接池大小:      &maxPoolSize,
+		X最小连接池大小:      &minPoolSize,
 	}
 
-	c, err := NewClient(context.Background(), cfg)
+	c, err := X创建客户端(context.Background(), cfg)
 	ast.Equal(nil, err)
 
 	opts := &options.DatabaseOptions{DatabaseOptions: officialOpts.Database().SetReadPreference(readpref.PrimaryPreferred())}
 	cOpts := &options.CollectionOptions{CollectionOptions: officialOpts.Collection().SetReadPreference(readpref.PrimaryPreferred())}
-	coll := c.Database("qmgotest", opts).Collection("testopen", cOpts)
+	coll := c.X设置数据库("qmgotest", opts).X取集合("testopen", cOpts)
 
-	res, err := coll.InsertOne(context.Background(), bson.D{{Key: "x", Value: 1}})
+	res, err := coll.X插入(context.Background(), bson.D{{Key: "x", Value: 1}})
 	ast.NoError(err)
 	ast.NotNil(res)
-	coll.DropCollection(context.Background())
+	coll.X删除集合(context.Background())
 }
 
 func TestClient_ServerVersion(t *testing.T) {
 	ast := require.New(t)
 
 	cfg := &Config{
-		Uri:      "mongodb://localhost:27017",
-		Database: "qmgotest",
-		Coll:     "transaction",
+		X连接URI:      "mongodb://localhost:27017",
+		X数据库名: "qmgotest",
+		X集合名:     "transaction",
 	}
 
 	ctx := context.Background()
-	cli, err := Open(ctx, cfg)
+	cli, err := X连接(ctx, cfg)
 	ast.NoError(err)
 
-	version := cli.ServerVersion()
+	version := cli.X取版本号()
 	ast.NotEmpty(version)
 	fmt.Println(version)
 }
@@ -161,67 +161,67 @@ func TestClient_newAuth(t *testing.T) {
 	ast := require.New(t)
 
 	auth := Credential{
-		AuthMechanism: "PLAIN",
-		AuthSource:    "PLAIN",
-		Username:      "qmgo",
-		Password:      "123",
+		X认证机制: "PLAIN",
+		X认证源:    "PLAIN",
+		X用户名:      "qmgo",
+		X密码:      "123",
 		PasswordSet:   false,
 	}
 	cred, err := newAuth(auth)
 	ast.NoError(err)
 	ast.Equal(auth.PasswordSet, cred.PasswordSet)
-	ast.Equal(auth.AuthSource, cred.AuthSource)
-	ast.Equal(auth.AuthMechanism, cred.AuthMechanism)
-	ast.Equal(auth.Username, cred.Username)
-	ast.Equal(auth.Password, cred.Password)
+	ast.Equal(auth.X认证源, cred.AuthSource)
+	ast.Equal(auth.X认证机制, cred.AuthMechanism)
+	ast.Equal(auth.X用户名, cred.Username)
+	ast.Equal(auth.X密码, cred.Password)
 
 	auth = Credential{
-		AuthMechanism: "PLAIN",
-		AuthSource:    "PLAIN",
-		Username:      "qmg/o",
-		Password:      "123",
+		X认证机制: "PLAIN",
+		X认证源:    "PLAIN",
+		X用户名:      "qmg/o",
+		X密码:      "123",
 		PasswordSet:   false,
 	}
 	_, err = newAuth(auth)
-	ast.Equal(ErrNotSupportedUsername, err)
+	ast.Equal(X错误_不支持用户名, err)
 
 	auth = Credential{
-		AuthMechanism: "PLAIN",
-		AuthSource:    "PLAIN",
-		Username:      "qmgo",
-		Password:      "12:3",
+		X认证机制: "PLAIN",
+		X认证源:    "PLAIN",
+		X用户名:      "qmgo",
+		X密码:      "12:3",
 		PasswordSet:   false,
 	}
 	_, err = newAuth(auth)
-	ast.Equal(ErrNotSupportedPassword, err)
+	ast.Equal(X错误_不支持密码, err)
 
 	auth = Credential{
-		AuthMechanism: "PLAIN",
-		AuthSource:    "PLAIN",
-		Username:      "qmgo",
-		Password:      "1/23",
+		X认证机制: "PLAIN",
+		X认证源:    "PLAIN",
+		X用户名:      "qmgo",
+		X密码:      "1/23",
 		PasswordSet:   false,
 	}
 	_, err = newAuth(auth)
-	ast.Equal(ErrNotSupportedPassword, err)
+	ast.Equal(X错误_不支持密码, err)
 
 	auth = Credential{
-		AuthMechanism: "PLAIN",
-		AuthSource:    "PLAIN",
-		Username:      "qmgo",
-		Password:      "1%3",
+		X认证机制: "PLAIN",
+		X认证源:    "PLAIN",
+		X用户名:      "qmgo",
+		X密码:      "1%3",
 		PasswordSet:   false,
 	}
 	_, err = newAuth(auth)
-	ast.Equal(ErrNotSupportedPassword, err)
+	ast.Equal(X错误_不支持密码, err)
 
 	auth = Credential{
-		AuthMechanism: "PLAIN",
-		AuthSource:    "PLAIN",
-		Username:      "q%3mgo",
-		Password:      "13",
+		X认证机制: "PLAIN",
+		X认证源:    "PLAIN",
+		X用户名:      "q%3mgo",
+		X密码:      "13",
 		PasswordSet:   false,
 	}
 	_, err = newAuth(auth)
-	ast.Equal(ErrNotSupportedUsername, err)
+	ast.Equal(X错误_不支持用户名, err)
 }

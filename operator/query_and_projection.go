@@ -11,38 +11,39 @@
  limitations under the License.
 */
 
-package operator
+package mgo常量
 
-// define the query and projection operators
-// refer: https://docs.mongodb.com/manual/reference/operator/query/
+// 定义查询和投影运算符
+// 参考：https://docs.mongodb.com/manual/reference/operator/query/
+// md5:0562f490d100fe93
 const (
 	// Comparison
-	Eq  = "$eq"
-	Gt  = "$gt"
-	Gte = "$gte"
-	In  = "$in"
-	Lt  = "$lt"
-	Lte = "$lte"
-	Ne  = "$ne"
-	Nin = "$nin"
+	X条件等于  = "$eq"
+	X条件大于  = "$gt"
+	X条件大于等于 = "$gte"
+	X条件包含  = "$in"
+	X条件小于  = "$lt"
+	X条件小于等于 = "$lte"
+	X条件不等于  = "$ne"
+	X条件不包含 = "$nin"
 
 	// Logical
-	And = "$and"
-	Not = "$not"
-	Nor = "$nor"
-	Or  = "$or"
+	X条件且 = "$and"
+	X条件非 = "$not"
+	X条件或非 = "$nor"
+	X条件或  = "$or"
 
 	// Element
-	Exists = "$exists"
-	Type   = "$type"
+	X条件字段存在 = "$exists"
+	X条件类型   = "$type"
 
 	// Evaluation
-	Expr       = "$expr"
-	JsonSchema = "$jsonSchema"
-	Mod        = "$mod"
-	Regex      = "$regex"
-	Text       = "$text"
-	Where      = "$where"
+	X条件表达式       = "$expr"
+	Json效验 = "$jsonSchema"
+	X取模        = "$mod"
+	X条件正则      = "$regex"
+	X条件全文搜索       = "$text"
+	X条件Js      = "$where"
 
 	// Geo spatial
 	GeoIntersects = "$geoIntersects"
@@ -51,9 +52,9 @@ const (
 	NearSphere    = "$nearSphere"
 
 	// Array
-	All       = "$all"
-	ElemMatch = "$elemMatch"
-	Size      = "$size"
+	X数组全部       = "$all"
+	X数组匹配条件 = "$elemMatch"
+	X数组数量      = "$size"
 
 	// Bitwise
 	BitsAllClear = "$bitsAllClear"

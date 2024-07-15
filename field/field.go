@@ -18,26 +18,28 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/qiniu/qmgo/operator"
+	"github.com/888go/qmgo/operator"
 )
 
 var nilTime time.Time
 
-// filedHandler defines the relations between field type and handler
-var fieldHandler = map[operator.OpType]func(doc interface{}) error{
-	operator.BeforeInsert:  beforeInsert,
-	operator.BeforeUpdate:  beforeUpdate,
-	operator.BeforeReplace: beforeUpdate,
-	operator.BeforeUpsert:  beforeUpsert,
+// filedHandler 定义字段类型和处理器之间的关系 md5:c7cd659bd6a053b2
+var fieldHandler = map[mgo常量.OpType]func(doc interface{}) error{
+	mgo常量.X钩子_插入前:  beforeInsert,
+	mgo常量.X钩子_更新前:  beforeUpdate,
+	mgo常量.X钩子_替换前: beforeUpdate,
+	mgo常量.X钩子_替换插入前:  beforeUpsert,
 }
 
-//func init() {
-//	middleware.Register(Do)
+// 函数 init() {
+// 注册 middleware，参数为 Do
 //}
+// md5:4bdefdddb5ec33c1
 
-// Do call the specific method to handle field based on fType
-// Don't use opts here
-func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...interface{}) error {
+// Do 调用特定方法根据 fType 处理字段
+// 不在这里使用 opts
+// md5:01967b5b64a19adb
+func Do(ctx context.Context, doc interface{}, opType mgo常量.OpType, opts ...interface{}) error {
 	to := reflect.TypeOf(doc)
 	if to == nil {
 		return nil
@@ -54,13 +56,13 @@ func Do(ctx context.Context, doc interface{}, opType operator.OpType, opts ...in
 			return do(doc, opType)
 		}
 	}
-	//fmt.Println("not support type")
+	//fmt.Println("不支持此类类型") md5:2ba1fad322480d74
 	return nil
 }
 
-// sliceHandle handles the slice docs
-func sliceHandle(docs interface{}, opType operator.OpType) error {
-	// []interface{}{UserType{}...}
+// sliceHandle处理切片文档 md5:92800dd5899836ce
+func sliceHandle(docs interface{}, opType mgo常量.OpType) error {
+	// []interface{}{UserType实例...} md5:bda81608072dd1ad
 	if h, ok := docs.([]interface{}); ok {
 		for _, v := range h {
 			if err := do(v, opType); err != nil {
@@ -79,10 +81,11 @@ func sliceHandle(docs interface{}, opType operator.OpType) error {
 	return nil
 }
 
-// beforeInsert handles field before insert
-// If value of field createAt is valid in doc, upsert doesn't change it
-// If value of field id is valid in doc, upsert doesn't change it
-// Change the value of field updateAt anyway
+// beforeInsert 在插入前处理字段
+// 如果文档中的createAt字段的值有效，upsert 不会改变它
+// 如果文档中的id字段的值有效，upsert 不会改变它
+// 无论如何，改变updateAt字段的值
+// md5:f49d81597c8212f6
 func beforeInsert(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultId()
@@ -91,29 +94,30 @@ func beforeInsert(doc interface{}) error {
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
 		fields := ih.CustomFields()
-		fields.(*CustomFields).CustomId(doc)
-		fields.(*CustomFields).CustomCreateTime(doc)
-		fields.(*CustomFields).CustomUpdateTime(doc)
+		fields.(*CustomFields).X自定义ID(doc)
+		fields.(*CustomFields).X自定义创建时间(doc)
+		fields.(*CustomFields).X自定义更新时间(doc)
 	}
 	return nil
 }
 
-// beforeUpdate handles field before update
+// beforeUpdate处理更新前的字段 md5:a783a1aa99fba490
 func beforeUpdate(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultUpdateAt()
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
 		fields := ih.CustomFields()
-		fields.(*CustomFields).CustomUpdateTime(doc)
+		fields.(*CustomFields).X自定义更新时间(doc)
 	}
 	return nil
 }
 
-// beforeUpsert handles field before upsert
-// If value of field createAt is valid in doc, upsert doesn't change it
-// If value of field id is valid in doc, upsert doesn't change it
-// Change the value of field updateAt anyway
+// beforeUpsert 处理字段的before upsert操作
+// 如果doc中field createAt的值有效，upsert操作不会改变它
+// 如果doc中field id的值有效，upsert操作也不会改变它
+// 无论如何都会更新field updateAt的值
+// md5:d286cfb6c0a1f1da
 func beforeUpsert(doc interface{}) error {
 	if ih, ok := doc.(DefaultFieldHook); ok {
 		ih.DefaultId()
@@ -122,15 +126,15 @@ func beforeUpsert(doc interface{}) error {
 	}
 	if ih, ok := doc.(CustomFieldsHook); ok {
 		fields := ih.CustomFields()
-		fields.(*CustomFields).CustomId(doc)
-		fields.(*CustomFields).CustomCreateTime(doc)
-		fields.(*CustomFields).CustomUpdateTime(doc)
+		fields.(*CustomFields).X自定义ID(doc)
+		fields.(*CustomFields).X自定义创建时间(doc)
+		fields.(*CustomFields).X自定义更新时间(doc)
 	}
 	return nil
 }
 
-// do check if opType is supported and call fieldHandler
-func do(doc interface{}, opType operator.OpType) error {
+// 检查opType是否被支持，并调用fieldHandler方法 md5:3bb8cbff6cb4f5e3
+func do(doc interface{}, opType mgo常量.OpType) error {
 	if f, ok := fieldHandler[opType]; !ok {
 		return nil
 	} else {

@@ -19,6 +19,6 @@ func (u *X记账) AfterInsert(ctx context.Context) error {
 
 func Test_hook(t *testing.T) {
 	u := &X记账{X名称: "爱丽丝", X年龄: 7}
-	_, err := cli.InsertOne(context.Background(), u)
+	_, err := cli.X插入(context.Background(), u)
 	fmt.Println(err)
 }

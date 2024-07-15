@@ -11,21 +11,21 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
-	opts "github.com/qiniu/qmgo/options"
+	opts "github.com/888go/qmgo/options"
 	"go.mongodb.org/mongo-driver/mongo/options"
 
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Pipeline define the pipeline for aggregate
+// Pipeline 定义聚合操作的管道 md5:39821c5115607719
 type Pipeline []bson.D
 
-// Aggregate is a handle to a aggregate
+// Aggregate是一个聚合的句柄 md5:e06636d2fc45e004
 type Aggregate struct {
 	ctx        context.Context
 	pipeline   interface{}
@@ -33,8 +33,8 @@ type Aggregate struct {
 	options    []opts.AggregateOptions
 }
 
-// All iterates the cursor from aggregate and decodes each document into results.
-func (a *Aggregate) All(results interface{}) error {
+// All 遍历聚合的游标，并将每个文档解码为结果。 md5:22b8eb7acebfa36a
+func (a *Aggregate) X取全部(结果指针 interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions
@@ -43,11 +43,11 @@ func (a *Aggregate) All(results interface{}) error {
 	if err != nil {
 		return err
 	}
-	return c.All(a.ctx, results)
+	return c.All(a.ctx, 结果指针)
 }
 
-// One iterates the cursor from aggregate and decodes current document into result.
-func (a *Aggregate) One(result interface{}) error {
+// One 从聚合结果中遍历游标，并将当前文档解码到结果中。 md5:95d05e20ff85babc
+func (a *Aggregate) X取一条(结果指针 interface{}) error {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions
@@ -61,24 +61,25 @@ func (a *Aggregate) One(result interface{}) error {
 		cursor: c,
 		err:    err,
 	}
-	defer cr.Close()
-	if !cr.Next(result) {
-		if err := cr.Err(); err != nil {
+	defer cr.X关闭()
+	if !cr.X下一个(结果指针) {
+		if err := cr.X取错误(); err != nil {
 			return err
 		}
-		return ErrNoSuchDocuments
+		return X错误_未找到文档
 	}
 	return err
 }
 
-// Iter return the cursor after aggregate
-// Deprecated, please use Cursor
-func (a *Aggregate) Iter() CursorI {
-	return a.Cursor()
+// Iter 返回聚合后的游标
+// 已弃用，请使用Cursor
+// md5:722184e644380849
+func (a *Aggregate) Iter弃用() CursorI {
+	return a.X取结果集()
 }
 
-// Cursor return the cursor after aggregate
-func (a *Aggregate) Cursor() CursorI {
+// Cursor返回聚合后的游标 md5:eac4fdc1facaf217
+func (a *Aggregate) X取结果集() CursorI {
 	opts := options.Aggregate()
 	if len(a.options) > 0 {
 		opts = a.options[0].AggregateOptions

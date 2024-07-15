@@ -11,40 +11,41 @@
  limitations under the License.
 */
 
-package operator
+package mgo常量
 
-// define the aggregation pipeline stages
-// refer: https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+// 定义聚合管道阶段
+// 参考：https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/
+// md5:40bdaebb510f842e
 const (
-	// Collection Aggregate Stages
+	// 集合聚合阶段 md5:37e4a0637949107b
 	AddFields      = "$addFields"
 	Bucket         = "$bucket"
 	BucketAuto     = "$bucketAuto"
 	CollStats      = "$collStats"
-	Count          = "$count"
+	X聚合计数          = "$count"
 	Facet          = "$facet"
 	GeoNear        = "$geoNear"
 	GraphLookup    = "$graphLookup"
-	Group          = "$group"
+	X聚合分组          = "$group"
 	IndexStats     = "$indexStats"
-	Limit          = "$limit"
+	X聚合限制数量          = "$limit"
 	ListSessions   = "$listSessions"
-	Lookup         = "$lookup"
-	Match          = "$match"
-	Merge          = "$merge"
+	X聚合关联集合         = "$lookup"
+	X聚合条件          = "$match"
+	X聚合合并          = "$merge"
 	Out            = "$out"
 	PlanCacheStats = "$planCacheStats"
-	Project        = "$project"
+	X聚合字段        = "$project"
 	Redact         = "$redact"
 	ReplaceRoot    = "$replaceRoot"
 	ReplaceWith    = "$replaceWith"
 	Sample         = "$sample"
-	Skip           = "$skip"
+	X聚合跳过           = "$skip"
 	SortByCount    = "$sortByCount"
 	UnionWith      = "$unionWith"
 	Unwind         = "$unwind"
 
-	// Database Aggregate stages
+	// 数据库聚合阶段 md5:b35520d72e009304
 	CurrentOp         = "$currentOp"
 	ListLocalSessions = "$listLocalSessions"
 )

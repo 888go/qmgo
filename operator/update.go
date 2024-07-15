@@ -11,33 +11,34 @@
  limitations under the License.
 */
 
-package operator
+package mgo常量
 
-// define the update operators
-// refer: https://docs.mongodb.com/manual/reference/operator/update/
+// 定义更新操作符
+// 参考: https://docs.mongodb.com/manual/reference/operator/update/
+// md5:166a573087a3fb27
 const (
 	// Fields
-	CurrentDate = "$currentDate"
-	Inc         = "$inc"
-	Min         = "$min"
-	Max         = "$max"
-	Mul         = "$mul"
-	Rename      = "$rename"
-	Set         = "$set"
-	SetOnInsert = "$setOnInsert"
-	Unset       = "$unset"
+	X更新为当前时间 = "$currentDate"
+	X更新数值递增         = "$inc"
+	X更新最小         = "$min"
+	X更新最大         = "$max"
+	X更新相乘         = "$mul"
+	X更新字段名      = "$rename"
+	X更新值         = "$set"
+	X更新插入时 = "$setOnInsert"
+	X聚合删除字段       = "$unset"
 
 	// Array Operators
-	AddToSet = "$addToSet"
-	Pop      = "$pop"
-	Pull     = "$pull"
-	Push     = "$push"
-	PullAll  = "$pullAll"
+	X数组不存在追加 = "$addToSet"
+	X数组删首尾      = "$pop"
+	X数组删除     = "$pull"
+	X数组追加     = "$push"
+	X数组删除全部  = "$pullAll"
 
 	// Array modifiers
 	Each     = "$each"
 	Position = "$position"
-	Sort     = "$sort"
+	X聚合排序     = "$sort"
 
 	// Array bitwise
 	Bit = "$bit"

@@ -19,7 +19,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/qiniu/qmgo/operator"
+	"github.com/888go/qmgo/operator"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 )
@@ -48,19 +48,19 @@ func TestInsertHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeInsert)
+	err := Do(ctx, u, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 	ast.Equal(17, u.Age)
 
-	err = Do(ctx, u, operator.AfterInsert)
+	err = Do(ctx, u, mgo常量.X钩子_插入后)
 	ast.NoError(err)
 	ast.True(u.AfterCalled)
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alices", Age: 8}
 	us := []interface{}{u1, u2}
-	err = Do(ctx, us, operator.BeforeInsert)
+	err = Do(ctx, us, mgo常量.X钩子_插入前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterInsert)
+	err = Do(ctx, us, mgo常量.X钩子_插入后)
 	ast.NoError(err)
 	for _, v := range us {
 		vv := v.(*User)
@@ -74,7 +74,7 @@ func TestInsertHook(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, operator.BeforeInsert)
+	err = Do(ctx, u3, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 }
 
@@ -94,19 +94,19 @@ func TestUpdateHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeUpdate)
+	err := Do(ctx, u, mgo常量.X钩子_更新前)
 	ast.NoError(err)
 	ast.Equal(17, u.Age)
 
-	err = Do(ctx, u, operator.AfterUpdate)
+	err = Do(ctx, u, mgo常量.X钩子_更新后)
 	ast.NoError(err)
 	ast.True(u.AfterCalled)
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alices", Age: 8}
 	us := []interface{}{u1, u2}
-	err = Do(ctx, us, operator.BeforeUpdate)
+	err = Do(ctx, us, mgo常量.X钩子_更新前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterUpdate)
+	err = Do(ctx, us, mgo常量.X钩子_更新后)
 	ast.NoError(err)
 	for _, v := range us {
 		vv := v.(*User)
@@ -139,19 +139,19 @@ func TestQueryHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeQuery)
+	err := Do(ctx, u, mgo常量.X钩子_查询前)
 	ast.NoError(err)
 	ast.Equal(17, u.Age)
 
-	err = Do(ctx, u, operator.AfterQuery)
+	err = Do(ctx, u, mgo常量.X钩子_查询后)
 	ast.NoError(err)
 	ast.True(u.AfterCalled)
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alices", Age: 8}
 	us := []interface{}{u1, u2}
-	err = Do(ctx, us, operator.BeforeQuery)
+	err = Do(ctx, us, mgo常量.X钩子_查询前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterQuery)
+	err = Do(ctx, us, mgo常量.X钩子_查询后)
 	ast.NoError(err)
 	for _, v := range us {
 		vv := v.(*User)
@@ -165,7 +165,7 @@ func TestQueryHook(t *testing.T) {
 	}
 
 	uss := []*User{&User{Name: "Lucas"}, &User{Name: "Alices"}}
-	Do(ctx, &uss, operator.BeforeQuery)
+	Do(ctx, &uss, mgo常量.X钩子_查询前)
 
 }
 func (u *User) BeforeRemove(ctx context.Context) error {
@@ -185,19 +185,19 @@ func TestRemoveHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeRemove)
+	err := Do(ctx, u, mgo常量.X钩子_删除前)
 	ast.NoError(err)
 	ast.Equal(17, u.Age)
 
-	err = Do(ctx, u, operator.AfterRemove)
+	err = Do(ctx, u, mgo常量.X钩子_删除后)
 	ast.NoError(err)
 	ast.True(u.AfterCalled)
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alices", Age: 8}
 	us := []interface{}{u1, u2}
-	err = Do(ctx, us, operator.BeforeRemove)
+	err = Do(ctx, us, mgo常量.X钩子_删除前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterRemove)
+	err = Do(ctx, us, mgo常量.X钩子_删除后)
 	ast.NoError(err)
 	for _, v := range us {
 		vv := v.(*User)
@@ -228,19 +228,19 @@ func TestUpsertHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeUpsert)
+	err := Do(ctx, u, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 	ast.Equal(17, u.Age)
 
-	err = Do(ctx, u, operator.AfterUpsert)
+	err = Do(ctx, u, mgo常量.X钩子_替换插入后)
 	ast.NoError(err)
 	ast.True(u.AfterCalled)
 
 	u1, u2 := &User{Name: "Lucas", Age: 7}, &User{Name: "Alices", Age: 8}
 	us := []interface{}{u1, u2}
-	err = Do(ctx, us, operator.BeforeUpsert)
+	err = Do(ctx, us, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterUpsert)
+	err = Do(ctx, us, mgo常量.X钩子_替换插入后)
 	ast.NoError(err)
 	for _, v := range us {
 		vv := v.(*User)
@@ -254,7 +254,7 @@ func TestUpsertHook(t *testing.T) {
 	}
 
 	u3 := User{Name: "Lucas", Age: 7}
-	err = Do(ctx, u3, operator.BeforeInsert)
+	err = Do(ctx, u3, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 }
 
@@ -283,7 +283,7 @@ func TestSliceError(t *testing.T) {
 
 	u1.On("AfterInsert").Return(nil)
 	u2.On("AfterInsert").Return(errors.New("called"))
-	err := Do(ctx, us, operator.AfterInsert)
+	err := Do(ctx, us, mgo常量.X钩子_插入后)
 	ast.Equal("called", err.Error())
 
 }
@@ -301,18 +301,18 @@ func TestUserNoHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &UserNoHook{Name: "Lucas", Age: 7}
-	err := Do(ctx, u, operator.BeforeInsert)
+	err := Do(ctx, u, mgo常量.X钩子_插入前)
 	ast.NoError(err)
 	ast.Equal(7, u.Age)
 
-	err = Do(ctx, u, operator.AfterInsert)
+	err = Do(ctx, u, mgo常量.X钩子_插入后)
 	ast.NoError(err)
 
 	u1, u2 := &UserNoHook{Name: "Lucas", Age: 7}, &UserNoHook{Name: "Alices", Age: 8}
 	us := []interface{}{u1, u2}
-	err = Do(ctx, us, operator.BeforeInsert)
+	err = Do(ctx, us, mgo常量.X钩子_插入前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterInsert)
+	err = Do(ctx, us, mgo常量.X钩子_插入后)
 	ast.NoError(err)
 	for _, v := range us {
 		vv := v.(*UserNoHook)
@@ -325,31 +325,31 @@ func TestUserNoHook(t *testing.T) {
 		ast.False(vv.AfterCalled)
 	}
 
-	err = Do(ctx, u, operator.BeforeUpdate)
+	err = Do(ctx, u, mgo常量.X钩子_更新前)
 	ast.NoError(err)
-	err = Do(ctx, u, operator.AfterUpdate)
+	err = Do(ctx, u, mgo常量.X钩子_更新后)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.BeforeUpdate)
+	err = Do(ctx, us, mgo常量.X钩子_更新前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterUpdate)
-	ast.NoError(err)
-
-	err = Do(ctx, u, operator.BeforeQuery)
-	ast.NoError(err)
-	err = Do(ctx, u, operator.AfterQuery)
-	ast.NoError(err)
-	err = Do(ctx, us, operator.BeforeQuery)
-	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterQuery)
+	err = Do(ctx, us, mgo常量.X钩子_更新后)
 	ast.NoError(err)
 
-	err = Do(ctx, u, operator.BeforeRemove)
+	err = Do(ctx, u, mgo常量.X钩子_查询前)
 	ast.NoError(err)
-	err = Do(ctx, u, operator.AfterRemove)
+	err = Do(ctx, u, mgo常量.X钩子_查询后)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.BeforeRemove)
+	err = Do(ctx, us, mgo常量.X钩子_查询前)
 	ast.NoError(err)
-	err = Do(ctx, us, operator.AfterRemove)
+	err = Do(ctx, us, mgo常量.X钩子_查询后)
+	ast.NoError(err)
+
+	err = Do(ctx, u, mgo常量.X钩子_删除前)
+	ast.NoError(err)
+	err = Do(ctx, u, mgo常量.X钩子_删除后)
+	ast.NoError(err)
+	err = Do(ctx, us, mgo常量.X钩子_删除前)
+	ast.NoError(err)
+	err = Do(ctx, us, mgo常量.X钩子_删除后)
 	ast.NoError(err)
 }
 
@@ -361,12 +361,12 @@ func TestSliceHook(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas"}
-	Do(ctx, u, operator.BeforeQuery)
+	Do(ctx, u, mgo常量.X钩子_查询前)
 
 	uss := []*User{&User{Name: "Lucas"}, &User{Name: "Alices"}}
-	Do(ctx, uss, operator.BeforeQuery)
+	Do(ctx, uss, mgo常量.X钩子_查询前)
 
-	Do(ctx, &uss, operator.BeforeQuery)
+	Do(ctx, &uss, mgo常量.X钩子_查询前)
 
 	ast.Equal(5, sliceBeforeQueryCount)
 
@@ -376,7 +376,7 @@ func TestNilError(t *testing.T) {
 	ast := require.New(t)
 	ctx := context.Background()
 
-	err := Do(ctx, nil, operator.BeforeUpsert)
+	err := Do(ctx, nil, mgo常量.X钩子_替换插入前)
 	ast.NoError(err)
 
 }
@@ -386,6 +386,6 @@ func TestOpts(t *testing.T) {
 	ctx := context.Background()
 
 	u := &User{Name: "Lucas", Age: 7}
-	err := Do(ctx, nil, operator.BeforeInsert, u)
+	err := Do(ctx, nil, mgo常量.X钩子_插入前, u)
 	ast.NoError(err)
 }

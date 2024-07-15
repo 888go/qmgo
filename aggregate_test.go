@@ -11,12 +11,12 @@
  limitations under the License.
 */
 
-package qmgo
+package mgo类
 
 import (
 	"context"
 	"errors"
-	opts "github.com/qiniu/qmgo/options"
+	opts "github.com/888go/qmgo/options"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"testing"
 
@@ -28,9 +28,9 @@ import (
 func TestAggregate(t *testing.T) {
 	ast := require.New(t)
 	cli := initClient("test")
-	defer cli.Close(context.Background())
-	defer cli.DropCollection(context.Background())
-	cli.EnsureIndexes(context.Background(), nil, []string{"name"})
+	defer cli.X关闭连接(context.Background())
+	defer cli.X删除集合(context.Background())
+	cli.EnsureIndexes弃用(context.Background(), nil, []string{"name"})
 
 	id1 := primitive.NewObjectID()
 	id2 := primitive.NewObjectID()
@@ -44,7 +44,7 @@ func TestAggregate(t *testing.T) {
 		QueryTestItem{Id: id4, Name: "Lucas", Age: 22},
 		QueryTestItem{Id: id5, Name: "Lucas", Age: 44},
 	}
-	cli.InsertMany(context.Background(), docs)
+	cli.X插入多个(context.Background(), docs)
 	matchStage := bson.D{{"$match", []bson.E{{"age", bson.D{{"$gt", 11}}}}}}
 	groupStage := bson.D{{"$group", bson.D{{"_id", "$name"}, {"total", bson.D{{"$sum", "$age"}}}}}}
 	var showsWithInfo []bson.M
@@ -53,7 +53,7 @@ func TestAggregate(t *testing.T) {
 		AggregateOptions: options.Aggregate().SetAllowDiskUse(true),
 	}
 	// aggregate ALL()
-	err := cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}, opt).All(&showsWithInfo)
+	err := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt).X取全部(&showsWithInfo)
 	ast.NoError(err)
 	ast.Equal(2, len(showsWithInfo))
 	for _, v := range showsWithInfo {
@@ -68,9 +68,9 @@ func TestAggregate(t *testing.T) {
 		ast.Error(errors.New("error"), "impossible")
 	}
 	// Iter()
-	iter := cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage})
+	iter := cli.X聚合(context.Background(), Pipeline{matchStage, groupStage})
 	ast.NotNil(iter)
-	err = iter.All(&showsWithInfo)
+	err = iter.X取全部(&showsWithInfo)
 	ast.NoError(err)
 	for _, v := range showsWithInfo {
 		if "Alice" == v["_id"] {
@@ -89,35 +89,35 @@ func TestAggregate(t *testing.T) {
 	opt = opts.AggregateOptions{
 		AggregateOptions: options.Aggregate().SetAllowDiskUse(true),
 	}
-	iter = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}, opt)
+	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt)
 	ast.NotNil(iter)
-	iter = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage})
+	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage})
 	ast.NotNil(iter)
-	err = iter.One(&oneInfo)
+	err = iter.X取一条(&oneInfo)
 	ast.NoError(err)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 
 	// iter
-	iter = cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}, opt)
+	iter = cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}, opt)
 	ast.NotNil(iter)
 
-	i := iter.Iter()
+	i := iter.Iter弃用()
 
-	ct := i.Next(&oneInfo)
+	ct := i.X下一个(&oneInfo)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 	ast.Equal(true, ct)
-	ct = i.Next(&oneInfo)
+	ct = i.X下一个(&oneInfo)
 	ast.Equal(true, oneInfo["_id"] == "Alice" || oneInfo["_id"] == "Lucas")
 	ast.Equal(true, ct)
-	ct = i.Next(&oneInfo)
+	ct = i.X下一个(&oneInfo)
 	ast.Equal(false, ct)
 
 	// err
-	ast.Error(cli.Aggregate(context.Background(), 1).All(&showsWithInfo))
-	ast.Error(cli.Aggregate(context.Background(), 1).One(&showsWithInfo))
-	ast.Error(cli.Aggregate(context.Background(), 1).Iter().Err())
+	ast.Error(cli.X聚合(context.Background(), 1).X取全部(&showsWithInfo))
+	ast.Error(cli.X聚合(context.Background(), 1).X取一条(&showsWithInfo))
+	ast.Error(cli.X聚合(context.Background(), 1).Iter弃用().X取错误())
 	matchStage = bson.D{{"$match", []bson.E{{"age", bson.D{{"$gt", 100}}}}}}
 	groupStage = bson.D{{"$group", bson.D{{"_id", "$name"}, {"total", bson.D{{"$sum", "$age"}}}}}}
-	ast.Error(cli.Aggregate(context.Background(), Pipeline{matchStage, groupStage}).One(&showsWithInfo))
+	ast.Error(cli.X聚合(context.Background(), Pipeline{matchStage, groupStage}).X取一条(&showsWithInfo))
 
 }
