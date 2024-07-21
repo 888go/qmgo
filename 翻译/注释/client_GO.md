@@ -14,11 +14,11 @@
 <原文结束>
 
 # <翻译开始>
-// URI 示例：[mongodb://][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
-// URI 参考：https://docs.mongodb.com/manual/reference/connection-string/ 
-// 
-// 这段注释解释了一个MongoDB连接字符串的格式，包括可选的部分如用户名、密码、多个服务器地址、数据库名以及可选的连接选项。URI以`mongodb://`开头，后面可以包含认证信息、主机列表、数据库路径和查询参数。链接：提供了官方文档的参考。
-// md5:038c28929efbdde0
+	// URI 示例：[mongodb:	//][user:pass@]主机1[:端口1][,主机2[:端口2],...][/数据库][?选项]
+	// URI 参考：https:	//docs.mongodb.com/manual/reference/connection-string/ 
+	// 
+	// 这段注释解释了一个MongoDB连接字符串的格式，包括可选的部分如用户名、密码、多个服务器地址、数据库名以及可选的连接选项。URI以`mongodb:	//`开头，后面可以包含认证信息、主机列表、数据库路径和查询参数。链接：提供了官方文档的参考。
+	// md5:038c28929efbdde0
 # <翻译结束>
 
 
@@ -29,10 +29,10 @@
 <原文结束>
 
 # <翻译开始>
-// ConnectTimeoutMS 指定了建立到服务器连接时使用的超时时间，以毫秒为单位。
-// 如果设置为 0，则不会使用超时。
-// 默认值为 30 秒。
-// md5:bdc6b23048c25478
+	// ConnectTimeoutMS 指定了建立到服务器连接时使用的超时时间，以毫秒为单位。
+	// 如果设置为 0，则不会使用超时。
+	// 默认值为 30 秒。
+	// md5:bdc6b23048c25478
 # <翻译结束>
 
 
@@ -43,10 +43,10 @@
 <原文结束>
 
 # <翻译开始>
-// MaxPoolSize 指定驱动程序连接池到每个服务器的最大连接数。
-// 如果设置为 0，则将其设置为 math.MaxInt64，
-// 默认值为 100。
-// md5:6840c2846a8fad6e
+	// MaxPoolSize 指定驱动程序连接池到每个服务器的最大连接数。
+	// 如果设置为 0，则将其设置为 math.MaxInt64，
+	// 默认值为 100。
+	// md5:6840c2846a8fad6e
 # <翻译结束>
 
 
@@ -57,8 +57,8 @@
 <原文结束>
 
 # <翻译开始>
-// MinPoolSize 指定了驱动程序到每个服务器的连接池中允许的最小连接数。如果此值不为零，将为每个服务器的连接池在后台维护，以确保其大小不低于最小值。这也可以通过 "minPoolSize" URI 选项（如 "minPoolSize=100"）进行设置。默认值为 0。
-// md5:9df8b44a6800236b
+	// MinPoolSize 指定了驱动程序到每个服务器的连接池中允许的最小连接数。如果此值不为零，将为每个服务器的连接池在后台维护，以确保其大小不低于最小值。这也可以通过 "minPoolSize" URI 选项（如 "minPoolSize=100"）进行设置。默认值为 0。
+	// md5:9df8b44a6800236b
 # <翻译结束>
 
 
@@ -69,8 +69,8 @@
 <原文结束>
 
 # <翻译开始>
-// SocketTimeoutMS 指定了驱动程序在返回网络错误之前，等待套接字读写操作返回的最长时间（以毫秒为单位）。如果此值为0，则表示不使用超时，套接字操作可能无限期阻塞。默认值为300,000毫秒。
-// md5:1e1ccf1f35a18417
+	// SocketTimeoutMS 指定了驱动程序在返回网络错误之前，等待套接字读写操作返回的最长时间（以毫秒为单位）。如果此值为0，则表示不使用超时，套接字操作可能无限期阻塞。默认值为300,000毫秒。
+	// md5:1e1ccf1f35a18417
 # <翻译结束>
 
 
@@ -80,8 +80,8 @@
 <原文结束>
 
 # <翻译开始>
-// ReadPreference 确定哪些服务器适合进行读取操作。默认为 PrimaryMode。
-// md5:6ca3a191c28443b8
+	// ReadPreference 确定哪些服务器适合进行读取操作。默认为 PrimaryMode。
+	// md5:6ca3a191c28443b8
 # <翻译结束>
 
 
@@ -153,8 +153,8 @@
 <原文结束>
 
 # <翻译开始>
-// MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
-// md5:01c3097a5d9a368b
+	// MaxStaleness是允许服务器被认为适合选择的最大时间。从版本3.4开始支持。
+	// md5:01c3097a5d9a368b
 # <翻译结束>
 
 
@@ -164,9 +164,9 @@
 <原文结束>
 
 # <翻译开始>
-// 表示用户在读取操作上的偏好。
-// 默认为PrimaryMode。
-// md5:85d94814e6ac8eca
+	// 表示用户在读取操作上的偏好。
+	// 默认为PrimaryMode。
+	// md5:85d94814e6ac8eca
 # <翻译结束>
 
 
@@ -367,11 +367,11 @@
 <原文结束>
 
 # <翻译开始>
-// TODO：不知道为什么在`topology()`函数中需要通过`cli, err := Open(ctx, &c.conf)`来获取topo，在弄清楚原因之前，我们只在这个UT（单元测试）中使用这个函数
-//topo, err := c.topology() // 从config对象获取topology信息
-//如果topo是description.Single（单点模式）：
-//    打印 "transaction is not supported because mongo server topology is single"
-//    返回false
-// md5:4d3e4bc17382c028
+	// TODO：不知道为什么在`topology()`函数中需要通过`cli, err := Open(ctx, &c.conf)`来获取topo，在弄清楚原因之前，我们只在这个UT（单元测试）中使用这个函数
+	//topo, err := c.topology() 	// 从config对象获取topology信息
+	//如果topo是description.Single（单点模式）：
+	//    打印 "transaction is not supported because mongo server topology is single"
+	//    返回false
+	// md5:4d3e4bc17382c028
 # <翻译结束>
 

@@ -42,10 +42,10 @@
 <原文结束>
 
 # <翻译开始>
-// res 是一个可解析的对象，但其 bson 标签与 mongodb 记录不一致，且不会报告错误
-// 将根据 res 数据结构的 bson 标签映射相应的值，没有值的标签将使用对应类型的默认值
-// res 的长度表示过滤条件筛选出的记录数
-// md5:fa2c9312a213eab9
+	// res 是一个可解析的对象，但其 bson 标签与 mongodb 记录不一致，且不会报告错误
+	// 将根据 res 数据结构的 bson 标签映射相应的值，没有值的标签将使用对应类型的默认值
+	// res 的长度表示过滤条件筛选出的记录数
+	// md5:fa2c9312a213eab9
 # <翻译结束>
 
 
@@ -112,11 +112,11 @@
 <原文结束>
 
 # <翻译开始>
-// 对于不同版本的mongod（如v4.4.0和v4.0.19），行为有所不同：v4.4.0会返回错误，而v4.0.19则可能返回nil
-// 不使用res6
-// _, err = cli.Find(context.Background(), filter2).Distinct("", &res6)
-// 如果err非nil，则打印错误信息：(Location40352) FieldPath不能使用空字符串构建
-// 验证res6的长度为0
-// md5:db8b4089027d21a0
+	// 对于不同版本的mongod（如v4.4.0和v4.0.19），行为有所不同：v4.4.0会返回错误，而v4.0.19则可能返回nil
+	// 不使用res6
+	// _, err = cli.Find(context.Background(), filter2).Distinct("", &res6)
+	// 如果err非nil，则打印错误信息：(Location40352) FieldPath不能使用空字符串构建
+	// 验证res6的长度为0
+	// md5:db8b4089027d21a0
 # <翻译结束>
 
