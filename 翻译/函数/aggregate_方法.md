@@ -35,15 +35,13 @@
 # //zj:
 # 备注结束
 
- 
-
 [func (a *Aggregate) All(results interface{}) error {]
-results=结果指针
 ff=取全部
+results=结果指针
 
 [func (a *Aggregate) One(result interface{}) error {]
-result=结果指针
 ff=取一条
+result=结果指针
 
 [func (a *Aggregate) Iter() CursorI {]
 ff=Iter弃用

@@ -35,7 +35,5 @@
 # //zj:
 # 备注结束
 
- 
-
 [package qmgo]
 bm=mgo类

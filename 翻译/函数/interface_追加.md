@@ -35,7 +35,5 @@
 # //zj:
 # 备注结束
 
- 
-
 [type QueryI interface {]
 zj=#TAB#//zj:type QueryI interface {#换行##TAB#X分页(页码 int, 页大小 int) QueryI#换行##TAB#X取分页数(perPage int) int#换行##TAB#//zj:

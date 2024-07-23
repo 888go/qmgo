@@ -35,66 +35,64 @@
 # //zj:
 # 备注结束
 
- 
-
 [func (q *Query) Collation(collation *options.Collation) QueryI {]
-collation=规则
 ff=设置排序规则
+collation=规则
 
 [func (q *Query) NoCursorTimeout(n bool) QueryI {]
-n=是否不超时
 ff=设置不超时
+n=是否不超时
 
 [func (q *Query) BatchSize(n int64) QueryI {]
-n=数量
 ff=设置批量处理数量
+n=数量
 
 [func (q *Query) Sort(fields ...string) QueryI {]
-fields=排序字段
 ff=排序
+fields=排序字段
 
 [func (q *Query) SetArrayFilters(filter *options.ArrayFilters) QueryI {]
-filter=过滤条件
 ff=设置切片过滤
+filter=过滤条件
 
 [func (q *Query) Select(projection interface{}) QueryI {]
-projection=字段Map
 ff=字段
+projection=字段Map
 
 [func (q *Query) Skip(n int64) QueryI {]
-n=跳过数量
 ff=跳过
+n=跳过数量
 
 [func (q *Query) Hint(hint interface{}) QueryI {]
-hint=索引字段
 ff=指定索引字段
+hint=索引字段
 
 [func (q *Query) Limit(n int64) QueryI {]
-n=数量
 ff=设置最大返回数
+n=数量
 
 [func (q *Query) One(result interface{}) error {]
-result=结果指针
 ff=取一条
+result=结果指针
 
 [func (q *Query) All(result interface{}) error {]
-result=结果指针
 ff=取全部
+result=结果指针
 
 [func (q *Query) Count() (n int64, err error) {]
+ff=取数量
 err=错误
 n=数量
-ff=取数量
 
 [func (q *Query) EstimatedCount() (n int64, err error) {]
+ff=取预估数量
 err=错误
 n=数量
-ff=取预估数量
 
 [func (q *Query) Distinct(key string, result interface{}) error {]
+ff=去重
 result=切片指针
 key=字段名
-ff=去重
 
 [func (q *Query) Cursor() CursorI {]
 ff=取结果集

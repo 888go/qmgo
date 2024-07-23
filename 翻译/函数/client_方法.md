@@ -35,8 +35,6 @@
 # //zj:
 # 备注结束
 
- 
-
 [func Open(ctx context.Context, conf *Config, o ...options.ClientOptions) (cli *QmgoClient, err error) {]
 ff=连接
 err=错误
@@ -74,8 +72,8 @@ opt=可选选项
 ff=事务
 opts=可选选项
 callback=回调函数
-ctx=上下文
 sessCtx=事务上下文
+ctx=上下文
 
 [func (c *Client) ServerVersion() string {]
 ff=取版本号
